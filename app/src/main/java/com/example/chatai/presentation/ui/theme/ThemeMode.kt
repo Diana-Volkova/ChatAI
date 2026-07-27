@@ -1,5 +1,9 @@
 package com.example.chatai.presentation.ui.theme
 
-enum class ThemeMode {
-    SYSTEM, LIGHT, DARK
+enum class ThemeMode(
+    val label: String
+) {
+    SYSTEM("System"),
+    LIGHT("Light"),
+    DARK("Dark"),
 }

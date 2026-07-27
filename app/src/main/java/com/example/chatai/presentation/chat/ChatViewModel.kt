@@ -17,7 +17,7 @@ import javax.inject.Inject
 class ChatViewModel @Inject constructor(
     private val repo: ChatRepository
 ) : ViewModel() {
-    private val _state = MutableStateFlow<ChatState>(ChatState.Success(emptyList()))
+    private val _state = MutableStateFlow<ChatState>(ChatState.Loading)
     val state: StateFlow<ChatState> = _state.asStateFlow()
 
     init {

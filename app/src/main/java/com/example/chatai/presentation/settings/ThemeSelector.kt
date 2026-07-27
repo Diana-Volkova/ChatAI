@@ -18,13 +18,14 @@ import com.example.chatai.presentation.ui.theme.ThemeState
 fun ThemeSelector() {
 
     Column {
-        ThemeOption("System", ThemeMode.SYSTEM)
-        ThemeOption("Light", ThemeMode.LIGHT)
-        ThemeOption("Dark", ThemeMode.DARK)
+        ThemeMode.entries.forEach {
+            ThemeOption(it)
+        }
     }
 }
+
 @Composable
-fun ThemeOption(title: String, mode: ThemeMode) {
+fun ThemeOption(mode: ThemeMode) {
 
     val selected = ThemeState.mode == mode
 
@@ -32,7 +33,7 @@ fun ThemeOption(title: String, mode: ThemeMode) {
         modifier = Modifier
             .fillMaxWidth()
             .clickable { ThemeState.mode = mode }
-            .padding(vertical = 12.dp),
+            .padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
 
@@ -41,6 +42,6 @@ fun ThemeOption(title: String, mode: ThemeMode) {
             onClick = { ThemeState.mode = mode }
         )
 
-        Text(text = title)
+        Text(text = mode.label)
     }
 }

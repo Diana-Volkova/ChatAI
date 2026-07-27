@@ -9,7 +9,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 object RetrofitFactory {
 
     private var interceptor = Interceptor { chain ->
-        val newUrl = chain.request().url()
+        val newUrl = chain.request().url
             .newBuilder()
             .build()
 
