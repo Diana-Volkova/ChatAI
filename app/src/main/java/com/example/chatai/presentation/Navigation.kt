@@ -7,26 +7,33 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.chatai.presentation.settings.SettingsScreen
+import kotlinx.serialization.Serializable
 
-sealed class Screen(val route: String) {
-    object HomeScreen : Screen("home")
-    object ChatScreen : Screen("chat")
-    object SettingsScreen : Screen("settings")
+@Serializable
+sealed class Screen {
+    @Serializable
+    object HomeScreen : Screen()
+
+    @Serializable
+    object ChatScreen : Screen()
+
+    @Serializable
+    object SettingsScreen : Screen()
 }
+
 @Composable
 fun Navigation(
     navController: NavHostController
 ) {
-    NavHost(navController, startDestination = Screen.HomeScreen.route) {
-        composable(route = Screen.HomeScreen.route) {
+    NavHost(navController, startDestination = Screen.HomeScreen) {
+        composable<Screen.HomeScreen> {
             HomeScreen(navController = navController)
         }
-        composable(route = Screen.ChatScreen.route) {
+        composable<Screen.ChatScreen> {
             ChatScreen(navController = navController)
         }
-        composable(Screen.SettingsScreen.route) {
+        composable<Screen.SettingsScreen> {
             SettingsScreen(navController)
         }
-
     }
 }

@@ -12,8 +12,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -27,14 +31,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.chatai.presentation.Screen
+import com.example.chatai.presentation.chat.ChatScreen
 import com.example.chatai.presentation.chat.ChatState
 import com.example.chatai.presentation.chat.MessagesScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavController) {
-    //val viewModel: HomeViewModel = hiltViewModel()
-    //val state by viewModel.state.collectAsState(remember { HomeScreenState.Idle })
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -42,6 +46,13 @@ fun HomeScreen(navController: NavController) {
         topBar = {
             TopAppBar(
                 title = { Text("Home") },
+                actions = {
+                    IconButton(
+                        onClick = { navController.navigate(Screen.SettingsScreen) }
+                    ) {
+                        Icon(Icons.Outlined.Settings, null)
+                    }
+                },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.surface
                 )
@@ -55,18 +66,8 @@ fun HomeScreen(navController: NavController) {
                 .background(MaterialTheme.colorScheme.background)
         ) {
             Home(paddingValues, navController)
-            //when (chatState) {
-            //    is ChatState.Empty -> MessagesScreen(viewModel, emptyList(), paddingValues)
-            //    is ChatState.Success -> {
-            //        val successState = chatState as ChatState.Success
-            //        MessagesScreen(viewModel, successState.messages, paddingValues)
-            //    }
-            //    is ChatState.Error -> {}
-            // }
         }
-
     }
-
 }
 
 @Composable
@@ -76,16 +77,11 @@ fun Home(paddingValues: PaddingValues, navController: NavController) {
             .padding(paddingValues)
             .fillMaxSize()
     ) {
-        Button(onClick = {
-            navController.navigate("chat")
-        }) {
+        Button(
+            onClick = { navController.navigate(Screen.ChatScreen) }
+        ) {
             Text("Go to Chat")
         }
-        Spacer(modifier = Modifier.height(8.dp))
-        Button(onClick = {
-            navController.navigate("settings")
-        }) {
-            Text("Go to Settings")
-        }
+
     }
 }

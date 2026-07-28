@@ -57,9 +57,10 @@ class ChatViewModel @Inject constructor(
 
     private fun addMessage(message: Message) {
         _state.update { state ->
-            if (state is ChatState.Success) {
-                state.copy(messages = state.messages + message)
-            } else state
+            when (state) {
+                is ChatState.Success -> state.copy(messages = listOf(message) + state.messages)
+                else -> state
+            }
         }
     }
 }

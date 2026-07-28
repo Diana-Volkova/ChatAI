@@ -31,24 +31,32 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.chatai.data.Message
 import com.example.chatai.data.Sender
 import formatTime
+import kotlinx.serialization.descriptors.PrimitiveKind
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -155,14 +163,10 @@ fun MessagesScreen(
 fun Messages(messages: List<Message>, modifier: Modifier) {
     val listState = rememberLazyListState()
 
-    LaunchedEffect(messages.size) {
-        if (messages.isNotEmpty()) {
-            listState.animateScrollToItem(messages.lastIndex)
-        }
-    }
 
     LazyColumn(
         state = listState,
+        reverseLayout = true,
         modifier = modifier
     ) {
         items(messages) { message ->
@@ -219,40 +223,100 @@ fun MessageInput(
 
 @Composable
 fun MessageItem(message: Message) {
+    val density = LocalDensity.current
+    var textLayout by remember { mutableStateOf<TextLayoutResult?>(null) }
+    var containerSize by remember { mutableStateOf(IntSize.Zero) }
+    var timeSize by remember { mutableStateOf(IntSize.Zero) }
+
+    val isInline by remember {
+        derivedStateOf {
+            val textLayout = textLayout
+
+            when {
+                textLayout == null -> false
+                timeSize == IntSize.Zero -> false
+                containerSize == IntSize.Zero -> false
+                textLayout.size.width < containerSize.width / 2 -> true
+                else -> false
+            }
+        }
+    }
+
+    val isFreeSpace by remember {
+        derivedStateOf {
+            val textLayout = textLayout
+
+            when {
+                textLayout == null -> false
+                timeSize == IntSize.Zero -> false
+                containerSize == IntSize.Zero -> false
+                textLayout.lineCount > 1 -> {
+                    val lastX = textLayout.getLineRight(textLayout.lineCount - 1)
+                    val freeSpace = textLayout.size.width - lastX
+                    freeSpace > timeSize.width
+                }
+
+                else -> false
+            }
+        }
+    }
+
+    val arrangement: Arrangement.Vertical by remember {
+        derivedStateOf {
+            when {
+                isInline || isFreeSpace -> Arrangement.spacedBy(density.run { -timeSize.height.toDp() })
+
+                else -> Arrangement.Top
+            }
+        }
+    }
+
+    val textPadding by remember {
+        derivedStateOf {
+            when (isInline) {
+                true -> density.run { timeSize.width.toDp() } + 4.dp
+                else -> 0.dp
+            }
+        }
+    }
+
     Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = if (message.sender == Sender.USER)
-            Arrangement.End else Arrangement.Start
+        modifier = Modifier
+            .fillMaxWidth()
+            .onSizeChanged { containerSize = it },
+        horizontalArrangement = when (message.sender) {
+            Sender.USER -> Arrangement.End
+            Sender.ASSISTANT -> Arrangement.Start
+        }
     ) {
-        Box(
+        Surface(
+            color = when (message.sender) {
+                Sender.USER -> MaterialTheme.colorScheme.primary
+                Sender.ASSISTANT -> MaterialTheme.colorScheme.surfaceVariant
+            },
+            shape = MaterialTheme.shapes.large,
             modifier = Modifier
                 .padding(horizontal = 8.dp, vertical = 4.dp)
-                .background(
-                    color = if (message.sender == Sender.USER)
-                        MaterialTheme.colorScheme.primary
-                    else
-                        MaterialTheme.colorScheme.surfaceVariant,
-                    shape = RoundedCornerShape(16.dp)
-                )
-                .padding(horizontal = 12.dp, vertical = 8.dp)
+
         ) {
-            Column {
+            Column(
+                verticalArrangement = arrangement,
+                modifier = Modifier
+                    .padding(horizontal = 12.dp, vertical = 8.dp)
+            ) {
                 Text(
                     text = message.text,
-                    color = if (message.sender == Sender.USER)
-                        MaterialTheme.colorScheme.onPrimary
-                    else
-                        MaterialTheme.colorScheme.onSurface
+                    onTextLayout = { textLayout = it },
+                    modifier = Modifier.padding(end = textPadding)
                 )
 
                 Text(
                     text = formatTime(message.timestamp),
-                    modifier = Modifier.align(Alignment.End),
+                    modifier = Modifier
+                        .onSizeChanged { timeSize = it }
+                        .align(Alignment.End)
+                        .alpha(0.7f),
                     style = MaterialTheme.typography.labelSmall,
-                    color = if (message.sender == Sender.USER)
-                        MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f)
-                    else
-                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                 )
             }
         }
