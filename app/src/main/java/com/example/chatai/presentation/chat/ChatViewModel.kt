@@ -17,7 +17,7 @@ import javax.inject.Inject
 class ChatViewModel @Inject constructor(
     private val repo: ChatRepository
 ) : ViewModel() {
-    private val _state = MutableStateFlow<ChatState>(ChatState.Success(emptyList()))
+    private val _state = MutableStateFlow<ChatState>(ChatState.Loading)
     val state: StateFlow<ChatState> = _state.asStateFlow()
 
     init {
@@ -57,9 +57,10 @@ class ChatViewModel @Inject constructor(
 
     private fun addMessage(message: Message) {
         _state.update { state ->
-            if (state is ChatState.Success) {
-                state.copy(messages = state.messages + message)
-            } else state
+            when (state) {
+                is ChatState.Success -> state.copy(messages = listOf(message) + state.messages)
+                else -> state
+            }
         }
     }
 }

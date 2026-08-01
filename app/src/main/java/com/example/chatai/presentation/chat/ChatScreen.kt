@@ -7,8 +7,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -16,59 +20,78 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.clearText
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.chatai.data.Message
 import com.example.chatai.data.Sender
 import formatTime
+import kotlinx.serialization.descriptors.PrimitiveKind
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatScreen(navController: NavController) {
     val viewModel: ChatViewModel = hiltViewModel()
-    val chatState by viewModel.state.collectAsState(remember { ChatState.Loading })
+    val chatState by viewModel.state.collectAsState()
 
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Chat") })
+            TopAppBar(
+                title = { Text("Chat") },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.AutoMirrored.Outlined.ArrowBack, null)
+                    }
+                }
+            )
         },
         modifier = Modifier
             .fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background
     ) { paddingValues ->
-        when (chatState) {
+        when (val state = chatState) {
             is ChatState.Loading -> LoadingScreen(
                 paddingValues = paddingValues
             )
 
-            is ChatState.Success -> {
-                val successState = chatState as ChatState.Success
-                MessagesScreen(viewModel, successState.messages, paddingValues = paddingValues)
-            }
+            is ChatState.Success -> MessagesScreen(
+                viewModel = viewModel,
+                previousMessages = state.messages,
+                paddingValues = paddingValues
+            )
 
-            is ChatState.Error -> { /* Обработка ошибки */
-            }
+            is ChatState.Error -> Error(state, paddingValues)
         }
 
     }
@@ -77,9 +100,33 @@ fun ChatScreen(navController: NavController) {
 
 @Composable
 fun LoadingScreen(paddingValues: PaddingValues) {
-    Text(
-        text = "LOADING"
-    )
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues)
+    ) {
+        Text(
+            text = "LOADING"
+        )
+    }
+}
+
+@Composable
+fun Error(
+    state: ChatState.Error,
+    paddingValues: PaddingValues
+) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues)
+    ) {
+        Text(
+            text = state.message
+        )
+    }
 }
 
 @Composable
@@ -88,22 +135,26 @@ fun MessagesScreen(
     previousMessages: List<Message>,
     paddingValues: PaddingValues
 ) {
+    val layoutDirection = LocalLayoutDirection.current
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(paddingValues)
+            .padding(
+                top = paddingValues.calculateTopPadding(),
+                start = paddingValues.calculateStartPadding(layoutDirection),
+                end = paddingValues.calculateEndPadding(layoutDirection)
+            )
+            .padding()
     ) {
         Messages(messages = previousMessages, modifier = Modifier.weight(1f))
 
-        MessageInput(onSendMessage = { text ->
-            if (text.isNotBlank()) {
-                viewModel.dispatch(
-                    ChatIntent.SendMessage(
-                        text = text
-                    )
-                )
+        MessageInput(
+            onSendMessage = { text ->
+                if (text.isNotBlank()) {
+                    viewModel.dispatch(ChatIntent.SendMessage(text))
+                }
             }
-        })
+        )
     }
 }
 
@@ -112,14 +163,10 @@ fun MessagesScreen(
 fun Messages(messages: List<Message>, modifier: Modifier) {
     val listState = rememberLazyListState()
 
-    LaunchedEffect(messages.size) {
-        if (messages.isNotEmpty()) {
-            listState.animateScrollToItem(messages.lastIndex)
-        }
-    }
 
     LazyColumn(
         state = listState,
+        reverseLayout = true,
         modifier = modifier
     ) {
         items(messages) { message ->
@@ -129,20 +176,23 @@ fun Messages(messages: List<Message>, modifier: Modifier) {
 }
 
 @Composable
-fun MessageInput(onSendMessage: (String) -> Unit) {
-    var text by remember { mutableStateOf("") }
+fun MessageInput(
+    onSendMessage: (String) -> Unit
+) {
+    val fieldState = remember { TextFieldState() }
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surface)
-            .padding(8.dp),
+            .padding(8.dp)
+            .imePadding()
+            .navigationBarsPadding(),
         verticalAlignment = Alignment.CenterVertically
     ) {
 
         OutlinedTextField(
-            value = text,
-            onValueChange = { text = it },
+            state = fieldState,
             placeholder = { Text("Message...") },
             modifier = Modifier.weight(1f),
             shape = RoundedCornerShape(24.dp)
@@ -152,10 +202,10 @@ fun MessageInput(onSendMessage: (String) -> Unit) {
 
         IconButton(
             onClick = {
-                onSendMessage(text)
-                text = ""
+                onSendMessage(fieldState.text.toString())
+                fieldState.clearText()
             },
-            enabled = text.isNotBlank(),
+            enabled = fieldState.text.isNotBlank(),
             modifier = Modifier
                 .background(
                     MaterialTheme.colorScheme.primary,
@@ -163,7 +213,7 @@ fun MessageInput(onSendMessage: (String) -> Unit) {
                 )
         ) {
             Icon(
-                imageVector = Icons.Filled.Send,
+                imageVector = Icons.AutoMirrored.Filled.Send,
                 contentDescription = "Send",
                 tint = MaterialTheme.colorScheme.onPrimary
             )
@@ -173,40 +223,100 @@ fun MessageInput(onSendMessage: (String) -> Unit) {
 
 @Composable
 fun MessageItem(message: Message) {
+    val density = LocalDensity.current
+    var textLayout by remember { mutableStateOf<TextLayoutResult?>(null) }
+    var containerSize by remember { mutableStateOf(IntSize.Zero) }
+    var timeSize by remember { mutableStateOf(IntSize.Zero) }
+
+    val isInline by remember {
+        derivedStateOf {
+            val textLayout = textLayout
+
+            when {
+                textLayout == null -> false
+                timeSize == IntSize.Zero -> false
+                containerSize == IntSize.Zero -> false
+                textLayout.size.width < containerSize.width / 2 -> true
+                else -> false
+            }
+        }
+    }
+
+    val isFreeSpace by remember {
+        derivedStateOf {
+            val textLayout = textLayout
+
+            when {
+                textLayout == null -> false
+                timeSize == IntSize.Zero -> false
+                containerSize == IntSize.Zero -> false
+                textLayout.lineCount > 1 -> {
+                    val lastX = textLayout.getLineRight(textLayout.lineCount - 1)
+                    val freeSpace = textLayout.size.width - lastX
+                    freeSpace > timeSize.width
+                }
+
+                else -> false
+            }
+        }
+    }
+
+    val arrangement: Arrangement.Vertical by remember {
+        derivedStateOf {
+            when {
+                isInline || isFreeSpace -> Arrangement.spacedBy(density.run { -timeSize.height.toDp() })
+
+                else -> Arrangement.Top
+            }
+        }
+    }
+
+    val textPadding by remember {
+        derivedStateOf {
+            when (isInline) {
+                true -> density.run { timeSize.width.toDp() } + 4.dp
+                else -> 0.dp
+            }
+        }
+    }
+
     Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = if (message.sender == Sender.USER)
-            Arrangement.End else Arrangement.Start
+        modifier = Modifier
+            .fillMaxWidth()
+            .onSizeChanged { containerSize = it },
+        horizontalArrangement = when (message.sender) {
+            Sender.USER -> Arrangement.End
+            Sender.ASSISTANT -> Arrangement.Start
+        }
     ) {
-        Box(
+        Surface(
+            color = when (message.sender) {
+                Sender.USER -> MaterialTheme.colorScheme.primary
+                Sender.ASSISTANT -> MaterialTheme.colorScheme.surfaceVariant
+            },
+            shape = MaterialTheme.shapes.large,
             modifier = Modifier
                 .padding(horizontal = 8.dp, vertical = 4.dp)
-                .background(
-                    color = if (message.sender == Sender.USER)
-                        MaterialTheme.colorScheme.primary
-                    else
-                        MaterialTheme.colorScheme.surfaceVariant,
-                    shape = RoundedCornerShape(16.dp)
-                )
-                .padding(horizontal = 12.dp, vertical = 8.dp)
+
         ) {
-            Column {
+            Column(
+                verticalArrangement = arrangement,
+                modifier = Modifier
+                    .padding(horizontal = 12.dp, vertical = 8.dp)
+            ) {
                 Text(
                     text = message.text,
-                    color = if (message.sender == Sender.USER)
-                        MaterialTheme.colorScheme.onPrimary
-                    else
-                        MaterialTheme.colorScheme.onSurface
+                    onTextLayout = { textLayout = it },
+                    modifier = Modifier.padding(end = textPadding)
                 )
 
                 Text(
                     text = formatTime(message.timestamp),
-                    modifier = Modifier.align(Alignment.End),
+                    modifier = Modifier
+                        .onSizeChanged { timeSize = it }
+                        .align(Alignment.End)
+                        .alpha(0.7f),
                     style = MaterialTheme.typography.labelSmall,
-                    color = if (message.sender == Sender.USER)
-                        MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f)
-                    else
-                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                 )
             }
         }
