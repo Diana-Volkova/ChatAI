@@ -14,6 +14,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -22,13 +23,31 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.chatai.presentation.Screen
 
 @Composable
 fun SignInScreen(navController: NavController) {
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
+    val viewModel: LogInViewModel = hiltViewModel()
+
+    LaunchedEffect(Unit) {
+        viewModel.effects.collect { effect ->
+            when (effect) {
+                LogInEffect.NavigateToHome -> {
+                    navController.navigate(Screen.HomeScreen) {
+                        popUpTo(Screen.LogInScreen) {
+                            inclusive = true
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -73,7 +92,7 @@ fun SignInScreen(navController: NavController) {
 
         Button(
             onClick = {
-                // TODO: Авторизация
+                viewModel.dispatch(LogInIntent.LogIn(email, password))
             },
             modifier = Modifier.fillMaxWidth()
         ) {

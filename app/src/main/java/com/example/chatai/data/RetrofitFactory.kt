@@ -9,37 +9,13 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 
 object RetrofitFactory {
 
-    private lateinit var preferences: SharedPreferences
-
-    fun init(sharedPreferences: SharedPreferences) {
-        preferences = sharedPreferences
-    }
-
-    private val interceptor = Interceptor { chain ->
-
-        val requestBuilder = chain.request()
-            .newBuilder()
-
-        val token = preferences.getString("access_token", null)
-
-        if (token != null) {
-            requestBuilder.addHeader(
-                "Authorization",
-                "Bearer $token"
-            )
-        }
-
-        chain.proceed(requestBuilder.build())
-    }
-
-    private val okHttpClient = OkHttpClient.Builder()
-        .addInterceptor(interceptor)
-        .build()
-
-    fun retrofit(baseUrl: String): Retrofit =
+    fun create(
+        baseUrl: String,
+        okHttpClient: OkHttpClient
+    ): Retrofit =
         Retrofit.Builder()
-            .client(okHttpClient)
             .baseUrl(baseUrl)
+            .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .addConverterFactory(ScalarsConverterFactory.create())
             .build()

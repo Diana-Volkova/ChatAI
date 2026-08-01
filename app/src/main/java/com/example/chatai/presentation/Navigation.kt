@@ -32,7 +32,7 @@ sealed class Screen {
 fun Navigation(
     navController: NavHostController
 ) {
-    NavHost(navController, startDestination = Screen.RegisterScreen) {
+    NavHost(navController, startDestination = Screen.LogInScreen) {
         composable<Screen.HomeScreen> {
             HomeScreen(navController = navController)
         }
