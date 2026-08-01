@@ -6,7 +6,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.chatai.presentation.register.RegisterScreen
 import com.example.chatai.presentation.settings.SettingsScreen
+import com.example.chatai.presentation.signin.SignInScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -18,6 +20,11 @@ sealed class Screen {
     object ChatScreen : Screen()
 
     @Serializable
+    object LogInScreen : Screen()
+
+    @Serializable
+    object RegisterScreen : Screen()
+    @Serializable
     object SettingsScreen : Screen()
 }
 
@@ -25,7 +32,7 @@ sealed class Screen {
 fun Navigation(
     navController: NavHostController
 ) {
-    NavHost(navController, startDestination = Screen.HomeScreen) {
+    NavHost(navController, startDestination = Screen.RegisterScreen) {
         composable<Screen.HomeScreen> {
             HomeScreen(navController = navController)
         }
@@ -34,6 +41,12 @@ fun Navigation(
         }
         composable<Screen.SettingsScreen> {
             SettingsScreen(navController)
+        }
+        composable<Screen.LogInScreen> {
+            SignInScreen(navController)
+        }
+        composable<Screen.RegisterScreen> {
+            RegisterScreen(navController)
         }
     }
 }

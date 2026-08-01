@@ -1,5 +1,6 @@
 package com.example.chatai.data
 
+import android.content.SharedPreferences
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -8,28 +9,38 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 
 object RetrofitFactory {
 
-    private var interceptor = Interceptor { chain ->
-        val newUrl = chain.request().url
-            .newBuilder()
-            .build()
+    private lateinit var preferences: SharedPreferences
 
-        val newRequest = chain.request().newBuilder()
-            .url(newUrl)
-            .build()
-
-        chain.proceed(newRequest)
+    fun init(sharedPreferences: SharedPreferences) {
+        preferences = sharedPreferences
     }
 
+    private val interceptor = Interceptor { chain ->
+
+        val requestBuilder = chain.request()
+            .newBuilder()
+
+        val token = preferences.getString("access_token", null)
+
+        if (token != null) {
+            requestBuilder.addHeader(
+                "Authorization",
+                "Bearer $token"
+            )
+        }
+
+        chain.proceed(requestBuilder.build())
+    }
 
     private val okHttpClient = OkHttpClient.Builder()
         .addInterceptor(interceptor)
         .build()
 
-    fun retrofit(baseUrl: String): Retrofit = Retrofit.Builder()
-        .client(okHttpClient)
-        .baseUrl(baseUrl)
-        .addConverterFactory(GsonConverterFactory.create())
-        .addConverterFactory(ScalarsConverterFactory.create())
-        //.addCallAdapterFactory(CoroutineCallAdapterFactory())
-        .build()
+    fun retrofit(baseUrl: String): Retrofit =
+        Retrofit.Builder()
+            .client(okHttpClient)
+            .baseUrl(baseUrl)
+            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .build()
 }
