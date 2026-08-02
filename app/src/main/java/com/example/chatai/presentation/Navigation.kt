@@ -1,8 +1,11 @@
 package com.example.chatai.presentation
 
+import android.content.Context
 import com.example.chatai.presentation.home.HomeScreen
 import com.example.chatai.presentation.chat.ChatScreen
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -32,7 +35,24 @@ sealed class Screen {
 fun Navigation(
     navController: NavHostController
 ) {
-    NavHost(navController, startDestination = Screen.LogInScreen) {
+    val context = LocalContext.current
+
+    val preferences = remember {
+        context.getSharedPreferences(
+            "app_preferences",
+            Context.MODE_PRIVATE
+        )
+    }
+
+    val startDestination = remember {
+        if (preferences.getString("access_token", null) != null) {
+            Screen.HomeScreen
+        } else {
+            Screen.LogInScreen
+        }
+    }
+
+    NavHost(navController, startDestination = startDestination) {
         composable<Screen.HomeScreen> {
             HomeScreen(navController = navController)
         }

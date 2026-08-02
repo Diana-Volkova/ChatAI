@@ -15,11 +15,11 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 class AuthInterceptor @Inject constructor(
-    private val preferences: SharedPreferences
+    private val sessionManager: SessionManager
 ) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
-        val token = preferences.getString("access_token", null)
+        val token = sessionManager.accessToken()
 
         val request = chain.request()
             .newBuilder()

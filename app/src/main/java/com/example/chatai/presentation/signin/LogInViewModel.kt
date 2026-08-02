@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chatai.data.ChatApi
 import com.example.chatai.data.LoginRequest
+import com.example.chatai.data.SessionManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -12,7 +13,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LogInViewModel @Inject constructor(
-    val api: ChatApi
+    val api: ChatApi,
+    private val sessionManager: SessionManager
 ) : ViewModel() {
     private val _effects = MutableSharedFlow<LogInEffect>(
         extraBufferCapacity = 1
@@ -31,11 +33,25 @@ class LogInViewModel @Inject constructor(
     fun logIn(loginRequest: LoginRequest) {
         viewModelScope.launch {
             try {
-                api.login(loginRequest)
+                val response = api.login(loginRequest)
 
-                _effects.emit(LogInEffect.NavigateToHome)
+                if (response.isSuccessful) {
+
+                    val body = response.body() ?: return@launch
+
+                    sessionManager.saveTokens(
+                        accessToken = body.access_token,
+                        refreshToken = body.refresh_token
+                    )
+
+                    _effects.emit(LogInEffect.NavigateToHome)
+
+                } else {
+                    // показать ошибку логина
+                }
+
             } catch (e: Exception) {
-                // обновить state с ошибкой
+                // показать ошибку сети
             }
         }
     }

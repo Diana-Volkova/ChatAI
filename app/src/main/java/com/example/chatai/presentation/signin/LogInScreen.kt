@@ -103,7 +103,7 @@ fun SignInScreen(navController: NavController) {
 
         TextButton(
             onClick = {
-                // TODO: Экран регистрации
+                navController.navigate(Screen.RegisterScreen)
             },
             modifier = Modifier.fillMaxWidth()
         ) {
