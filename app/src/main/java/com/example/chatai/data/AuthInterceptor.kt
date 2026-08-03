@@ -1,18 +1,9 @@
 package com.example.chatai.data
 
-import android.content.Context
-import android.content.SharedPreferences
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
+import android.util.Log
 import okhttp3.Interceptor
-import okhttp3.OkHttpClient
 import okhttp3.Response
-import retrofit2.Retrofit
 import javax.inject.Inject
-import javax.inject.Singleton
 
 class AuthInterceptor @Inject constructor(
     private val sessionManager: SessionManager
@@ -41,6 +32,11 @@ class AuthInterceptor @Inject constructor(
 
                 }
                 .build()
+
+        Log.d(
+            "HTTP",
+            "request ${chain.request().url}"
+        )
 
 
         return chain.proceed(request)

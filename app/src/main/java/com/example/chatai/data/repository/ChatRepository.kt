@@ -12,18 +12,36 @@ class ChatRepository(
     private val api: ChatApi,
     private val dao: MessageDao
 ) {
-
     suspend fun loadHistory(): List<Message> {
         return dao.getAll().map { it.toDomain() }
     }
 
-    suspend fun sendMessage(message: Message): Message {
-        dao.insert(message.toEntity())
+    suspend fun sendMessage(
+        message: Message
+    ): Message {
+        dao.insert(
+            message.toEntity()
+        )
 
-        val response = api.sendMsg(message.toDto())
+        val response =
+            api.sendMsg(
+                message.toDto()
+            )
 
-        val body = response.body()
-            ?: throw IllegalStateException("Empty response")
+        if (!response.isSuccessful) {
+
+            throw IllegalStateException(
+                "HTTP ${response.code()}: ${
+                    response.errorBody()?.string()
+                }"
+            )
+        }
+
+        val body =
+            response.body()
+                ?: throw IllegalStateException(
+                    "Empty response"
+                )
 
         val assistantMessage = Message(
             id = 0,
@@ -32,8 +50,9 @@ class ChatRepository(
             timestamp = body.timestamp
         )
 
-        dao.insert(assistantMessage.toEntity())
-
+        dao.insert(
+            assistantMessage.toEntity()
+        )
         return assistantMessage
     }
 

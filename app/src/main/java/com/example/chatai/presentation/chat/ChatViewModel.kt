@@ -1,5 +1,6 @@
 package com.example.chatai.presentation.chat
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chatai.data.Message
@@ -50,6 +51,11 @@ class ChatViewModel @Inject constructor(
                 val response = repo.sendMessage(userMessage)
                 addMessage(response)
             } catch (e: Exception) {
+                Log.e(
+                    "CHAT_ERROR",
+                    "error",
+                    e
+                )
                 _state.value = ChatState.Error(e.message ?: "error")
             }
         }
