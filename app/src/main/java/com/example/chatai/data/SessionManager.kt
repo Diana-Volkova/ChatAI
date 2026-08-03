@@ -18,10 +18,36 @@ class SessionManager @Inject constructor(
         }
     }
 
+
     fun accessToken(): String? =
-        preferences.getString("access_token", null)
+        preferences.getString(
+            "access_token",
+            null
+        )
+
+
+    fun refreshToken(): String? =
+        preferences.getString(
+            "refresh_token",
+            null
+        )
+
+
+    fun saveAccessToken(
+        token: String
+    ) {
+        preferences.edit {
+            putString(
+                "access_token",
+                token
+            )
+        }
+    }
+
 
     fun clear() {
-        preferences.edit { clear() }
+        preferences.edit {
+            clear()
+        }
     }
 }

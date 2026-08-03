@@ -11,7 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.chatai.presentation.register.RegisterScreen
 import com.example.chatai.presentation.settings.SettingsScreen
-import com.example.chatai.presentation.signin.SignInScreen
+import com.example.chatai.presentation.signin.LogInScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -63,7 +63,7 @@ fun Navigation(
             SettingsScreen(navController)
         }
         composable<Screen.LogInScreen> {
-            SignInScreen(navController)
+            LogInScreen(navController)
         }
         composable<Screen.RegisterScreen> {
             RegisterScreen(navController)

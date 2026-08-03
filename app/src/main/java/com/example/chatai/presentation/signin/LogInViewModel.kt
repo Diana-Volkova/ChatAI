@@ -7,51 +7,124 @@ import com.example.chatai.data.LoginRequest
 import com.example.chatai.data.SessionManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import java.net.SocketTimeoutException
 import javax.inject.Inject
 
 @HiltViewModel
 class LogInViewModel @Inject constructor(
-    val api: ChatApi,
+    private val api: ChatApi,
     private val sessionManager: SessionManager
 ) : ViewModel() {
-    private val _effects = MutableSharedFlow<LogInEffect>(
-        extraBufferCapacity = 1
-    )
 
-    val effects = _effects.asSharedFlow()
+
+    private val _effects =
+        MutableSharedFlow<LogInEffect>(
+            extraBufferCapacity = 1
+        )
+
+    val effects =
+        _effects.asSharedFlow()
+
 
     fun dispatch(intent: LogInIntent) {
+
         when (intent) {
+
             is LogInIntent.LogIn -> {
-                logIn(LoginRequest(email = intent.email, password = intent.password))
+
+                logIn(
+                    LoginRequest(
+                        email = intent.email,
+                        password = intent.password
+                    )
+                )
             }
         }
     }
 
-    fun logIn(loginRequest: LoginRequest) {
+
+    private fun logIn(
+        loginRequest: LoginRequest
+    ) {
+
         viewModelScope.launch {
+
             try {
-                val response = api.login(loginRequest)
+
+                val response =
+                    api.login(loginRequest)
+
 
                 if (response.isSuccessful) {
 
-                    val body = response.body() ?: return@launch
+
+                    val body =
+                        response.body()
+                            ?: return@launch
+
 
                     sessionManager.saveTokens(
-                        accessToken = body.access_token,
-                        refreshToken = body.refresh_token
+                        accessToken =
+                            body.access_token,
+
+                        refreshToken =
+                            body.refresh_token
                     )
 
-                    _effects.emit(LogInEffect.NavigateToHome)
+
+                    _effects.emit(
+                        LogInEffect.NavigateToHome
+                    )
+
 
                 } else {
-                    // показать ошибку логина
+
+
+                    val message =
+                        when (response.code()) {
+
+                            401 ->
+                                "Неверный email или пароль"
+
+                            404 ->
+                                "Сервер недоступен"
+
+                            500 ->
+                                "Ошибка сервера"
+
+                            else ->
+                                "Ошибка авторизации"
+                        }
+
+
+                    _effects.emit(
+                        LogInEffect.Error(message)
+                    )
                 }
 
+
+            } catch (e: SocketTimeoutException) {
+
+                _effects.emit(
+                    LogInEffect.Error(
+                        "Нет подключения к интернету"
+                    )
+                )
+
+
             } catch (e: Exception) {
-                // показать ошибку сети
+
+
+                _effects.emit(
+                    LogInEffect.Error(
+                        e.localizedMessage
+                            ?: "Неизвестная ошибка"
+                    )
+                )
             }
         }
     }

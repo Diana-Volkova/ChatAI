@@ -10,10 +10,12 @@ interface ChatApi {
         @Body request: RegisterRequest
     ): Response<Unit>
 
+
     @POST("auth/login")
     suspend fun login(
         @Body request: LoginRequest
     ): Response<TokenResponse>
+
 
     @POST("chat")
     suspend fun sendMsg(
