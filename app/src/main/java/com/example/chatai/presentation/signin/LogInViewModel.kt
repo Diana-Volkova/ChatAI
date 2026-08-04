@@ -7,8 +7,6 @@ import com.example.chatai.data.LoginRequest
 import com.example.chatai.data.SessionManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import java.net.SocketTimeoutException
@@ -20,22 +18,16 @@ class LogInViewModel @Inject constructor(
     private val sessionManager: SessionManager
 ) : ViewModel() {
 
-
     private val _effects =
         MutableSharedFlow<LogInEffect>(
             extraBufferCapacity = 1
         )
 
-    val effects =
-        _effects.asSharedFlow()
-
+    val effects = _effects.asSharedFlow()
 
     fun dispatch(intent: LogInIntent) {
-
         when (intent) {
-
             is LogInIntent.LogIn -> {
-
                 logIn(
                     LoginRequest(
                         email = intent.email,
@@ -46,26 +38,19 @@ class LogInViewModel @Inject constructor(
         }
     }
 
-
     private fun logIn(
         loginRequest: LoginRequest
     ) {
-
         viewModelScope.launch {
-
             try {
-
                 val response =
                     api.login(loginRequest)
 
-
                 if (response.isSuccessful) {
-
 
                     val body =
                         response.body()
                             ?: return@launch
-
 
                     sessionManager.saveTokens(
                         accessToken =
@@ -75,14 +60,11 @@ class LogInViewModel @Inject constructor(
                             body.refresh_token
                     )
 
-
                     _effects.emit(
                         LogInEffect.NavigateToHome
                     )
 
-
                 } else {
-
 
                     val message =
                         when (response.code()) {
@@ -100,25 +82,19 @@ class LogInViewModel @Inject constructor(
                                 "Ошибка авторизации"
                         }
 
-
                     _effects.emit(
                         LogInEffect.Error(message)
                     )
                 }
 
-
             } catch (e: SocketTimeoutException) {
-
                 _effects.emit(
                     LogInEffect.Error(
                         "Нет подключения к интернету"
                     )
                 )
 
-
             } catch (e: Exception) {
-
-
                 _effects.emit(
                     LogInEffect.Error(
                         e.localizedMessage
