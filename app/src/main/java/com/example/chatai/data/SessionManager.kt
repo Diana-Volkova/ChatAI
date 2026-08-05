@@ -7,7 +7,6 @@ import androidx.core.content.edit
 class SessionManager @Inject constructor(
     private val preferences: SharedPreferences
 ) {
-
     fun saveTokens(
         accessToken: String,
         refreshToken: String
@@ -18,20 +17,17 @@ class SessionManager @Inject constructor(
         }
     }
 
-
     fun accessToken(): String? =
         preferences.getString(
             "access_token",
             null
         )
 
-
     fun refreshToken(): String? =
         preferences.getString(
             "refresh_token",
             null
         )
-
 
     fun saveAccessToken(
         token: String
@@ -43,7 +39,6 @@ class SessionManager @Inject constructor(
             )
         }
     }
-
 
     fun clear() {
         preferences.edit {

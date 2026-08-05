@@ -1,4 +1,4 @@
-package com.example.chatai.presentation.signin
+package com.example.chatai.presentation.login
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

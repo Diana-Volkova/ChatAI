@@ -1,4 +1,4 @@
-package com.example.chatai.presentation.signin
+package com.example.chatai.presentation.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -47,17 +47,11 @@ class LogInViewModel @Inject constructor(
                     api.login(loginRequest)
 
                 if (response.isSuccessful) {
-
-                    val body =
-                        response.body()
-                            ?: return@launch
+                    val body = response.body() ?: return@launch
 
                     sessionManager.saveTokens(
-                        accessToken =
-                            body.access_token,
-
-                        refreshToken =
-                            body.refresh_token
+                        accessToken = body.access_token,
+                        refreshToken = body.refresh_token
                     )
 
                     _effects.emit(
@@ -65,40 +59,25 @@ class LogInViewModel @Inject constructor(
                     )
 
                 } else {
+                    val message = when (response.code()) {
+                        401 -> "Неверный email или пароль"
+                        404 -> "Сервер недоступен"
+                        500 -> "Ошибка сервера"
+                        else -> "Ошибка авторизации"
+                    }
 
-                    val message =
-                        when (response.code()) {
-
-                            401 ->
-                                "Неверный email или пароль"
-
-                            404 ->
-                                "Сервер недоступен"
-
-                            500 ->
-                                "Ошибка сервера"
-
-                            else ->
-                                "Ошибка авторизации"
-                        }
-
-                    _effects.emit(
-                        LogInEffect.Error(message)
-                    )
+                    _effects.emit(LogInEffect.Error(message))
                 }
 
             } catch (e: SocketTimeoutException) {
                 _effects.emit(
-                    LogInEffect.Error(
-                        "Нет подключения к интернету"
-                    )
+                    LogInEffect.Error("Нет подключения к интернету")
                 )
 
             } catch (e: Exception) {
                 _effects.emit(
                     LogInEffect.Error(
-                        e.localizedMessage
-                            ?: "Неизвестная ошибка"
+                        e.localizedMessage ?: "Неизвестная ошибка"
                     )
                 )
             }

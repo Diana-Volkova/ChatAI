@@ -12,24 +12,17 @@ class AuthInterceptor @Inject constructor(
     override fun intercept(
         chain: Interceptor.Chain
     ): Response {
-
-        val token =
-            sessionManager.accessToken()
-
-
+        val token = sessionManager.accessToken()
         val request =
             chain.request()
                 .newBuilder()
                 .apply {
-
                     if (token != null) {
-
                         addHeader(
                             "Authorization",
                             "Bearer $token"
                         )
                     }
-
                 }
                 .build()
 
@@ -37,7 +30,6 @@ class AuthInterceptor @Inject constructor(
             "HTTP",
             "request ${chain.request().url}"
         )
-
 
         return chain.proceed(request)
     }

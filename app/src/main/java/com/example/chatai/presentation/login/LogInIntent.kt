@@ -1,4 +1,4 @@
-package com.example.chatai.presentation.signin
+package com.example.chatai.presentation.login
 
 sealed class LogInIntent {
     data class LogIn(

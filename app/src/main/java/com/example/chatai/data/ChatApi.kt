@@ -16,6 +16,10 @@ interface ChatApi {
         @Body request: LoginRequest
     ): Response<TokenResponse>
 
+    @POST("auth/logout")
+    suspend fun logout(
+        @Body request: RefreshRequest
+    ): Response<Unit>
 
     @POST("chat")
     suspend fun sendMsg(
