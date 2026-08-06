@@ -17,6 +17,7 @@ class ChatRepository(
     }
 
     suspend fun sendMessage(
+        chatId: Int,
         message: Message
     ): Message {
         dao.insert(
@@ -25,6 +26,7 @@ class ChatRepository(
 
         val response =
             api.sendMsg(
+                chatId = chatId,
                 message.toDto()
             )
 

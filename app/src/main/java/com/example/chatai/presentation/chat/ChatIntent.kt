@@ -4,6 +4,7 @@ import com.example.chatai.data.Message
 
 sealed class ChatIntent {
     data class SendMessage(
+        val chatId: Int,
         val text: String
     ) : ChatIntent()
 }

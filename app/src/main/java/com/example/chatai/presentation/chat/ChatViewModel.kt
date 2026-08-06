@@ -31,12 +31,12 @@ class ChatViewModel @Inject constructor(
     fun dispatch(intent: ChatIntent) {
         when (intent) {
             is ChatIntent.SendMessage -> {
-                sendMessage(intent.text)
+                sendMessage(intent.chatId, intent.text)
             }
         }
     }
 
-    fun sendMessage(text: String) {
+    fun sendMessage(chatId: Int, text: String) {
         val userMessage = Message(
             id = 0,
             text = text,
@@ -48,7 +48,7 @@ class ChatViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-                val response = repo.sendMessage(userMessage)
+                val response = repo.sendMessage(chatId, userMessage)
                 addMessage(response)
             } catch (e: Exception) {
                 Log.e(

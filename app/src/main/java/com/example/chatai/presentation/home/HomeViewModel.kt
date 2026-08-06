@@ -3,6 +3,7 @@ package com.example.chatai.presentation.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chatai.data.ChatApi
+import com.example.chatai.data.ChatDto
 import com.example.chatai.data.RefreshRequest
 import com.example.chatai.data.SessionManager
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,10 +19,25 @@ class HomeViewModel @Inject constructor(
     private val api: ChatApi,
     private val sessionManager: SessionManager
 ) : ViewModel() {
+    private val _chats = MutableStateFlow<List<ChatDto>>(emptyList())
+    val chats = _chats.asStateFlow()
     private val _effects = MutableSharedFlow<AuthEffect>()
     val effects = _effects.asSharedFlow()
     private val _error = MutableStateFlow<String?>(null)
     val error = _error.asStateFlow()
+
+    init {
+        loadChats()
+    }
+
+    private fun loadChats() {
+        viewModelScope.launch {
+            val response = api.getChats()
+            if(response.isSuccessful){
+                _chats.value = response.body() ?: emptyList()
+            }
+        }
+    }
 
     fun logout() {
         viewModelScope.launch {

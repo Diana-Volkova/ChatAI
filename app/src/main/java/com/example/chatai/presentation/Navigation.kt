@@ -9,6 +9,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import com.example.chatai.presentation.register.RegisterScreen
 import com.example.chatai.presentation.settings.SettingsScreen
 import com.example.chatai.presentation.login.LogInScreen
@@ -20,13 +21,16 @@ sealed class Screen {
     object HomeScreen : Screen()
 
     @Serializable
-    object ChatScreen : Screen()
+    data class ChatScreen(
+        val chatId: Int
+    ) : Screen()
 
     @Serializable
     object LogInScreen : Screen()
 
     @Serializable
     object RegisterScreen : Screen()
+
     @Serializable
     object SettingsScreen : Screen()
 }
@@ -56,8 +60,12 @@ fun Navigation(
         composable<Screen.HomeScreen> {
             HomeScreen(navController = navController)
         }
-        composable<Screen.ChatScreen> {
-            ChatScreen(navController = navController)
+        composable<Screen.ChatScreen> { backStackEntry ->
+            val args = backStackEntry.toRoute<Screen.ChatScreen>()
+            ChatScreen(
+                navController = navController,
+                chatId = args.chatId
+            )
         }
         composable<Screen.SettingsScreen> {
             SettingsScreen(navController)

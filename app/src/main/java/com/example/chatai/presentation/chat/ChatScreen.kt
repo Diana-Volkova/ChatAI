@@ -59,7 +59,7 @@ import kotlinx.serialization.descriptors.PrimitiveKind
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChatScreen(navController: NavController) {
+fun ChatScreen(navController: NavController, chatId: Int) {
     val viewModel: ChatViewModel = hiltViewModel()
     val chatState by viewModel.state.collectAsState()
 
@@ -85,6 +85,7 @@ fun ChatScreen(navController: NavController) {
             )
 
             is ChatState.Success -> MessagesScreen(
+                chatId = chatId,
                 viewModel = viewModel,
                 previousMessages = state.messages,
                 paddingValues = paddingValues
@@ -105,6 +106,8 @@ fun LoadingScreen(paddingValues: PaddingValues) {
             .fillMaxSize()
             .padding(paddingValues)
     ) {
+
+        //todo заменить на красивую анимацию загрузки
         Text(
             text = "LOADING"
         )
@@ -130,6 +133,7 @@ fun Error(
 
 @Composable
 fun MessagesScreen(
+    chatId: Int,
     viewModel: ChatViewModel,
     previousMessages: List<Message>,
     paddingValues: PaddingValues
@@ -150,7 +154,7 @@ fun MessagesScreen(
         MessageInput(
             onSendMessage = { text ->
                 if (text.isNotBlank()) {
-                    viewModel.dispatch(ChatIntent.SendMessage(text))
+                    viewModel.dispatch(ChatIntent.SendMessage(chatId, text))
                 }
             }
         )
@@ -161,8 +165,6 @@ fun MessagesScreen(
 @Composable
 fun Messages(messages: List<Message>, modifier: Modifier) {
     val listState = rememberLazyListState()
-
-
     LazyColumn(
         state = listState,
         reverseLayout = true,

@@ -2,7 +2,9 @@ package com.example.chatai.data
 
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface ChatApi {
     @POST("auth/register")
@@ -20,9 +22,12 @@ interface ChatApi {
     suspend fun logout(
         @Body request: RefreshRequest
     ): Response<Unit>
-
-    @POST("chat")
+    @POST("chats/{chat_id}/messages")
     suspend fun sendMsg(
+        @Path("chat_id") chatId: Int,
         @Body msg: MessageDto
     ): Response<MessageDto>
+
+    @GET("chats")
+    suspend fun getChats(): Response<List<ChatDto>>
 }
