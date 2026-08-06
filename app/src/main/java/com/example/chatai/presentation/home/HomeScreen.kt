@@ -118,7 +118,7 @@ fun Home(
                             }
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
-                            Text(text = chat.name)
+                            Text(text = chat.title)
                             Text(text = chat.model)
                         }
                     }

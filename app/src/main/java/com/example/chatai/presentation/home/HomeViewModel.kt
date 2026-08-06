@@ -1,5 +1,6 @@
 package com.example.chatai.presentation.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chatai.data.ChatApi
@@ -32,9 +33,23 @@ class HomeViewModel @Inject constructor(
 
     private fun loadChats() {
         viewModelScope.launch {
-            val response = api.getChats()
-            if(response.isSuccessful){
-                _chats.value = response.body() ?: emptyList()
+            try {
+                val response = api.getChats()
+
+                Log.d("Chats", "code = ${response.code()}")
+                Log.d("Chats", "message = ${response.message()}")
+
+                if (response.isSuccessful) {
+                    Log.d("Chats", "body = ${response.body()}")
+                    _chats.value = response.body() ?: emptyList()
+                } else {
+                    Log.e(
+                        "Chats",
+                        response.errorBody()?.string() ?: "no error body"
+                    )
+                }
+            } catch (e: Exception) {
+                Log.e("Chats", "exception", e)
             }
         }
     }
