@@ -1,4 +1,8 @@
 package com.example.chatai.presentation.register
 
-interface RegisterIntent {
+sealed class RegisterIntent {
+    data class Register(
+        val email: String,
+        val password: String
+    ) : RegisterIntent()
 }

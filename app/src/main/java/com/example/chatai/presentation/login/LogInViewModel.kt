@@ -43,8 +43,7 @@ class LogInViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             try {
-                val response =
-                    api.login(loginRequest)
+                val response = api.login(loginRequest)
 
                 if (response.isSuccessful) {
                     val body = response.body() ?: return@launch

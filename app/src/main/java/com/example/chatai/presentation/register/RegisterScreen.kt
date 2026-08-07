@@ -13,9 +13,11 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,15 +26,41 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.chatai.presentation.Screen
 
 @Composable
 fun RegisterScreen(navController: NavController) {
+
+    val viewModel: RegisterViewModel = hiltViewModel()
 
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
+
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(Unit) {
+        viewModel.effects.collect { effect ->
+            when (effect) {
+                RegisterEffect.NavigateToLogIn -> {
+                    navController.navigate(Screen.LogInScreen) {
+                        popUpTo(Screen.RegisterScreen) {
+                            inclusive = true
+                        }
+                    }
+                }
+
+                is RegisterEffect.Error -> {
+                    snackbarHostState.showSnackbar(
+                        effect.message
+                    )
+                }
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -102,7 +130,7 @@ fun RegisterScreen(navController: NavController) {
 
         Button(
             onClick = {
-                // TODO: Регистрация
+                viewModel.dispatch(RegisterIntent.Register(email, password))
             },
             modifier = Modifier.fillMaxWidth()
         ) {
