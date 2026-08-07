@@ -21,10 +21,15 @@ class ChatViewModel @Inject constructor(
     private val _state = MutableStateFlow<ChatState>(ChatState.Loading)
     val state: StateFlow<ChatState> = _state.asStateFlow()
 
-    init {
+    fun loadHistory(chatId: Int) {
         viewModelScope.launch {
-            val history = repo.loadHistory()
-            _state.value = ChatState.Success(history)
+            try {
+                val history = repo.loadHistory(chatId)
+                _state.value = ChatState.Success(history)
+            } catch (e: Exception) {
+                Log.e("CHAT_ERROR", "load history error", e)
+                _state.value = ChatState.Error(e.message ?: "error")
+            }
         }
     }
 
@@ -39,6 +44,7 @@ class ChatViewModel @Inject constructor(
     fun sendMessage(chatId: Int, text: String) {
         val userMessage = Message(
             id = 0,
+            chatId = chatId,
             text = text,
             sender = Sender.USER,
             timestamp = System.currentTimeMillis()
@@ -51,11 +57,7 @@ class ChatViewModel @Inject constructor(
                 val response = repo.sendMessage(chatId, userMessage)
                 addMessage(response)
             } catch (e: Exception) {
-                Log.e(
-                    "CHAT_ERROR",
-                    "error",
-                    e
-                )
+                Log.e("CHAT_ERROR", "error", e)
                 _state.value = ChatState.Error(e.message ?: "error")
             }
         }

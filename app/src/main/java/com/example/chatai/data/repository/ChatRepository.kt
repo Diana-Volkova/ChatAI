@@ -12,26 +12,24 @@ class ChatRepository(
     private val api: ChatApi,
     private val dao: MessageDao
 ) {
-    suspend fun loadHistory(): List<Message> {
-        return dao.getAll().map { it.toDomain() }
+    suspend fun loadHistory(chatId: Int): List<Message> {
+        return dao.getByChatId(chatId).map { it.toDomain() }
     }
 
     suspend fun sendMessage(
         chatId: Int,
         message: Message
     ): Message {
-        dao.insert(
-            message.toEntity()
+        val userMessage = message.copy(chatId = chatId)
+
+        dao.insert(userMessage.toEntity())
+
+        val response = api.sendMsg(
+            chatId = chatId,
+            message.toDto()
         )
 
-        val response =
-            api.sendMsg(
-                chatId = chatId,
-                message.toDto()
-            )
-
         if (!response.isSuccessful) {
-
             throw IllegalStateException(
                 "HTTP ${response.code()}: ${
                     response.errorBody()?.string()
@@ -47,18 +45,18 @@ class ChatRepository(
 
         val assistantMessage = Message(
             id = 0,
+            chatId = chatId,
             text = body.text,
             sender = Sender.ASSISTANT,
             timestamp = body.timestamp
         )
 
-        dao.insert(
-            assistantMessage.toEntity()
-        )
+        dao.insert(assistantMessage.toEntity())
+
         return assistantMessage
     }
 
-    suspend fun clearHistory() {
-        dao.clear()
+    suspend fun clearHistory(chatId: Int) {
+        dao.clearChat(chatId)
     }
 }

@@ -35,6 +35,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -63,6 +64,9 @@ fun ChatScreen(navController: NavController, chatId: Int) {
     val viewModel: ChatViewModel = hiltViewModel()
     val chatState by viewModel.state.collectAsState()
 
+    LaunchedEffect(chatId) {
+        viewModel.loadHistory(chatId)
+    }
 
     Scaffold(
         topBar = {
@@ -83,19 +87,15 @@ fun ChatScreen(navController: NavController, chatId: Int) {
             is ChatState.Loading -> LoadingScreen(
                 paddingValues = paddingValues
             )
-
             is ChatState.Success -> MessagesScreen(
                 chatId = chatId,
                 viewModel = viewModel,
                 previousMessages = state.messages,
                 paddingValues = paddingValues
             )
-
             is ChatState.Error -> Error(state, paddingValues)
         }
-
     }
-
 }
 
 @Composable
@@ -167,7 +167,7 @@ fun Messages(messages: List<Message>, modifier: Modifier) {
     val listState = rememberLazyListState()
     LazyColumn(
         state = listState,
-        reverseLayout = true,
+        reverseLayout = false,
         modifier = modifier
     ) {
         items(messages) { message ->
