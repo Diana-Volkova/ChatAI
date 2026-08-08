@@ -56,7 +56,6 @@ import androidx.navigation.NavController
 import com.example.chatai.data.Message
 import com.example.chatai.data.Sender
 import formatTime
-import kotlinx.serialization.descriptors.PrimitiveKind
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -87,12 +86,14 @@ fun ChatScreen(navController: NavController, chatId: Int) {
             is ChatState.Loading -> LoadingScreen(
                 paddingValues = paddingValues
             )
+
             is ChatState.Success -> MessagesScreen(
                 chatId = chatId,
                 viewModel = viewModel,
                 previousMessages = state.messages,
                 paddingValues = paddingValues
             )
+
             is ChatState.Error -> Error(state, paddingValues)
         }
     }
