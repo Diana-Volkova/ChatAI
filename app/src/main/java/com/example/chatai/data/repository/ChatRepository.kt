@@ -59,4 +59,8 @@ class ChatRepository(
     suspend fun clearHistory(chatId: Int) {
         dao.clearChat(chatId)
     }
+
+    suspend fun clearAll() {
+        dao.clearAll()
+    }
 }

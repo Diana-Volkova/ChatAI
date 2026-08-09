@@ -5,20 +5,24 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chatai.data.ChatApi
 import com.example.chatai.data.ChatDto
+import com.example.chatai.data.DeleteAccountRequest
 import com.example.chatai.data.RefreshRequest
 import com.example.chatai.data.SessionManager
+import com.example.chatai.data.repository.ChatRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val api: ChatApi,
-    private val sessionManager: SessionManager
+    private val sessionManager: SessionManager,
+    private val repo: ChatRepository
 ) : ViewModel() {
     private val _chats = MutableStateFlow<List<ChatDto>>(emptyList())
     val chats = _chats.asStateFlow()
@@ -78,6 +82,37 @@ class HomeViewModel @Inject constructor(
                 }
             } catch (_: Exception) {
                 _error.value = "Не удалось связаться с сервером"
+            }
+        }
+    }
+
+    fun deleteAccount() {
+        viewModelScope.launch {
+            try {
+                val response = api.deleteAccount()
+                if (response.isSuccessful){
+                    sessionManager.clear()
+                    repo.clearAll()
+                    _effects.emit(AuthEffect.NavigateToLogin)
+                    return@launch
+                }
+                _error.value = when (response.code()) {
+                    400 -> "Некорректный запрос"
+                    401 -> "Сессия истекла. Войдите снова"
+                    403 -> "Недостаточно прав для удаления аккаунта"
+                    404 -> "Аккаунт не найден"
+                    409 -> "Не удалось удалить аккаунт"
+                    422 -> "Неверный пароль"
+                    429 -> "Слишком много попыток. Попробуйте позже"
+                    500 -> "Ошибка сервера. Попробуйте позже"
+                    502, 503, 504 -> "Сервер временно недоступен"
+                    else -> "Не удалось удалить аккаунт (${response.code()})"
+                }
+            } catch (e: IOException) {
+                _error.value = "Нет соединения с сервером"
+
+            } catch (e: Exception) {
+                _error.value = "Произошла непредвиденная ошибка"
             }
         }
     }

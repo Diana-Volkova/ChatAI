@@ -2,6 +2,7 @@ package com.example.chatai.data
 
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -22,6 +23,15 @@ interface ChatApi {
     suspend fun logout(
         @Body request: RefreshRequest
     ): Response<Unit>
+
+    //@DELETE("auth/account")
+    //suspend fun deleteAccount(
+    //    @Body request: DeleteAccountRequest
+    //): Response<DeleteAccountResponse>
+
+    @DELETE("auth/account")
+    suspend fun deleteAccount(): Response<Unit>
+
     @POST("chats/{chat_id}/messages")
     suspend fun sendMsg(
         @Path("chat_id") chatId: Int,

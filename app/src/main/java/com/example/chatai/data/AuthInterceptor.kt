@@ -12,6 +12,11 @@ class AuthInterceptor @Inject constructor(
     override fun intercept(
         chain: Interceptor.Chain
     ): Response {
+        Log.d(
+            "HTTP",
+            "INTERCEPTOR START ${chain.request().method} ${chain.request().url}"
+        )
+
         val token = sessionManager.accessToken()
         val request =
             chain.request()
@@ -28,7 +33,7 @@ class AuthInterceptor @Inject constructor(
 
         Log.d(
             "HTTP",
-            "request ${chain.request().url}"
+            "INTERCEPTOR PROCEED ${request.method} ${request.url}"
         )
 
         return chain.proceed(request)
