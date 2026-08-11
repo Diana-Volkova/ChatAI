@@ -2,11 +2,8 @@
 
 package com.example.chatai.presentation.home
 
-import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -18,32 +15,41 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import com.example.chatai.presentation.Screen
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.example.chatai.data.ChatDto
+import com.example.chatai.presentation.Screen
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController) {
-
-    val viewModel: HomeViewModel = hiltViewModel()
+fun HomeScreen(
+    navController: NavController,
+    viewModel: HomeViewModel = hiltViewModel()
+) {
+    val chats by viewModel.chats.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.effects.collect { effect ->
@@ -64,55 +70,58 @@ fun HomeScreen(navController: NavController) {
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
-                title = { Text("Home") },
+                title = {
+                    Text("Home")
+                },
                 actions = {
                     IconButton(
-                        onClick = { navController.navigate(Screen.SettingsScreen) }
+                        onClick = {
+                            navController.navigate(Screen.SettingsScreen)
+                        }
                     ) {
-                        Icon(Icons.Outlined.Settings, null)
+                        Icon(
+                            imageVector = Icons.Outlined.Settings,
+                            contentDescription = "Settings"
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.surface
                 )
             )
-        },
+        }
     ) { paddingValues ->
-        Box(
+
+        HomeContent(
+            chats = chats,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
-                .background(MaterialTheme.colorScheme.background)
-        ) {
-            Home(
-                chats = viewModel.chats.collectAsState().value,
-                paddingValues,
-                onChatClick = { chatId ->
-                    navController.navigate(
-                        Screen.ChatScreen(chatId)
-                    )
-                }, onLogout = {
-                    viewModel.logout()
-                },
-                onDeleteAcc = {
-                    viewModel.deleteAccount()
-                })
-        }
+                .padding(paddingValues),
+            onChatClick = { chatId ->
+                navController.navigate(
+                    Screen.ChatScreen(chatId)
+                )
+            },
+            onLogout = viewModel::logout,
+            onDeleteAccount = viewModel::deleteAccount
+        )
     }
 }
 
 @Composable
-fun Home(
+private fun HomeContent(
     chats: List<ChatDto>,
-    paddingValues: PaddingValues,
+    modifier: Modifier = Modifier,
     onChatClick: (Int) -> Unit,
     onLogout: () -> Unit,
-    onDeleteAcc: ()-> Unit
+    onDeleteAccount: () -> Unit
 ) {
+    var showDeleteDialog by remember {
+        mutableStateOf(false)
+    }
+
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(paddingValues)
+        modifier = modifier
     ) {
         Text(
             text = "Мои чаты",
@@ -124,6 +133,7 @@ fun Home(
                 bottom = 12.dp
             )
         )
+
         LazyColumn(
             modifier = Modifier.weight(1f),
             contentPadding = PaddingValues(
@@ -132,60 +142,130 @@ fun Home(
             ),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            items(chats) { chat ->
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            onChatClick(chat.id)
-                        },
-                    shape = MaterialTheme.shapes.large,
-                    elevation = CardDefaults.cardElevation(
-                        defaultElevation = 2.dp
-                    )
-                ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp)
-                    ) {
-                        Text(
-                            text = chat.title,
-                            style = MaterialTheme.typography.titleMedium
-                        )
+            items(
+                items = chats,
+                key = { chat -> chat.id }
+            ) { chat ->
 
-                        Spacer(modifier = Modifier.height(4.dp))
-
-                        Text(
-                            text = chat.model,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+                ChatItem(
+                    chat = chat,
+                    onClick = {
+                        onChatClick(chat.id)
                     }
-                }
+                )
             }
         }
 
-        Button(
-            onClick = onLogout,
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
                     horizontal = 16.dp,
                     vertical = 12.dp
-                )
+                ),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text("Logout")
-        }
+            Button(
+                onClick = onLogout,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Logout")
+            }
 
-        Button(
-            onClick = onDeleteAcc,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    horizontal = 16.dp,
-                    vertical = 12.dp
+            OutlinedButton(
+                onClick = {
+                    showDeleteDialog = true
+                },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.outlinedButtonColors(
+                    contentColor = MaterialTheme.colorScheme.error
                 )
-        ) {
-            Text("Delete account")
+            ) {
+                Text("Delete account")
+            }
         }
     }
+
+    if (showDeleteDialog) {
+        DeleteAccountDialog(
+            onDismiss = {
+                showDeleteDialog = false
+            },
+            onConfirm = {
+                showDeleteDialog = false
+                onDeleteAccount()
+            }
+        )
+    }
+}
+
+@Composable
+private fun ChatItem(
+    chat: ChatDto,
+    onClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
+        shape = MaterialTheme.shapes.large,
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 2.dp
+        )
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = chat.title,
+                style = MaterialTheme.typography.titleMedium
+            )
+
+            Spacer(
+                modifier = Modifier.height(4.dp)
+            )
+
+            Text(
+                text = chat.model,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
+}
+
+@Composable
+private fun DeleteAccountDialog(
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text("Удалить аккаунт?")
+        },
+        text = {
+            Text(
+                "Это действие нельзя отменить. " +
+                        "Все данные аккаунта будут удалены."
+            )
+        },
+        confirmButton = {
+            TextButton(
+                onClick = onConfirm,
+                colors = ButtonDefaults.textButtonColors(
+                    contentColor = MaterialTheme.colorScheme.error
+                )
+            ) {
+                Text("Удалить")
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = onDismiss
+            ) {
+                Text("Отмена")
+            }
+        }
+    )
 }

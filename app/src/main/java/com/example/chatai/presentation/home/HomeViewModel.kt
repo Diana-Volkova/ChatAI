@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chatai.data.ChatApi
 import com.example.chatai.data.ChatDto
-import com.example.chatai.data.DeleteAccountRequest
 import com.example.chatai.data.RefreshRequest
 import com.example.chatai.data.SessionManager
 import com.example.chatai.data.repository.ChatRepository

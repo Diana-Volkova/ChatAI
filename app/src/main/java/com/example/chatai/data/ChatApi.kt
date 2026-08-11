@@ -24,11 +24,6 @@ interface ChatApi {
         @Body request: RefreshRequest
     ): Response<Unit>
 
-    //@DELETE("auth/account")
-    //suspend fun deleteAccount(
-    //    @Body request: DeleteAccountRequest
-    //): Response<DeleteAccountResponse>
-
     @DELETE("auth/account")
     suspend fun deleteAccount(): Response<Unit>
 
