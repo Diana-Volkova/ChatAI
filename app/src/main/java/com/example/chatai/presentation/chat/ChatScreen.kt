@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
@@ -45,6 +47,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntSize
@@ -87,7 +90,7 @@ fun ChatScreen(
             )
         },
         modifier = Modifier.fillMaxSize(),
-        containerColor = MaterialTheme.colorScheme.background,
+        containerColor = MaterialTheme.colorScheme.background
     ) { paddingValues ->
         when (val state = chatState) {
             is ChatState.Loading -> {
@@ -178,10 +181,16 @@ fun MessagesScreen(
     paddingValues: PaddingValues,
     onSendMessage: (String) -> Unit,
 ) {
+    val layoutDirection = LocalLayoutDirection.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(paddingValues),
+            .padding(
+                top = paddingValues.calculateTopPadding(),
+                start = paddingValues.calculateStartPadding(layoutDirection),
+                end = paddingValues.calculateEndPadding(layoutDirection),
+            )
     ) {
         Messages(
             messages = messages,
@@ -200,16 +209,10 @@ fun Messages(
     modifier: Modifier = Modifier,
 ) {
     val listState = rememberLazyListState()
-    var initialized by remember { mutableStateOf(false) }
 
     LaunchedEffect(messages.size) {
-        if (messages.isEmpty()) return@LaunchedEffect
-
-        if (!initialized) {
+        if (messages.isNotEmpty()) {
             listState.scrollToItem(messages.lastIndex)
-            initialized = true
-        } else {
-            listState.animateScrollToItem(messages.lastIndex)
         }
     }
 
@@ -217,15 +220,11 @@ fun Messages(
         state = listState,
         modifier = modifier,
     ) {
-        items(
-            items = messages,
-            key = { it.id },
-        ) { message ->
+        items(messages) { message ->
             MessageItem(message)
         }
     }
 }
-
 @Composable
 fun MessageInput(
     onSendMessage: (String) -> Unit,
@@ -239,7 +238,8 @@ fun MessageInput(
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surface)
             .padding(8.dp)
-            .imePadding(),
+            .imePadding()
+            .navigationBarsPadding(),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
