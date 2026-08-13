@@ -1,8 +1,8 @@
-package com.example.chatai.presentation
+package com.example.chatai.presentation.navigation
 
 import android.content.Context
-import com.example.chatai.presentation.home.HomeScreen
-import com.example.chatai.presentation.chat.ChatScreen
+import com.example.chatai.presentation.ui.home.HomeScreen
+import com.example.chatai.presentation.ui.chat.ChatScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
@@ -10,30 +10,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import com.example.chatai.presentation.register.RegisterScreen
-import com.example.chatai.presentation.settings.SettingsScreen
-import com.example.chatai.presentation.login.LogInScreen
-import kotlinx.serialization.Serializable
+import com.example.chatai.presentation.ui.register.RegisterScreen
+import com.example.chatai.presentation.ui.settings.SettingsScreen
+import com.example.chatai.presentation.ui.login.LogInScreen
 
-@Serializable
-sealed class Screen {
-    @Serializable
-    object HomeScreen : Screen()
-
-    @Serializable
-    data class ChatScreen(
-        val chatId: Int
-    ) : Screen()
-
-    @Serializable
-    object LogInScreen : Screen()
-
-    @Serializable
-    object RegisterScreen : Screen()
-
-    @Serializable
-    object SettingsScreen : Screen()
-}
 
 @Composable
 fun Navigation(
@@ -58,6 +38,15 @@ fun Navigation(
 
     NavHost(navController, startDestination = startDestination) {
         composable<Screen.HomeScreen> {
+            // todo
+            // HomeScreen(
+            //    onChatClick = { chatId ->
+            //        navController.navigate(Screen.Chat(chatId))
+            //    },
+            //    onSettingsClick = {
+            //        navController.navigate(Screen.Settings)
+            //    },
+            //)
             HomeScreen(navController = navController)
         }
         composable<Screen.ChatScreen> { backStackEntry ->

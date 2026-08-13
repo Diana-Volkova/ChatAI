@@ -1,4 +1,4 @@
-package com.example.chatai.presentation.login
+package com.example.chatai.presentation.ui.login
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,7 +28,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.chatai.presentation.Screen
+import com.example.chatai.presentation.navigation.Screen
 
 @Composable
 fun LogInScreen(navController: NavController) {

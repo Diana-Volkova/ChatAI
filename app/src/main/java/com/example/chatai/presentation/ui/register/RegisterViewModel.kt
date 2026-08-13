@@ -1,4 +1,4 @@
-package com.example.chatai.presentation.register
+package com.example.chatai.presentation.ui.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

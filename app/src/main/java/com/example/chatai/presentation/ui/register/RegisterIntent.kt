@@ -1,4 +1,4 @@
-package com.example.chatai.presentation.register
+package com.example.chatai.presentation.ui.register
 
 sealed class RegisterIntent {
     data class Register(

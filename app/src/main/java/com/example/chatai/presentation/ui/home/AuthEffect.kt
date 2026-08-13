@@ -1,4 +1,4 @@
-package com.example.chatai.presentation.home
+package com.example.chatai.presentation.ui.home
 
 sealed class AuthEffect {
     data object NavigateToLogin :

@@ -1,4 +1,4 @@
-package com.example.chatai.presentation.chat
+package com.example.chatai.presentation.ui.chat
 
 import com.example.chatai.data.Message
 

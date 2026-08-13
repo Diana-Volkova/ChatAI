@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.example.chatai.presentation.home
+package com.example.chatai.presentation.ui.home
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -42,7 +42,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.chatai.data.ChatDto
-import com.example.chatai.presentation.Screen
+import com.example.chatai.presentation.navigation.Screen
 
 @Composable
 fun HomeScreen(

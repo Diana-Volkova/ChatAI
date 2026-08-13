@@ -1,8 +1,7 @@
-package com.example.chatai.presentation.chat
+package com.example.chatai.presentation.ui.chat
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -24,8 +22,6 @@ import androidx.compose.foundation.text.input.clearText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -49,13 +45,14 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.TextLayoutResult
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.chatai.data.Message
 import com.example.chatai.data.Sender
+import com.example.chatai.presentation.ui.components.Error
+import com.example.chatai.presentation.ui.components.LoadingScreen
 import formatTime
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -94,7 +91,7 @@ fun ChatScreen(
     ) { paddingValues ->
         when (val state = chatState) {
             is ChatState.Loading -> {
-                LoadingScreen(paddingValues)
+                LoadingScreen(modifier = Modifier.padding(paddingValues))
             }
 
             is ChatState.Success -> {
@@ -111,66 +108,10 @@ fun ChatScreen(
 
             is ChatState.Error -> {
                 Error(
-                    state = state,
-                    paddingValues = paddingValues,
+                    message = state.message,
+                    modifier = Modifier.padding(paddingValues),
                 )
             }
-        }
-    }
-}
-
-@Composable
-fun LoadingScreen(
-    paddingValues: PaddingValues,
-) {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(paddingValues),
-    ) {
-        CircularProgressIndicator(
-            modifier = Modifier.size(32.dp),
-            strokeWidth = 3.dp,
-        )
-    }
-}
-
-@Composable
-fun Error(
-    state: ChatState.Error,
-    paddingValues: PaddingValues,
-) {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(paddingValues)
-            .padding(horizontal = 32.dp),
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
-            Icon(
-                imageVector = Icons.Default.Warning,
-                contentDescription = null,
-                modifier = Modifier.size(40.dp),
-                tint = MaterialTheme.colorScheme.error,
-            )
-
-            Text(
-                text = "Something went wrong",
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onBackground,
-            )
-
-            Text(
-                text = state.message,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center,
-            )
         }
     }
 }
