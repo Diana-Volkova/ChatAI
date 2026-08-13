@@ -1,4 +1,4 @@
-package com.example.chatai.domain.di
+package com.example.chatai.di
 
 import android.content.Context
 import androidx.room.Room

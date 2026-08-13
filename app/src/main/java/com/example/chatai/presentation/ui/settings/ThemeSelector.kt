@@ -1,4 +1,4 @@
-package com.example.chatai.presentation.settings
+package com.example.chatai.presentation.ui.settings
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
