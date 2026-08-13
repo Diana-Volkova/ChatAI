@@ -1,8 +1,8 @@
-package com.example.chatai.domain.di
+package com.example.chatai.di
 
 import com.example.chatai.data.ChatApi
 import com.example.chatai.data.local.MessageDao
-import com.example.chatai.data.repository.ChatRepository
+import com.example.chatai.data.repository.ChatRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,7 +18,7 @@ object RepositoryModule {
     fun provideChatRepository(
         api: ChatApi,
         dao: MessageDao
-    ): ChatRepository {
-        return ChatRepository(api, dao)
+    ): ChatRepositoryImpl {
+        return ChatRepositoryImpl(api, dao)
     }
 }

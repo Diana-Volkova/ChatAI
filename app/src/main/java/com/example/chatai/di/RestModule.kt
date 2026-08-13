@@ -1,17 +1,16 @@
-package com.example.chatai.domain.di
+package com.example.chatai.di
 
 import android.content.Context
 import android.content.SharedPreferences
 import com.example.chatai.data.AuthApi
 import com.example.chatai.data.AuthInterceptor
+import com.example.chatai.data.ChatApi
+import com.example.chatai.data.JwtAuthenticator
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import com.example.chatai.data.ChatApi
-import com.example.chatai.data.JwtAuthenticator
-import com.example.chatai.data.RetrofitFactory
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

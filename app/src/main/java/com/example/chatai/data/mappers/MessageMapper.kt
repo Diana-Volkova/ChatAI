@@ -1,8 +1,8 @@
 package com.example.chatai.data.mappers
 
-import com.example.chatai.data.Message
+import com.example.chatai.domain.model.Message
 import com.example.chatai.data.MessageDto
-import com.example.chatai.data.Sender
+import com.example.chatai.domain.model.Sender
 import com.example.chatai.data.local.MessageEntity
 
 fun MessageDto.toDomain(chatId: Int): Message {

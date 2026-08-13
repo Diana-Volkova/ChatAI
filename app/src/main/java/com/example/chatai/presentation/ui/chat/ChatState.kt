@@ -1,6 +1,6 @@
 package com.example.chatai.presentation.ui.chat
 
-import com.example.chatai.data.Message
+import com.example.chatai.domain.model.Message
 
 sealed interface ChatState {
 

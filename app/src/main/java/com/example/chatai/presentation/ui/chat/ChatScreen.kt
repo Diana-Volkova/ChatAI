@@ -49,8 +49,8 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.chatai.data.Message
-import com.example.chatai.data.Sender
+import com.example.chatai.domain.model.Message
+import com.example.chatai.domain.model.Sender
 import com.example.chatai.presentation.ui.components.Error
 import com.example.chatai.presentation.ui.components.LoadingScreen
 import formatTime

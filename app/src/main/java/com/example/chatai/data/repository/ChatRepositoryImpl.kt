@@ -1,22 +1,23 @@
 package com.example.chatai.data.repository
 
 import com.example.chatai.data.ChatApi
-import com.example.chatai.data.Sender
-import com.example.chatai.data.Message
+import com.example.chatai.domain.model.Sender
+import com.example.chatai.domain.model.Message
 import com.example.chatai.data.local.MessageDao
 import com.example.chatai.data.mappers.toDto
 import com.example.chatai.data.mappers.toDomain
 import com.example.chatai.data.mappers.toEntity
+import com.example.chatai.domain.repository.ChatRepository
 
-class ChatRepository(
+class ChatRepositoryImpl (
     private val api: ChatApi,
     private val dao: MessageDao
-) {
-    suspend fun loadHistory(chatId: Int): List<Message> {
+) : ChatRepository {
+    override suspend fun loadHistory(chatId: Int): List<Message> {
         return dao.getByChatId(chatId).map { it.toDomain() }
     }
 
-    suspend fun sendMessage(
+    override suspend fun sendMessage(
         chatId: Int,
         message: Message
     ): Message {
@@ -56,11 +57,11 @@ class ChatRepository(
         return assistantMessage
     }
 
-    suspend fun clearHistory(chatId: Int) {
+    override suspend fun clearHistory(chatId: Int) {
         dao.clearChat(chatId)
     }
 
-    suspend fun clearAll() {
+    override suspend fun clearAll() {
         dao.clearAll()
     }
 }

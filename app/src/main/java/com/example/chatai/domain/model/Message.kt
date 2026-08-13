@@ -1,4 +1,4 @@
-package com.example.chatai.data
+package com.example.chatai.domain.model
 
 data class Message(
     val id: Long = 0,
