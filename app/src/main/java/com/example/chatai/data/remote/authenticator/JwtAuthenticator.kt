@@ -1,6 +1,9 @@
-package com.example.chatai.data
+package com.example.chatai.data.remote.authenticator
 
 import android.util.Log
+import com.example.chatai.data.local.SessionManager
+import com.example.chatai.data.remote.api.AuthApi
+import com.example.chatai.data.remote.dto.RefreshRequest
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
 import okhttp3.Request

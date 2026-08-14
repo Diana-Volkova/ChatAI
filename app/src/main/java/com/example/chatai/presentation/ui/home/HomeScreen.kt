@@ -41,7 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.example.chatai.data.ChatDto
+import com.example.chatai.data.remote.dto.ChatDto
 import com.example.chatai.presentation.navigation.Screen
 
 @Composable

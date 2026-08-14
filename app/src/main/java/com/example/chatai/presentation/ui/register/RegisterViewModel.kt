@@ -2,8 +2,8 @@ package com.example.chatai.presentation.ui.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.chatai.data.ChatApi
-import com.example.chatai.data.RegisterRequest
+import com.example.chatai.data.remote.api.ChatApi
+import com.example.chatai.data.remote.dto.RegisterRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow

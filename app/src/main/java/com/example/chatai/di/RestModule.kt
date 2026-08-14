@@ -2,10 +2,10 @@ package com.example.chatai.di
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.example.chatai.data.AuthApi
-import com.example.chatai.data.AuthInterceptor
-import com.example.chatai.data.ChatApi
-import com.example.chatai.data.JwtAuthenticator
+import com.example.chatai.data.remote.api.AuthApi
+import com.example.chatai.data.remote.interceptor.AuthInterceptor
+import com.example.chatai.data.remote.api.ChatApi
+import com.example.chatai.data.remote.authenticator.JwtAuthenticator
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,10 +21,8 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object RestModule {
 
-
     private const val BASE_URL =
         "http://31.56.146.253:8001/"
-
 
     @Provides
     @Singleton
@@ -37,7 +35,6 @@ object RestModule {
             Context.MODE_PRIVATE
         )
     }
-
 
     // ---------- AUTH API (без токенов) ----------
 

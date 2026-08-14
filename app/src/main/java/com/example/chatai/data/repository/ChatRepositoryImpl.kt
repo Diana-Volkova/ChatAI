@@ -1,6 +1,6 @@
 package com.example.chatai.data.repository
 
-import com.example.chatai.data.ChatApi
+import com.example.chatai.data.remote.api.ChatApi
 import com.example.chatai.domain.model.Sender
 import com.example.chatai.domain.model.Message
 import com.example.chatai.data.local.MessageDao
@@ -9,7 +9,7 @@ import com.example.chatai.data.mappers.toDomain
 import com.example.chatai.data.mappers.toEntity
 import com.example.chatai.domain.repository.ChatRepository
 
-class ChatRepositoryImpl (
+class ChatRepositoryImpl(
     private val api: ChatApi,
     private val dao: MessageDao
 ) : ChatRepository {

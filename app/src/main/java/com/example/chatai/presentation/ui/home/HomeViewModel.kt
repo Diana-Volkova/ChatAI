@@ -3,11 +3,11 @@ package com.example.chatai.presentation.ui.home
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.chatai.data.ChatApi
-import com.example.chatai.data.ChatDto
-import com.example.chatai.data.RefreshRequest
-import com.example.chatai.data.SessionManager
-import com.example.chatai.data.repository.ChatRepositoryImpl
+import com.example.chatai.data.remote.api.ChatApi
+import com.example.chatai.data.remote.dto.ChatDto
+import com.example.chatai.data.remote.dto.RefreshRequest
+import com.example.chatai.data.local.SessionManager
+import com.example.chatai.domain.repository.ChatRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,7 +21,7 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val api: ChatApi,
     private val sessionManager: SessionManager,
-    private val repo: ChatRepositoryImpl
+    private val repo: ChatRepository
 ) : ViewModel() {
     private val _chats = MutableStateFlow<List<ChatDto>>(emptyList())
     val chats = _chats.asStateFlow()

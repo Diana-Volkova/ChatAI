@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chatai.domain.model.Message
 import com.example.chatai.domain.model.Sender
-import com.example.chatai.data.repository.ChatRepositoryImpl
+import com.example.chatai.domain.repository.ChatRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChatViewModel @Inject constructor(
-    private val repo: ChatRepositoryImpl
+    private val repo: ChatRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow<ChatState>(ChatState.Loading)
     val state: StateFlow<ChatState> = _state.asStateFlow()

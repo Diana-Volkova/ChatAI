@@ -1,8 +1,12 @@
 package com.example.chatai.di
 
-import com.example.chatai.data.ChatApi
+import com.example.chatai.data.remote.api.ChatApi
 import com.example.chatai.data.local.MessageDao
+import com.example.chatai.data.local.SessionManager
+import com.example.chatai.data.repository.AuthRepositoryImpl
 import com.example.chatai.data.repository.ChatRepositoryImpl
+import com.example.chatai.domain.repository.AuthRepository
+import com.example.chatai.domain.repository.ChatRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,10 +19,19 @@ object RepositoryModule {
 
     @Provides
     @Singleton
+    fun provideAuthRepository(
+        api: ChatApi,
+        sessionManager: SessionManager,
+    ): AuthRepository {
+        return AuthRepositoryImpl(api, sessionManager)
+    }
+
+    @Provides
+    @Singleton
     fun provideChatRepository(
         api: ChatApi,
         dao: MessageDao
-    ): ChatRepositoryImpl {
+    ): ChatRepository {
         return ChatRepositoryImpl(api, dao)
     }
 }

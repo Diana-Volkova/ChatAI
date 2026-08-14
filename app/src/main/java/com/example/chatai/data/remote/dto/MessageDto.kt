@@ -1,4 +1,4 @@
-package com.example.chatai.data
+package com.example.chatai.data.remote.dto
 
 data class MessageDto(
     val text: String,
