@@ -1,19 +1,19 @@
 package com.example.chatai.domain.usecase
 
 import com.example.chatai.data.local.SessionManager
-import com.example.chatai.domain.error.AuthException
 import com.example.chatai.domain.repository.AuthRepository
+import com.example.chatai.domain.repository.ChatRepository
 import javax.inject.Inject
 
-class LogoutUseCase @Inject constructor(
+class DeleteAccountUseCase @Inject constructor(
     private val repository: AuthRepository,
     private val sessionManager: SessionManager,
+    private val chatRepository: ChatRepository,
 ) {
     suspend operator fun invoke() {
-        val refreshToken = sessionManager.refreshToken()
-            ?: throw AuthException(401)
+        repository.deleteAccount()
 
-        repository.logout(refreshToken)
         sessionManager.clear()
+        chatRepository.clearAll()
     }
 }

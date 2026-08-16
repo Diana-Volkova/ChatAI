@@ -40,18 +40,12 @@ class RegisterViewModel @Inject constructor(
 
                 _effects.emit(RegisterEffect.NavigateToLogIn)
             } catch (e: AuthException) {
-                val message = when (e.code) {
-                    409 -> "Пользователь уже существует"
-                    422 -> "Некорректные данные"
-                    500 -> "Ошибка сервера"
-                    else -> "Ошибка регистрации"
-                }
                 _effects.emit(
-                    RegisterEffect.Error(message)
+                    RegisterEffect.Error(e.message())
                 )
             } catch (e: SocketTimeoutException) {
                 _effects.emit(
-                    RegisterEffect.Error("Нет подключения к интернету")
+                    RegisterEffect.Error("Нет подключения к интернету: " + e.localizedMessage)
                 )
             } catch (e: Exception) {
                 _effects.emit(RegisterEffect.Error(e.localizedMessage ?: "Неизвестная ошибка"))

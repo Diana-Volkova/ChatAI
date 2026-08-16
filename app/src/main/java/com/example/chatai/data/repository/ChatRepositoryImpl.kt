@@ -7,6 +7,8 @@ import com.example.chatai.data.local.MessageDao
 import com.example.chatai.data.mappers.toDto
 import com.example.chatai.data.mappers.toDomain
 import com.example.chatai.data.mappers.toEntity
+import com.example.chatai.data.remote.dto.ChatDto
+import com.example.chatai.domain.error.ChatException
 import com.example.chatai.domain.repository.ChatRepository
 
 class ChatRepositoryImpl(
@@ -15,6 +17,16 @@ class ChatRepositoryImpl(
 ) : ChatRepository {
     override suspend fun loadHistory(chatId: Int): List<Message> {
         return dao.getByChatId(chatId).map { it.toDomain() }
+    }
+
+    override suspend fun loadChats(): List<ChatDto> {
+        val response = api.getChats()
+
+        if (!response.isSuccessful) {
+            throw ChatException(response.code())
+        }
+
+        return response.body() ?: emptyList()
     }
 
     override suspend fun sendMessage(
