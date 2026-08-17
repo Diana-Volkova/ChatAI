@@ -5,9 +5,9 @@ import com.example.chatai.data.remote.dto.MessageDto
 import com.example.chatai.domain.model.Sender
 import com.example.chatai.data.local.MessageEntity
 
-fun MessageDto.toDomain(chatId: Int): Message {
+fun MessageDto.toDomain(): Message {
     return Message(
-        id = 0,
+        id = id,
         chatId = chatId,
         text = text,
         sender = if (sender == "user") Sender.USER else Sender.ASSISTANT,
@@ -17,6 +17,8 @@ fun MessageDto.toDomain(chatId: Int): Message {
 
 fun Message.toDto(): MessageDto {
     return MessageDto(
+        id = id,
+        chatId = chatId,
         text = text,
         sender = sender.name.lowercase(),
         timestamp = timestamp
@@ -25,7 +27,6 @@ fun Message.toDto(): MessageDto {
 
 fun Message.toEntity(): MessageEntity {
     return MessageEntity(
-        id = id,
         chatId = chatId,
         text = text,
         sender = sender.name,

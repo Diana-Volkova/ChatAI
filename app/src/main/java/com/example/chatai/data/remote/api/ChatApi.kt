@@ -41,4 +41,9 @@ interface ChatApi {
 
     @GET("chats")
     suspend fun getChats(): Response<List<ChatDto>>
+
+    @GET("chats/{chat_id}/messages")
+    suspend fun getMessages(
+        @Path("chat_id") chatId: Int
+    ): Response<List<MessageDto>>
 }

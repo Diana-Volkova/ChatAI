@@ -57,8 +57,8 @@ class ChatRepositoryImpl(
                 )
 
         val assistantMessage = Message(
-            id = 0,
-            chatId = chatId,
+            id = body.id,
+            chatId = body.chatId,
             text = body.text,
             sender = Sender.ASSISTANT,
             timestamp = body.timestamp
