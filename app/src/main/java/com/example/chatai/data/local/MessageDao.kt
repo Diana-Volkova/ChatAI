@@ -17,4 +17,7 @@ interface MessageDao {
 
     @Query("DELETE FROM messages")
     suspend fun clearAll()
+
+    @Query("SELECT * FROM messages WHERE chatId = :chatId AND serverId = :serverId LIMIT 1")
+    suspend fun getByServerId(chatId: Int, serverId: Long): MessageEntity?
 }

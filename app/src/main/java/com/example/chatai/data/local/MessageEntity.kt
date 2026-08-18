@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 data class MessageEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
+    val serverId: Long?,
     val chatId: Int,
     val text: String,
     val sender: String,

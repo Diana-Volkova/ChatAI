@@ -25,8 +25,19 @@ fun Message.toDto(): MessageDto {
     )
 }
 
+fun MessageDto.toEntity(): MessageEntity {
+    return MessageEntity(
+        serverId = id,
+        chatId = chatId,
+        text = text,
+        sender = sender,
+        timestamp = timestamp
+    )
+}
+
 fun Message.toEntity(): MessageEntity {
     return MessageEntity(
+        serverId = null,
         chatId = chatId,
         text = text,
         sender = sender.name,
@@ -36,10 +47,10 @@ fun Message.toEntity(): MessageEntity {
 
 fun MessageEntity.toDomain(): Message {
     return Message(
-        id = id,
+        id = serverId ?: id,
         chatId = chatId,
         text = text,
-        sender = Sender.valueOf(sender),
+        sender = if (sender == "user") Sender.USER else Sender.ASSISTANT,
         timestamp = timestamp
     )
 }

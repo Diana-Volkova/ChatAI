@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chatai.domain.model.Message
 import com.example.chatai.domain.repository.ChatRepository
+import com.example.chatai.domain.usecase.ClearHistoryUseCase
 import com.example.chatai.domain.usecase.SendMessageUseCase
+import com.example.chatai.domain.usecase.SyncMessagesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,7 +18,9 @@ import javax.inject.Inject
 @HiltViewModel
 class ChatViewModel @Inject constructor(
     private val repo: ChatRepository,
-    private val sendMessageUseCase: SendMessageUseCase
+    private val sendMessageUseCase: SendMessageUseCase,
+    private val syncMessagesUseCase: SyncMessagesUseCase,
+    private val clearHistoryUseCase: ClearHistoryUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow<ChatState>(ChatState.Loading)
     val state: StateFlow<ChatState> = _state.asStateFlow()
@@ -26,6 +30,23 @@ class ChatViewModel @Inject constructor(
             try {
                 val history = repo.loadHistory(chatId)
                 _state.value = ChatState.Success(history)
+
+                syncMessagesUseCase(chatId)
+
+                val syncedHistory = repo.loadHistory(chatId)
+                _state.value = ChatState.Success(syncedHistory)
+
+            } catch (e: Exception) {
+                _state.value = ChatState.Error(e.message ?: "error")
+            }
+        }
+    }
+
+    fun clearHistory(chatId: Int) {
+        viewModelScope.launch {
+            try {
+                clearHistoryUseCase(chatId)
+                _state.value = ChatState.Success(emptyList())
             } catch (e: Exception) {
                 _state.value = ChatState.Error(e.message ?: "error")
             }

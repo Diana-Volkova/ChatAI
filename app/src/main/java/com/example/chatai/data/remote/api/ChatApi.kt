@@ -46,4 +46,9 @@ interface ChatApi {
     suspend fun getMessages(
         @Path("chat_id") chatId: Int
     ): Response<List<MessageDto>>
+
+    @DELETE("chats/{chat_id}/messages")
+    suspend fun deleteMessages(
+        @Path("chat_id") chatId: Int
+    ): Response<Unit>
 }

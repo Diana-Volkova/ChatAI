@@ -1,6 +1,7 @@
 package com.example.chatai.domain.repository
 
 import com.example.chatai.data.remote.dto.ChatDto
+import com.example.chatai.data.remote.dto.MessageDto
 import com.example.chatai.domain.model.Message
 
 interface ChatRepository {
@@ -11,6 +12,11 @@ interface ChatRepository {
         message: Message
     ): Message
 
+    suspend fun getRemoteMessages(
+        chatId: Int
+    ): List<MessageDto>
+
+    suspend fun syncMessages(chatId: Int)
     suspend fun clearHistory(chatId: Int)
     suspend fun clearAll()
 }
