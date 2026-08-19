@@ -2,8 +2,8 @@ package com.example.chatai.presentation.ui.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.chatai.data.ChatApi
-import com.example.chatai.data.RegisterRequest
+import com.example.chatai.domain.error.AuthException
+import com.example.chatai.domain.usecase.RegisterUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val api: ChatApi
+    private val register: RegisterUseCase,
 ) : ViewModel() {
     private val _effects =
         MutableSharedFlow<RegisterEffect>(
@@ -25,32 +25,28 @@ class RegisterViewModel @Inject constructor(
     fun dispatch(intent: RegisterIntent) {
         when (intent) {
             is RegisterIntent.Register -> {
-                register(RegisterRequest(intent.email, intent.password))
+                registerUser(
+                    email = intent.email,
+                    password = intent.password,
+                )
             }
         }
     }
 
-    private fun register(registerRequest: RegisterRequest) {
+    private fun registerUser(email: String, password: String) {
         viewModelScope.launch {
             try {
-                val response = api.register(registerRequest)
-                if (response.isSuccessful) {
-                    _effects.emit(RegisterEffect.NavigateToLogIn)
-                } else {
-                    val message = when (response.code()) {
-                        409 -> "Пользователь уже существует"
-                        422 -> "Некорректные данные"
-                        500 -> "Ошибка сервера"
-                        else -> "Ошибка регистрации"
-                    }
+                register(email, password)
 
-                    _effects.emit(RegisterEffect.Error(message))
-                }
+                _effects.emit(RegisterEffect.NavigateToLogIn)
+            } catch (e: AuthException) {
+                _effects.emit(
+                    RegisterEffect.Error(e.message())
+                )
             } catch (e: SocketTimeoutException) {
                 _effects.emit(
-                    RegisterEffect.Error("Нет подключения к интернету")
+                    RegisterEffect.Error("Нет подключения к интернету: " + e.localizedMessage)
                 )
-
             } catch (e: Exception) {
                 _effects.emit(RegisterEffect.Error(e.localizedMessage ?: "Неизвестная ошибка"))
             }

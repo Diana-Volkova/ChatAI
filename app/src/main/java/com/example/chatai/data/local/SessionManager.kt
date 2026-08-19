@@ -1,8 +1,8 @@
-package com.example.chatai.data
+package com.example.chatai.data.local
 
 import android.content.SharedPreferences
-import javax.inject.Inject
 import androidx.core.content.edit
+import javax.inject.Inject
 
 class SessionManager @Inject constructor(
     private val preferences: SharedPreferences

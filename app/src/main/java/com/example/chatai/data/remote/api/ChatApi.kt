@@ -1,5 +1,11 @@
-package com.example.chatai.data
+package com.example.chatai.data.remote.api
 
+import com.example.chatai.data.remote.dto.ChatDto
+import com.example.chatai.data.remote.dto.LoginRequest
+import com.example.chatai.data.remote.dto.MessageDto
+import com.example.chatai.data.remote.dto.RefreshRequest
+import com.example.chatai.data.remote.dto.RegisterRequest
+import com.example.chatai.data.remote.dto.TokenResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -35,4 +41,14 @@ interface ChatApi {
 
     @GET("chats")
     suspend fun getChats(): Response<List<ChatDto>>
+
+    @GET("chats/{chat_id}/messages")
+    suspend fun getMessages(
+        @Path("chat_id") chatId: Int
+    ): Response<List<MessageDto>>
+
+    @DELETE("chats/{chat_id}/messages")
+    suspend fun deleteMessages(
+        @Path("chat_id") chatId: Int
+    ): Response<Unit>
 }

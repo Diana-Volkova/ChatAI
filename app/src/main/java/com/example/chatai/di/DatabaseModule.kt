@@ -3,6 +3,7 @@ package com.example.chatai.di
 import android.content.Context
 import androidx.room.Room
 import com.example.chatai.data.local.ChatDatabase
+import com.example.chatai.data.local.MIGRATION_1_2
 import com.example.chatai.data.local.MessageDao
 import dagger.Module
 import dagger.Provides
@@ -24,7 +25,7 @@ object DatabaseModule {
             context,
             ChatDatabase::class.java,
             "chat.db"
-        ).build()
+        ).addMigrations(MIGRATION_1_2).build()
     }
 
     @Provides

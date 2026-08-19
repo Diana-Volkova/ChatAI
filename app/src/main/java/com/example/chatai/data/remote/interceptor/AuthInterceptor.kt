@@ -1,6 +1,7 @@
-package com.example.chatai.data
+package com.example.chatai.data.remote.interceptor
 
 import android.util.Log
+import com.example.chatai.data.local.SessionManager
 import okhttp3.Interceptor
 import okhttp3.Response
 import javax.inject.Inject

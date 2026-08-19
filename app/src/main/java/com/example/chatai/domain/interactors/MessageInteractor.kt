@@ -1,4 +1,4 @@
-package com.example.chatai.domain.usecase
+package com.example.chatai.domain.interactors
 
 import com.example.chatai.domain.model.Message
 import com.example.chatai.domain.model.Sender
@@ -7,10 +7,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class SendMessageUseCase @Inject constructor(
+class MessageInteractor @Inject constructor(
     private val repo: ChatRepository
 ) {
-    operator fun invoke(
+    fun sendMessage(
         chatId: Int,
         text: String
     ): Flow<Message> = flow {

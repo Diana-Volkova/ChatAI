@@ -1,11 +1,10 @@
 package com.example.chatai.presentation.ui.chat
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.chatai.domain.interactors.HistoryInteractor
+import com.example.chatai.domain.interactors.MessageInteractor
 import com.example.chatai.domain.model.Message
-import com.example.chatai.domain.model.Sender
-import com.example.chatai.data.repository.ChatRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,7 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChatViewModel @Inject constructor(
-    private val repo: ChatRepositoryImpl
+    private val historyInteractor: HistoryInteractor,
+    private val messageInteractor: MessageInteractor
 ) : ViewModel() {
     private val _state = MutableStateFlow<ChatState>(ChatState.Loading)
     val state: StateFlow<ChatState> = _state.asStateFlow()
@@ -24,10 +24,26 @@ class ChatViewModel @Inject constructor(
     fun loadHistory(chatId: Int) {
         viewModelScope.launch {
             try {
-                val history = repo.loadHistory(chatId)
+                val history = historyInteractor.loadHistory(chatId)
                 _state.value = ChatState.Success(history)
+
+                historyInteractor.syncHistory(chatId)
+
+                val syncedHistory = historyInteractor.loadHistory(chatId)
+                _state.value = ChatState.Success(syncedHistory)
+
             } catch (e: Exception) {
-                Log.e("CHAT_ERROR", "load history error", e)
+                _state.value = ChatState.Error(e.message ?: "error")
+            }
+        }
+    }
+
+    fun clearHistory(chatId: Int) {
+        viewModelScope.launch {
+            try {
+                historyInteractor.clearHistory(chatId)
+                _state.value = ChatState.Success(emptyList())
+            } catch (e: Exception) {
                 _state.value = ChatState.Error(e.message ?: "error")
             }
         }
@@ -36,29 +52,14 @@ class ChatViewModel @Inject constructor(
     fun dispatch(intent: ChatIntent) {
         when (intent) {
             is ChatIntent.SendMessage -> {
-                sendMessage(intent.chatId, intent.text)
-            }
-        }
-    }
-
-    fun sendMessage(chatId: Int, text: String) {
-        val userMessage = Message(
-            id = 0,
-            chatId = chatId,
-            text = text,
-            sender = Sender.USER,
-            timestamp = System.currentTimeMillis()
-        )
-
-        addMessage(userMessage)
-
-        viewModelScope.launch {
-            try {
-                val response = repo.sendMessage(chatId, userMessage)
-                addMessage(response)
-            } catch (e: Exception) {
-                Log.e("CHAT_ERROR", "error", e)
-                _state.value = ChatState.Error(e.message ?: "error")
+                viewModelScope.launch {
+                    try {
+                        messageInteractor.sendMessage(intent.chatId, intent.text)
+                            .collect(::addMessage)
+                    } catch (e: Exception) {
+                        _state.value = ChatState.Error(e.message ?: "error")
+                    }
+                }
             }
         }
     }

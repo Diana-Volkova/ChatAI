@@ -1,13 +1,13 @@
 package com.example.chatai.data.mappers
 
 import com.example.chatai.domain.model.Message
-import com.example.chatai.data.MessageDto
+import com.example.chatai.data.remote.dto.MessageDto
 import com.example.chatai.domain.model.Sender
 import com.example.chatai.data.local.MessageEntity
 
-fun MessageDto.toDomain(chatId: Int): Message {
+fun MessageDto.toDomain(): Message {
     return Message(
-        id = 0,
+        id = id,
         chatId = chatId,
         text = text,
         sender = if (sender == "user") Sender.USER else Sender.ASSISTANT,
@@ -17,15 +17,27 @@ fun MessageDto.toDomain(chatId: Int): Message {
 
 fun Message.toDto(): MessageDto {
     return MessageDto(
+        id = id,
+        chatId = chatId,
         text = text,
         sender = sender.name.lowercase(),
         timestamp = timestamp
     )
 }
 
+fun MessageDto.toEntity(): MessageEntity {
+    return MessageEntity(
+        serverId = id,
+        chatId = chatId,
+        text = text,
+        sender = sender,
+        timestamp = timestamp
+    )
+}
+
 fun Message.toEntity(): MessageEntity {
     return MessageEntity(
-        id = id,
+        serverId = null,
         chatId = chatId,
         text = text,
         sender = sender.name,
@@ -35,10 +47,10 @@ fun Message.toEntity(): MessageEntity {
 
 fun MessageEntity.toDomain(): Message {
     return Message(
-        id = id,
+        id = serverId ?: id,
         chatId = chatId,
         text = text,
-        sender = Sender.valueOf(sender),
+        sender = if (sender == "user") Sender.USER else Sender.ASSISTANT,
         timestamp = timestamp
     )
 }
