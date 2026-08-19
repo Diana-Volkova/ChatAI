@@ -4,9 +4,14 @@ import com.google.gson.annotations.SerializedName
 
 data class MessageDto(
     val id: Long,
+
     @SerializedName("chat_id")
     val chatId: Int,
+
     val text: String,
     val sender: String,
-    val timestamp: Long
+    val timestamp: Long,
+
+    @SerializedName("user_message_id")
+    val userMessageId: Long? = null
 )

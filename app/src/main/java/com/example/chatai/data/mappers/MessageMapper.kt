@@ -8,6 +8,7 @@ import com.example.chatai.data.local.MessageEntity
 fun MessageDto.toDomain(): Message {
     return Message(
         id = id,
+        serverId = id,
         chatId = chatId,
         text = text,
         sender = if (sender == "user") Sender.USER else Sender.ASSISTANT,
@@ -17,7 +18,7 @@ fun MessageDto.toDomain(): Message {
 
 fun Message.toDto(): MessageDto {
     return MessageDto(
-        id = id,
+        id = serverId ?: 0,
         chatId = chatId,
         text = text,
         sender = sender.name.lowercase(),

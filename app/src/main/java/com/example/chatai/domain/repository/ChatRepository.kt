@@ -16,6 +16,11 @@ interface ChatRepository {
         chatId: Int
     ): List<MessageDto>
 
+    suspend fun deleteMessage(
+        chatId: Int,
+        messageId: Long
+    )
+
     suspend fun syncMessages(chatId: Int)
     suspend fun clearHistory(chatId: Int)
     suspend fun clearAll()

@@ -1,5 +1,6 @@
 package com.example.chatai.data.repository
 
+import android.util.Log
 import com.example.chatai.data.remote.api.ChatApi
 import com.example.chatai.domain.model.Sender
 import com.example.chatai.domain.model.Message
@@ -17,7 +18,15 @@ class ChatRepositoryImpl(
     private val dao: MessageDao
 ) : ChatRepository {
     override suspend fun loadHistory(chatId: Int): List<Message> {
-        return dao.getByChatId(chatId).map { it.toDomain() }
+        Log.d("CHAT_SYNC", "loadHistory: $chatId")
+        val messages = dao.getByChatId(chatId)
+
+        Log.d("CHAT_SYNC", "local messages: $messages")
+
+        return messages.map {
+            Log.d("CHAT_SYNC", "mapping: $it")
+            it.toDomain()
+        }
     }
 
     override suspend fun loadChats(): List<ChatDto> {
@@ -36,14 +45,20 @@ class ChatRepositoryImpl(
     ): Message {
         val userMessage = message.copy(chatId = chatId)
 
-        dao.insert(userMessage.toEntity())
+        val localId = dao.insert(userMessage.toEntity())
+
+        val dto = message.toDto()
+        Log.d("CHAT_API", "send dto = $dto")
 
         val response = api.sendMsg(
             chatId = chatId,
-            message.toDto()
+            msg = dto
         )
 
         if (!response.isSuccessful) {
+            val error = response.errorBody()?.string()
+            Log.e("CHAT_API", "HTTP ${response.code()}: $error")
+
             throw IllegalStateException(
                 "HTTP ${response.code()}: ${
                     response.errorBody()?.string()
@@ -54,15 +69,19 @@ class ChatRepositoryImpl(
         val body = response.body()
             ?: throw IllegalStateException("Empty response")
 
+        body.userMessageId?.let { serverId ->
+            dao.updateServerId(
+                localId = localId,
+                serverId = serverId
+            )
+        }
+
         val assistantMessage = Message(
             id = body.id,
+            serverId = body.id,
             chatId = body.chatId,
             text = body.text,
-            sender = if (body.sender == "user") {
-                Sender.USER
-            } else {
-                Sender.ASSISTANT
-            },
+            sender = Sender.ASSISTANT,
             timestamp = body.timestamp
         )
 
@@ -75,6 +94,10 @@ class ChatRepositoryImpl(
         val response = api.getMessages(chatId)
 
         if (!response.isSuccessful) {
+            Log.e(
+                "CHAT_SYNC",
+                "HTTP ${response.code()}: ${response.errorBody()}"
+            )
             throw ChatException(response.code())
         }
 
@@ -84,7 +107,13 @@ class ChatRepositoryImpl(
     override suspend fun syncMessages(chatId: Int) {
         val response = api.getMessages(chatId)
 
+        Log.d("CHAT_SYNC", "GET messages: ${response.code()}")
+
         if (!response.isSuccessful) {
+            val error = response.errorBody()?.string()
+
+            Log.e("CHAT_SYNC", "GET messages error: $error")
+
             throw ChatException(response.code())
         }
 
@@ -105,6 +134,22 @@ class ChatRepositoryImpl(
             throw ChatException(response.code())
         }
         dao.clearChat(chatId)
+    }
+
+    override suspend fun deleteMessage(
+        chatId: Int,
+        messageId: Long
+    ) {
+        val response = api.deleteMessage(
+            chatId = chatId,
+            messageId = messageId
+        )
+
+        if (!response.isSuccessful) {
+            throw ChatException(response.code())
+        }
+
+        dao.deleteByServerId(messageId)
     }
 
     override suspend fun clearAll() {

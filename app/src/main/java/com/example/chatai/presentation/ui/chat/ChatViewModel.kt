@@ -72,4 +72,21 @@ class ChatViewModel @Inject constructor(
             }
         }
     }
+
+    fun deleteMessage(chatId: Int, messageId: Long?) {
+        if (messageId == null) {
+            return
+        }
+        viewModelScope.launch {
+            try {
+                messageInteractor.deleteMessage(chatId, messageId)
+
+                val history = historyInteractor.loadHistory(chatId)
+                _state.value = ChatState.Success(history)
+
+            } catch (e: Exception) {
+                _state.value = ChatState.Error(e.message ?: "error")
+            }
+        }
+    }
 }

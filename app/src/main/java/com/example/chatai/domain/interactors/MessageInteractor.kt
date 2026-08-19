@@ -26,4 +26,11 @@ class MessageInteractor @Inject constructor(
 
         emit(repo.sendMessage(chatId, userMessage))
     }
+
+    suspend fun deleteMessage(
+        chatId: Int,
+        messageId: Long
+    ) {
+        repo.deleteMessage(chatId, messageId)
+    }
 }
