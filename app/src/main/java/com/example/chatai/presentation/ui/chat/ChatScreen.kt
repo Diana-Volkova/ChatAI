@@ -1,7 +1,6 @@
 package com.example.chatai.presentation.ui.chat
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -30,34 +29,24 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.text.TextLayoutResult
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Popup
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.chatai.domain.model.Message
-import com.example.chatai.domain.model.Sender
 import com.example.chatai.presentation.ui.components.Error
 import com.example.chatai.presentation.ui.components.LoadingScreen
-import formatTime
+import com.example.chatai.presentation.ui.components.MessageItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -119,8 +108,8 @@ fun ChatScreen(
                             ChatIntent.SendMessage(chatId, text)
                         )
                     },
-                    onLongClick = { message ->
-                        viewModel.deleteMessage(message.chatId,message.serverId)
+                    onDeleteMessage = { message ->
+                        viewModel.deleteMessage(message.chatId, message.serverId)
                     }
                 )
             }
@@ -140,7 +129,7 @@ fun MessagesScreen(
     messages: List<Message>,
     paddingValues: PaddingValues,
     onSendMessage: (String) -> Unit,
-    onLongClick: (Message) -> Unit
+    onDeleteMessage: (Message) -> Unit
 ) {
     val layoutDirection = LocalLayoutDirection.current
 
@@ -156,7 +145,7 @@ fun MessagesScreen(
         Messages(
             messages = messages,
             modifier = Modifier.weight(1f),
-            onLongClick = onLongClick
+            onDeleteMessage = onDeleteMessage
         )
 
         MessageInput(
@@ -169,10 +158,10 @@ fun MessagesScreen(
 fun Messages(
     messages: List<Message>,
     modifier: Modifier = Modifier,
-    onLongClick: (Message) -> Unit
+    onDeleteMessage: (Message) -> Unit
 ) {
     val listState = rememberLazyListState()
-    var selectedMessage by remember { mutableStateOf<Message?>(null) }
+    val selectedMessages = remember { mutableStateSetOf<Message>() }
 
     LaunchedEffect(messages.size) {
         if (messages.isNotEmpty()) {
@@ -186,34 +175,21 @@ fun Messages(
     ) {
         items(messages) { message ->
             MessageItem(
-                message,
-                onLongClick = {
-                    selectedMessage = message
-                }
+                message = message,
+                selected = message in selectedMessages,
+                selecting = selectedMessages.isNotEmpty(),
+                onDelete = { onDeleteMessage(message) },
+
+                onSelect = {
+                    when (message in selectedMessages) {
+                        true -> selectedMessages.remove(message)
+                        false -> selectedMessages.add(message)
+                    }
+                },
             )
         }
     }
-    selectedMessage?.let { message ->
-        Popup(
-            onDismissRequest = {
-                selectedMessage = null
-            }
-        ) {
-            Surface(
-                shape = MaterialTheme.shapes.medium,
-                tonalElevation = 4.dp,
-            ) {
-                TextButton(
-                    onClick = {
-                        onLongClick(message)
-                        selectedMessage = null
-                    }
-                ) {
-                    Text("Удалить")
-                }
-            }
-        }
-    }
+
 }
 
 @Composable
@@ -263,119 +239,3 @@ fun MessageInput(
     }
 }
 
-@Composable
-fun MessageItem(
-    message: Message,
-    onLongClick: () -> Unit,
-) {
-    val density = LocalDensity.current
-
-    var textLayout by remember {
-        mutableStateOf<TextLayoutResult?>(null)
-    }
-
-    var containerSize by remember {
-        mutableStateOf(IntSize.Zero)
-    }
-
-    var timeSize by remember {
-        mutableStateOf(IntSize.Zero)
-    }
-
-    val isInline =
-        textLayout != null &&
-                timeSize != IntSize.Zero &&
-                containerSize != IntSize.Zero &&
-                textLayout!!.size.width < containerSize.width / 2
-
-    val isFreeSpace =
-        textLayout != null &&
-                timeSize != IntSize.Zero &&
-                containerSize != IntSize.Zero &&
-                textLayout!!.lineCount > 1 &&
-                run {
-                    val layout = textLayout!!
-                    val lastX = layout.getLineRight(layout.lineCount - 1)
-                    val freeSpace = layout.size.width - lastX
-
-                    freeSpace > timeSize.width
-                }
-
-    val arrangement: Arrangement.Vertical =
-        if (isInline || isFreeSpace) {
-            Arrangement.spacedBy(
-                density.run {
-                    -timeSize.height.toDp()
-                }
-            )
-        } else {
-            Arrangement.Top
-        }
-
-    val textPadding =
-        if (isInline) {
-            density.run {
-                timeSize.width.toDp()
-            } + 4.dp
-        } else {
-            0.dp
-        }
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .onSizeChanged {
-                containerSize = it
-            },
-        horizontalArrangement = when (message.sender) {
-            Sender.USER -> Arrangement.End
-            Sender.ASSISTANT -> Arrangement.Start
-        },
-    ) {
-        Surface(
-            color = when (message.sender) {
-                Sender.USER -> MaterialTheme.colorScheme.primary
-                Sender.ASSISTANT -> MaterialTheme.colorScheme.surfaceVariant
-            },
-            shape = MaterialTheme.shapes.large,
-            modifier = Modifier.padding(
-                horizontal = 8.dp,
-                vertical = 4.dp,
-            ),
-        ) {
-            Column(
-                verticalArrangement = arrangement,
-                modifier = Modifier
-                    .padding(
-                        horizontal = 12.dp,
-                        vertical = 8.dp,
-                    )
-                    .combinedClickable(
-                        onClick = {},
-                        onLongClick = onLongClick,
-                    ),
-            ) {
-                Text(
-                    text = message.text,
-                    onTextLayout = {
-                        textLayout = it
-                    },
-                    modifier = Modifier.padding(
-                        end = textPadding,
-                    ),
-                )
-
-                Text(
-                    text = formatTime(message.timestamp),
-                    modifier = Modifier
-                        .onSizeChanged {
-                            timeSize = it
-                        }
-                        .align(Alignment.End)
-                        .alpha(0.7f),
-                    style = MaterialTheme.typography.labelSmall,
-                )
-            }
-        }
-    }
-}
