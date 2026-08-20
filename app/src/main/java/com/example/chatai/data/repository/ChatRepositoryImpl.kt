@@ -136,20 +136,27 @@ class ChatRepositoryImpl(
         dao.clearChat(chatId)
     }
 
-    override suspend fun deleteMessage(
+    override suspend fun deleteMessagesList(
         chatId: Int,
-        messageId: Long
+        messageIds: List<Long>
     ) {
-        val response = api.deleteMessage(
+        val response = api.deleteMessagesList(
             chatId = chatId,
-            messageId = messageId
+            messageIds = messageIds
         )
 
         if (!response.isSuccessful) {
+            val error = response.errorBody()?.string()
+
+            Log.e(
+                "CHAT_DELETE",
+                "HTTP ${response.code()}: $error"
+            )
+
             throw ChatException(response.code())
         }
 
-        dao.deleteByServerId(messageId)
+        dao.deleteByServerIds(messageIds)
     }
 
     override suspend fun clearAll() {

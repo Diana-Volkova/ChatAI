@@ -73,13 +73,10 @@ class ChatViewModel @Inject constructor(
         }
     }
 
-    fun deleteMessage(chatId: Int, messageId: Long?) {
-        if (messageId == null) {
-            return
-        }
+    fun deleteMessages(chatId: Int, messageIds: List<Long>) {
         viewModelScope.launch {
             try {
-                messageInteractor.deleteMessage(chatId, messageId)
+                messageInteractor.deleteMessages(chatId, messageIds)
 
                 val history = historyInteractor.loadHistory(chatId)
                 _state.value = ChatState.Success(history)

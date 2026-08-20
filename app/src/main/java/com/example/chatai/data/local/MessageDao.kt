@@ -30,6 +30,9 @@ interface MessageDao {
     @Query("DELETE FROM messages WHERE id = :id")
     suspend fun deleteById(id: Long)
 
+    @Query("DELETE FROM messages WHERE serverId IN (:serverIds)")
+    suspend fun deleteByServerIds(serverIds: List<Long>)
+
     @Query("DELETE FROM messages")
     suspend fun clearAll()
 

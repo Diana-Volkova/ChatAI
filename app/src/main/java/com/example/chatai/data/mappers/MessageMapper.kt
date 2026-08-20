@@ -48,7 +48,8 @@ fun Message.toEntity(): MessageEntity {
 
 fun MessageEntity.toDomain(): Message {
     return Message(
-        id = serverId ?: id,
+        id = id,
+        serverId = serverId,
         chatId = chatId,
         text = text,
         sender = if (sender == "user") Sender.USER else Sender.ASSISTANT,

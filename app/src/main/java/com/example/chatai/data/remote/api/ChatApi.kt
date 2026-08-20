@@ -10,6 +10,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.HTTP
 import retrofit2.http.POST
 import retrofit2.http.Path
 
@@ -52,9 +53,13 @@ interface ChatApi {
         @Path("chat_id") chatId: Int
     ): Response<Unit>
 
-    @DELETE("chats/{chat_id}/messages/{message_id}")
-    suspend fun deleteMessage(
+    @HTTP(
+        method = "DELETE",
+        path = "chats/{chat_id}/messages/bulk",
+        hasBody = true
+    )
+    suspend fun deleteMessagesList(
         @Path("chat_id") chatId: Int,
-        @Path("message_id") messageId: Long
+        @Body messageIds: List<Long>
     ): Response<Unit>
 }

@@ -27,10 +27,10 @@ class MessageInteractor @Inject constructor(
         emit(repo.sendMessage(chatId, userMessage))
     }
 
-    suspend fun deleteMessage(
+    suspend fun deleteMessages(
         chatId: Int,
-        messageId: Long
+        messageIds: List<Long>
     ) {
-        repo.deleteMessage(chatId, messageId)
+        repo.deleteMessagesList(chatId, messageIds)
     }
 }
