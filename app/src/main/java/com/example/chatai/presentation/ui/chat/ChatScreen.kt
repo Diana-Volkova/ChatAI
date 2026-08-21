@@ -1,11 +1,14 @@
 package com.example.chatai.presentation.ui.chat
 
-import android.util.Log
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -17,8 +20,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -36,9 +41,12 @@ fun ChatScreen(
     val chatState by viewModel.state.collectAsState()
 
     val selectedMessages = remember { mutableStateSetOf<Message>() }
+    var showMenu by remember { mutableStateOf(false) }
 
     LaunchedEffect(chatId) {
-        viewModel.loadHistory(chatId)
+        viewModel.dispatch(
+            ChatIntent.LoadHistory(chatId)
+        )
     }
 
     Scaffold(
@@ -76,9 +84,11 @@ fun ChatScreen(
                                 val messageIds = selectedMessages
                                     .mapNotNull { it.serverId }
 
-                                viewModel.deleteMessages(
-                                    chatId = chatId,
-                                    messageIds = messageIds
+                                viewModel.dispatch(
+                                    ChatIntent.DeleteMessages(
+                                        chatId,
+                                        messageIds
+                                    )
                                 )
 
                                 selectedMessages.clear()
@@ -88,6 +98,40 @@ fun ChatScreen(
                                 imageVector = Icons.Outlined.Delete,
                                 contentDescription = "Delete messages"
                             )
+                        }
+                    } else {
+                        Box {
+                            IconButton(
+                                onClick = {
+                                    showMenu = true
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.MoreVert,
+                                    contentDescription = "More options"
+                                )
+                            }
+
+                            DropdownMenu(
+                                expanded = showMenu,
+                                onDismissRequest = {
+                                    showMenu = false
+                                }
+                            ) {
+                                DropdownMenuItem(
+                                    text = {
+                                        Text("Очистить историю")
+                                    },
+                                    onClick = {
+                                        showMenu = false
+                                        viewModel.dispatch(
+                                            ChatIntent.ClearHistory(chatId)
+                                        )
+                                    }
+                                )
+                                // todo добавить остальное
+                                // DropdownMenuItem()
+                            }
                         }
                     }
                 }
@@ -112,13 +156,11 @@ fun ChatScreen(
                     },
                     selectedMessages = selectedMessages,
                     onDeleteMessages = { messageIds ->
-                        Log.d(
-                            "CHAT_DELETE",
-                            "selected=${selectedMessages.size}, serverIds=$messageIds"
-                        )
-                        viewModel.deleteMessages(
-                            chatId = chatId,
-                            messageIds = messageIds
+                        viewModel.dispatch(
+                            ChatIntent.DeleteMessages(
+                                chatId = chatId,
+                                messageIds = messageIds
+                            )
                         )
                     }
                 )

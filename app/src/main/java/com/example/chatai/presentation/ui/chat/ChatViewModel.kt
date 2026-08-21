@@ -21,7 +21,37 @@ class ChatViewModel @Inject constructor(
     private val _state = MutableStateFlow<ChatState>(ChatState.Loading)
     val state: StateFlow<ChatState> = _state.asStateFlow()
 
-    fun loadHistory(chatId: Int) {
+    fun dispatch(intent: ChatIntent) {
+        when (intent) {
+            is ChatIntent.LoadHistory -> {
+                loadHistory(intent.chatId)
+            }
+            is ChatIntent.SendMessage -> {
+                sendMessage(intent.chatId, intent.text)
+            }
+
+            is ChatIntent.DeleteMessages -> {
+                deleteMessages(intent.chatId, intent.messageIds)
+            }
+
+            is ChatIntent.ClearHistory -> {
+                clearHistory(intent.chatId)
+            }
+        }
+    }
+
+    private fun sendMessage(chatId: Int, text: String) {
+        viewModelScope.launch {
+            try {
+                messageInteractor.sendMessage(chatId, text)
+                    .collect(::addMessage)
+            } catch (e: Exception) {
+                _state.value = ChatState.Error(e.message ?: "error")
+            }
+        }
+    }
+
+    private fun loadHistory(chatId: Int) {
         viewModelScope.launch {
             try {
                 val history = historyInteractor.loadHistory(chatId)
@@ -38,32 +68,6 @@ class ChatViewModel @Inject constructor(
         }
     }
 
-    fun clearHistory(chatId: Int) {
-        viewModelScope.launch {
-            try {
-                historyInteractor.clearHistory(chatId)
-                _state.value = ChatState.Success(emptyList())
-            } catch (e: Exception) {
-                _state.value = ChatState.Error(e.message ?: "error")
-            }
-        }
-    }
-
-    fun dispatch(intent: ChatIntent) {
-        when (intent) {
-            is ChatIntent.SendMessage -> {
-                viewModelScope.launch {
-                    try {
-                        messageInteractor.sendMessage(intent.chatId, intent.text)
-                            .collect(::addMessage)
-                    } catch (e: Exception) {
-                        _state.value = ChatState.Error(e.message ?: "error")
-                    }
-                }
-            }
-        }
-    }
-
     private fun addMessage(message: Message) {
         _state.update { state ->
             when (state) {
@@ -73,7 +77,7 @@ class ChatViewModel @Inject constructor(
         }
     }
 
-    fun deleteMessages(chatId: Int, messageIds: List<Long>) {
+    private fun deleteMessages(chatId: Int, messageIds: List<Long>) {
         viewModelScope.launch {
             try {
                 messageInteractor.deleteMessages(chatId, messageIds)
@@ -81,6 +85,17 @@ class ChatViewModel @Inject constructor(
                 val history = historyInteractor.loadHistory(chatId)
                 _state.value = ChatState.Success(history)
 
+            } catch (e: Exception) {
+                _state.value = ChatState.Error(e.message ?: "error")
+            }
+        }
+    }
+
+    private fun clearHistory(chatId: Int) {
+        viewModelScope.launch {
+            try {
+                historyInteractor.clearHistory(chatId)
+                _state.value = ChatState.Success(emptyList())
             } catch (e: Exception) {
                 _state.value = ChatState.Error(e.message ?: "error")
             }
