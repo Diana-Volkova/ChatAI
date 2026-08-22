@@ -4,7 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chatai.domain.interactors.HistoryInteractor
 import com.example.chatai.domain.interactors.MessageInteractor
+import com.example.chatai.domain.model.ChatSettings
 import com.example.chatai.domain.model.Message
+import com.example.chatai.domain.repository.ChatSettingsRepository
+import com.example.chatai.domain.theme.ChatThemeId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,10 +19,14 @@ import javax.inject.Inject
 @HiltViewModel
 class ChatViewModel @Inject constructor(
     private val historyInteractor: HistoryInteractor,
-    private val messageInteractor: MessageInteractor
+    private val messageInteractor: MessageInteractor,
+    private val chatSettingsRepository: ChatSettingsRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow<ChatState>(ChatState.Loading)
     val state: StateFlow<ChatState> = _state.asStateFlow()
+
+    private val _settings = MutableStateFlow<ChatSettings?>(null)
+    val settings = _settings.asStateFlow()
 
     fun dispatch(intent: ChatIntent) {
         when (intent) {
@@ -37,6 +44,31 @@ class ChatViewModel @Inject constructor(
             is ChatIntent.ClearHistory -> {
                 clearHistory(intent.chatId)
             }
+
+            is ChatIntent.SetTheme -> {
+                setTheme(intent.chatId, intent.chatThemeId)
+            }
+
+            is ChatIntent.ObserveSettings -> {
+                observeSettings(intent.chatId)
+            }
+        }
+    }
+
+    private fun observeSettings(chatId: Int) {
+        viewModelScope.launch {
+            chatSettingsRepository
+                .observe(chatId)
+                .collect { settings ->
+                    _settings.value = settings
+                }
+        }
+    }
+
+
+    private fun setTheme(chatId: Int, chatThemeId: ChatThemeId) {
+        viewModelScope.launch {
+            chatSettingsRepository.setTheme(chatId, chatThemeId)
         }
     }
 
