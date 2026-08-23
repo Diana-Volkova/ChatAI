@@ -1,6 +1,7 @@
 package com.example.chatai.presentation.ui.chat
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
@@ -10,6 +11,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -17,9 +19,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.chatai.domain.model.Message
 import com.example.chatai.domain.theme.ChatThemeId
+import com.example.chatai.presentation.ui.theme.ChatThemeBackIcon
+import com.example.chatai.presentation.ui.theme.ChatThemeDefaultIcon
+import com.example.chatai.presentation.ui.theme.ChatThemeForestIcon
+import com.example.chatai.presentation.ui.theme.ChatThemeMidnightIcon
+import com.example.chatai.presentation.ui.theme.ChatThemeSunsetIcon
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -32,6 +41,15 @@ fun ChatTopAppBar(
 ) {
     var showMenu by remember { mutableStateOf(false) }
     var showThemeSelection by remember { mutableStateOf(false) }
+
+    fun ChatThemeId.icon(): ImageVector {
+        return when (this) {
+            ChatThemeId.DEFAULT -> ChatThemeDefaultIcon
+            ChatThemeId.MIDNIGHT -> ChatThemeMidnightIcon
+            ChatThemeId.FOREST -> ChatThemeForestIcon
+            ChatThemeId.SUNSET -> ChatThemeSunsetIcon
+        }
+    }
 
     TopAppBar(
         title = {
@@ -99,12 +117,22 @@ fun ChatTopAppBar(
                         onDismissRequest = {
                             showMenu = false
                             showThemeSelection = false
-                        }
+                        },
+                        shape = RoundedCornerShape(16.dp),
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        tonalElevation = 2.dp,
+                        shadowElevation = 4.dp
                     ) {
                         if (showThemeSelection) {
                             DropdownMenuItem(
                                 text = {
-                                    Text("← Тема")
+                                    Text("Тема")
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = ChatThemeBackIcon,
+                                        contentDescription = null
+                                    )
                                 },
                                 onClick = {
                                     showThemeSelection = false
@@ -115,6 +143,12 @@ fun ChatTopAppBar(
                                 DropdownMenuItem(
                                     text = {
                                         Text(theme.label)
+                                    },
+                                    leadingIcon = {
+                                        Icon(
+                                            imageVector = theme.icon(),
+                                            contentDescription = null
+                                        )
                                     },
                                     onClick = {
                                         onIntent(
