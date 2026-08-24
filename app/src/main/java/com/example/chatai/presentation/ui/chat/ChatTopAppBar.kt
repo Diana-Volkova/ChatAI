@@ -26,8 +26,11 @@ import com.example.chatai.domain.model.Message
 import com.example.chatai.domain.theme.ChatThemeId
 import com.example.chatai.presentation.ui.theme.ChatThemeBackIcon
 import com.example.chatai.presentation.ui.theme.ChatThemeDefaultIcon
+import com.example.chatai.presentation.ui.theme.ChatThemeDeleteIcon
 import com.example.chatai.presentation.ui.theme.ChatThemeForestIcon
 import com.example.chatai.presentation.ui.theme.ChatThemeMidnightIcon
+import com.example.chatai.presentation.ui.theme.ChatThemePaletteIcon
+import com.example.chatai.presentation.ui.theme.ChatThemeSearchIcon
 import com.example.chatai.presentation.ui.theme.ChatThemeSunsetIcon
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -168,14 +171,40 @@ fun ChatTopAppBar(
                                 text = {
                                     Text("Тема")
                                 },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = ChatThemePaletteIcon,
+                                        contentDescription = null
+                                    )
+                                },
                                 onClick = {
                                     showThemeSelection = true
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = {
+                                    Text("Поиск по истории")
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = ChatThemeSearchIcon,
+                                        contentDescription = null
+                                    )
+                                },
+                                onClick = {
+
                                 }
                             )
 
                             DropdownMenuItem(
                                 text = {
                                     Text("Очистить историю")
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = ChatThemeDeleteIcon,
+                                        contentDescription = null
+                                    )
                                 },
                                 onClick = {
                                     showMenu = false

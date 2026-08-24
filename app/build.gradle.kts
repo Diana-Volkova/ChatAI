@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.ksp)
@@ -6,9 +8,27 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.inputStream().use {
+        localProperties.load(it)
+    }
+}
+
+val backendIp = localProperties.getProperty("backendIp")
+    ?: error("backendIp is not defined in local.properties")
+
 android {
     namespace = "com.example.chatai"
     compileSdk = 37
+
+    buildFeatures {
+        compose = true
+        resValues = true
+    }
 
     defaultConfig {
         applicationId = "com.example.chatai"
@@ -21,6 +41,8 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        resValue("string", "backend_ip", backendIp)
     }
 
     buildTypes {
@@ -37,10 +59,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
-
-    buildFeatures {
-        compose = true
-    }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"

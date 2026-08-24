@@ -2,6 +2,7 @@ package com.example.chatai.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.example.chatai.R
 import com.example.chatai.data.remote.api.AuthApi
 import com.example.chatai.data.remote.interceptor.AuthInterceptor
 import com.example.chatai.data.remote.api.ChatApi
@@ -21,8 +22,13 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object RestModule {
 
-    private const val BASE_URL =
-        "http://31.56.146.253:8001/"
+    @Provides
+    @Singleton
+    fun provideBaseUrl(
+        @ApplicationContext context: Context
+    ): String {
+        return "http://${context.getString(R.string.backend_ip)}:8001/"
+    }
 
     @Provides
     @Singleton
@@ -41,10 +47,12 @@ object RestModule {
     @Provides
     @Singleton
     @Named("authRetrofit")
-    fun provideAuthRetrofit(): Retrofit {
+    fun provideAuthRetrofit(
+        baseUrl: String
+    ): Retrofit {
 
         return Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(baseUrl)
             .addConverterFactory(
                 GsonConverterFactory.create()
             )
@@ -85,11 +93,12 @@ object RestModule {
     @Singleton
     @Named("chatRetrofit")
     fun provideChatRetrofit(
-        client: OkHttpClient
+        client: OkHttpClient,
+        baseUrl: String
     ): Retrofit {
 
         return Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(baseUrl)
             .client(client)
             .addConverterFactory(
                 GsonConverterFactory.create()

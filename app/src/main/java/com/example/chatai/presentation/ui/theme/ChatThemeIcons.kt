@@ -27,6 +27,169 @@ val ChatThemeBackIcon = ImageVector.Builder(
     }
 }.build()
 
+val ChatThemeSearchIcon = ImageVector.Builder(
+    name = "ChatThemeSearch",
+    defaultWidth = 24.dp,
+    defaultHeight = 24.dp,
+    viewportWidth = 24f,
+    viewportHeight = 24f
+).apply {
+    path(
+        // Внутри круга ничего не заливаем
+        fill = null,
+
+        // Рисуем именно контур
+        stroke = SolidColor(Color.Black),
+
+        // Толщина линии
+        strokeLineWidth = 2f,
+
+        // Концы линий закруглены
+        strokeLineCap = StrokeCap.Round,
+
+        // Соединения закруглены
+        strokeLineJoin = StrokeJoin.Round
+    ) {
+        // Начинаем справа от круга
+        moveTo(16f, 10f)
+
+        // Верхняя/правая часть круга
+        curveTo(
+            16f, 13.31f,
+            13.31f, 16f,
+            10f, 16f
+        )
+
+        // Нижняя/левая часть круга
+        curveTo(
+            6.69f, 16f,
+            4f, 13.31f,
+            4f, 10f
+        )
+
+        // Левая/верхняя часть круга
+        curveTo(
+            4f, 6.69f,
+            6.69f, 4f,
+            10f, 4f
+        )
+
+        // Замыкаем круг
+        curveTo(
+            13.31f, 4f,
+            16f, 6.69f,
+            16f, 10f
+        )
+
+        // Ручка лупы
+        moveTo(14.5f, 14.5f)
+        lineTo(20f, 20f)
+    }
+}.build()
+
+val ChatThemeDeleteIcon = ImageVector.Builder(
+    name = "ChatThemeDelete",
+    defaultWidth = 24.dp,
+    defaultHeight = 24.dp,
+    viewportWidth = 24f,
+    viewportHeight = 24f
+).apply {
+    path(
+        fill = null,
+        stroke = SolidColor(Color.Black),
+        strokeLineWidth = 2f,
+        strokeLineCap = StrokeCap.Round,
+        strokeLineJoin = StrokeJoin.Round
+    ) {
+        // Корпус ведра
+        moveTo(6f, 7f)
+        lineTo(7f, 20f)
+        lineTo(17f, 20f)
+        lineTo(18f, 7f)
+
+        // Крышка
+        moveTo(4f, 7f)
+        lineTo(20f, 7f)
+
+        // Ручка
+        moveTo(9f, 7f)
+        lineTo(9f, 5f)
+        lineTo(15f, 5f)
+        lineTo(15f, 7f)
+
+        // Две вертикальные полоски
+        moveTo(10f, 10f)
+        lineTo(10.5f, 17f)
+
+        moveTo(14f, 10f)
+        lineTo(13.5f, 17f)
+    }
+}.build()
+
+val ChatThemePaletteIcon = ImageVector.Builder(
+    name = "ChatThemePalette",
+    defaultWidth = 24.dp,
+    defaultHeight = 24.dp,
+    viewportWidth = 24f,
+    viewportHeight = 24f
+).apply {
+    path(
+        fill = null,
+        stroke = SolidColor(Color.Black),
+        strokeLineWidth = 2f,
+        strokeLineCap = StrokeCap.Round,
+        strokeLineJoin = StrokeJoin.Round
+    ) {
+        // Простая палитра
+        moveTo(12f, 4f)
+        curveTo(
+            7.58f, 4f,
+            4f, 7.58f,
+            4f, 12f
+        )
+        curveTo(
+            4f, 16.42f,
+            7.58f, 20f,
+            12f, 20f
+        )
+
+        // Небольшой "вырез" палитры
+        curveTo(
+            13.1f, 20f,
+            13.5f, 19.2f,
+            13.5f, 18.5f
+        )
+        curveTo(
+            13.5f, 17.5f,
+            14.2f, 17f,
+            15.2f, 17f
+        )
+
+        // Правая часть
+        curveTo(
+            17.85f, 17f,
+            20f, 14.85f,
+            20f, 12f
+        )
+
+        curveTo(
+            20f, 7.58f,
+            16.42f, 4f,
+            12f, 4f
+        )
+
+        // Точки цветов
+        moveTo(8f, 10f)
+        lineTo(8f, 10f)
+
+        moveTo(12f, 8f)
+        lineTo(12f, 8f)
+
+        moveTo(16f, 10f)
+        lineTo(16f, 10f)
+    }
+}.build()
+
 val ChatThemeDefaultIcon = ImageVector.Builder(
     name = "ChatThemeDefault",
     defaultWidth = 24.dp,
