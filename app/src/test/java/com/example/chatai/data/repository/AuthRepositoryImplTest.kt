@@ -3,6 +3,8 @@ package com.example.chatai.data.repository
 import com.example.chatai.data.local.SessionManager
 import com.example.chatai.data.remote.api.ChatApi
 import com.example.chatai.data.remote.dto.LoginRequest
+import com.example.chatai.data.remote.dto.RefreshRequest
+import com.example.chatai.data.remote.dto.RegisterRequest
 import com.example.chatai.data.remote.dto.TokenResponse
 import com.example.chatai.domain.error.AuthException
 import io.mockk.MockKAnnotations
@@ -122,6 +124,131 @@ class AuthRepositoryImplTest {
             fail("Expected IllegalStateException")
         } catch (e: IllegalStateException) {
             assertEquals("Empty response", e.message)
+        }
+    }
+
+    @Test
+    fun `register completes when response is successful`() = runTest {
+        val response = Response.success<Unit>(Unit)
+
+        coEvery {
+            api.register(
+                RegisterRequest(
+                    email = "test@mail.com",
+                    password = "12345678",
+                )
+            )
+        } returns response
+
+        repository.register(
+            email = "test@mail.com",
+            password = "12345678",
+        )
+
+        coVerify {
+            api.register(
+                RegisterRequest(
+                    email = "test@mail.com",
+                    password = "12345678",
+                )
+            )
+        }
+    }
+
+    @Test
+    fun `register throws AuthException when response is unsuccessful`() = runTest {
+        val response = Response.error<Unit>(
+            400,
+            "Bad Request".toResponseBody()
+        )
+
+        coEvery {
+            api.register(any())
+        } returns response
+
+        try {
+            repository.register(
+                email = "test@mail.com",
+                password = "12345678",
+            )
+
+            fail("Expected AuthException")
+        } catch (e: AuthException) {
+            assertEquals(400, e.code)
+        }
+    }
+
+    @Test
+    fun `logout completes when response is successful`() = runTest {
+        val response = Response.success<Unit>(Unit)
+
+        coEvery {
+            api.logout(
+                RefreshRequest("refresh-token")
+            )
+        } returns response
+
+        repository.logout("refresh-token")
+
+        coVerify {
+            api.logout(
+                RefreshRequest("refresh-token")
+            )
+        }
+    }
+
+    @Test
+    fun `logout throws AuthException when response is unsuccessful`() = runTest {
+        val response = Response.error<Unit>(
+            401,
+            "Unauthorized".toResponseBody()
+        )
+
+        coEvery {
+            api.logout(any())
+        } returns response
+
+        try {
+            repository.logout("refresh-token")
+
+            fail("Expected AuthException")
+        } catch (e: AuthException) {
+            assertEquals(401, e.code)
+        }
+    }
+
+    @Test
+    fun `deleteAccount completes when response is successful`() = runTest {
+        val response = Response.success<Unit>(Unit)
+
+        coEvery {
+            api.deleteAccount()
+        } returns response
+
+        repository.deleteAccount()
+
+        coVerify {
+            api.deleteAccount()
+        }
+    }
+
+    @Test
+    fun `deleteAccount throws AuthException when response is unsuccessful`() = runTest {
+        val response = Response.error<Unit>(
+            401,
+            "Unauthorized".toResponseBody()
+        )
+
+        coEvery {
+            api.deleteAccount()
+        } returns response
+
+        try {
+            repository.deleteAccount()
+
+            fail("Expected AuthException")
+        } catch (e: AuthException) {
+            assertEquals(401, e.code)
         }
     }
 }
