@@ -60,9 +60,7 @@ class ChatRepositoryImpl(
             Log.e("CHAT_API", "HTTP ${response.code()}: $error")
 
             throw IllegalStateException(
-                "HTTP ${response.code()}: ${
-                    response.errorBody()?.string()
-                }"
+                "HTTP ${response.code()}: $error"
             )
         }
 
