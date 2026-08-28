@@ -23,6 +23,7 @@ import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import retrofit2.Response
+import kotlin.test.assertFailsWith
 
 class ChatRepositoryImplTest {
     private lateinit var api: ChatApi
@@ -112,8 +113,10 @@ class ChatRepositoryImplTest {
 
     @Test
     fun `sendMessage saves user message and assistant message when response is successful`() = runTest {
+        val chatId = 10
+
         val message = Message(
-            id = 1L,
+            id = 0L,
             serverId = null,
             chatId = 0,
             text = "Hello",
@@ -121,29 +124,25 @@ class ChatRepositoryImplTest {
             timestamp = 123456L,
         )
 
-        val assistantResponse = MessageDto(
+        val responseBody = MessageDto(
             id = 2L,
-            chatId = 10,
-            text = "Hello! How can I help?",
+            chatId = chatId,
+            text = "Hello!",
             timestamp = 123457L,
             userMessageId = 200L,
             sender = "assistant"
         )
 
         coEvery {
-            dao.insert(message.copy(chatId = 10).toEntity())
-        } returns 100L
-
-        coEvery {
             dao.insert(any())
-        } returns 101L
+        } returnsMany listOf(100L, 101L)
 
         coEvery {
             api.sendMsg(
-                chatId = 10,
+                chatId = chatId,
                 msg = message.toDto()
             )
-        } returns Response.success(assistantResponse)
+        } returns Response.success(responseBody)
 
         coEvery {
             dao.updateServerId(
@@ -153,7 +152,7 @@ class ChatRepositoryImplTest {
         } just Runs
 
         val result = repository.sendMessage(
-            chatId = 10,
+            chatId = chatId,
             message = message,
         )
 
@@ -161,8 +160,8 @@ class ChatRepositoryImplTest {
             Message(
                 id = 2L,
                 serverId = 2L,
-                chatId = 10,
-                text = "Hello! How can I help?",
+                chatId = chatId,
+                text = "Hello!",
                 sender = Sender.ASSISTANT,
                 timestamp = 123457L,
             ),
@@ -170,14 +169,11 @@ class ChatRepositoryImplTest {
         )
 
         coVerify(exactly = 1) {
-            dao.insert(message.copy(chatId = 10).toEntity())
+            dao.insert(message.copy(chatId = chatId).toEntity())
         }
 
-        coVerify(exactly = 1) {
-            api.sendMsg(
-                chatId = 10,
-                msg = message.toDto()
-            )
+        coVerify(exactly = 2) {
+            dao.insert(any())
         }
 
         coVerify(exactly = 1) {
@@ -187,8 +183,11 @@ class ChatRepositoryImplTest {
             )
         }
 
-        coVerify(exactly = 2) {
-            dao.insert(any())
+        coVerify(exactly = 1) {
+            api.sendMsg(
+                chatId = chatId,
+                msg = message.toDto()
+            )
         }
     }
 
@@ -276,6 +275,225 @@ class ChatRepositoryImplTest {
         }
 
         coVerify(exactly = 2) {
+            dao.insert(any())
+        }
+    }
+
+    @Test
+    fun `getRemoteMessages returns messages when response is successful`() = runTest {
+        val chatId = 1
+
+        val messages = listOf(
+            MessageDto(
+                id = 1L,
+                chatId = chatId,
+                text = "Hello",
+                sender = "USER",
+                timestamp = 123456L,
+            ),
+            MessageDto(
+                id = 2L,
+                chatId = chatId,
+                text = "Hi!",
+                sender = "ASSISTANT",
+                timestamp = 123457L,
+            )
+        )
+
+        val response = Response.success(messages)
+
+        coEvery {
+            api.getMessages(chatId)
+        } returns response
+
+        val result = repository.getRemoteMessages(chatId)
+
+        assertEquals(messages, result)
+
+        coVerify(exactly = 1) {
+            api.getMessages(chatId)
+        }
+    }
+
+    @Test
+    fun `getRemoteMessages throws ChatException when response is unsuccessful`() = runTest {
+        val chatId = 1
+
+        val response = Response.error<List<MessageDto>>(
+            401,
+            "Unauthorized".toResponseBody()
+        )
+
+        coEvery {
+            api.getMessages(chatId)
+        } returns response
+
+        val exception = assertFailsWith<ChatException> {
+            repository.getRemoteMessages(chatId)
+        }
+
+        assertEquals(401, exception.code)
+
+        coVerify(exactly = 1) {
+            api.getMessages(chatId)
+        }
+    }
+
+    @Test
+    fun `getRemoteMessages returns empty list when response body is null`() = runTest {
+        val chatId = 1
+
+        val response = Response.success<List<MessageDto>>(null)
+
+        coEvery {
+            api.getMessages(chatId)
+        } returns response
+
+        val result = repository.getRemoteMessages(chatId)
+
+        assertTrue(result.isEmpty())
+
+        coVerify(exactly = 1) {
+            api.getMessages(chatId)
+        }
+    }
+
+    @Test
+    fun `syncMessages clears chat and inserts messages when response is successful`() = runTest {
+        val chatId = 1
+
+        val messages = listOf(
+            MessageDto(
+                id = 1L,
+                chatId = chatId,
+                text = "Hello",
+                sender = "USER",
+                timestamp = 123456L,
+            ),
+            MessageDto(
+                id = 2L,
+                chatId = chatId,
+                text = "Hi!",
+                sender = "ASSISTANT",
+                timestamp = 123457L,
+            )
+        )
+
+        val response = Response.success(messages)
+
+        coEvery {
+            api.getMessages(chatId)
+        } returns response
+
+        coEvery {
+            dao.clearChat(chatId)
+        } just Runs
+
+        coEvery {
+            dao.insert(any())
+        } returns 1L
+
+        repository.syncMessages(chatId)
+
+        coVerify(exactly = 1) {
+            api.getMessages(chatId)
+        }
+
+        coVerify(exactly = 1) {
+            dao.clearChat(chatId)
+        }
+
+        coVerify(exactly = 2) {
+            dao.insert(any())
+        }
+    }
+
+    @Test
+    fun `syncMessages throws ChatException when response is unsuccessful`() = runTest {
+        val chatId = 1
+
+        val response = Response.error<List<MessageDto>>(
+            500,
+            "Internal Server Error".toResponseBody()
+        )
+
+        coEvery {
+            api.getMessages(chatId)
+        } returns response
+
+        val exception = assertFailsWith<ChatException> {
+            repository.syncMessages(chatId)
+        }
+
+        assertEquals(500, exception.code)
+
+        coVerify(exactly = 1) {
+            api.getMessages(chatId)
+        }
+
+        coVerify(exactly = 0) {
+            dao.clearChat(any())
+        }
+
+        coVerify(exactly = 0) {
+            dao.insert(any())
+        }
+    }
+
+    @Test
+    fun `syncMessages throws ChatException when response body is null`() = runTest {
+        val chatId = 1
+
+        val response = Response.success<List<MessageDto>>(null)
+
+        coEvery {
+            api.getMessages(chatId)
+        } returns response
+
+        val exception = assertFailsWith<ChatException> {
+            repository.syncMessages(chatId)
+        }
+
+        assertEquals(200, exception.code)
+
+        coVerify(exactly = 1) {
+            api.getMessages(chatId)
+        }
+
+        coVerify(exactly = 0) {
+            dao.clearChat(any())
+        }
+
+        coVerify(exactly = 0) {
+            dao.insert(any())
+        }
+    }
+
+    @Test
+    fun `syncMessages clears chat and does not insert anything when messages are empty`() = runTest {
+        val chatId = 1
+
+        val response = Response.success(emptyList<MessageDto>())
+
+        coEvery {
+            api.getMessages(chatId)
+        } returns response
+
+        coEvery {
+            dao.clearChat(chatId)
+        } just Runs
+
+        repository.syncMessages(chatId)
+
+        coVerify(exactly = 1) {
+            api.getMessages(chatId)
+        }
+
+        coVerify(exactly = 1) {
+            dao.clearChat(chatId)
+        }
+
+        coVerify(exactly = 0) {
             dao.insert(any())
         }
     }
