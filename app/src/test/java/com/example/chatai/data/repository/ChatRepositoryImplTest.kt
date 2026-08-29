@@ -497,4 +497,147 @@ class ChatRepositoryImplTest {
             dao.insert(any())
         }
     }
+
+    @Test
+    fun `clearHistory clears chat when response is successful`() = runTest {
+        val chatId = 10
+
+        val response = Response.success<Unit>(Unit)
+
+        coEvery {
+            api.deleteMessages(chatId)
+        } returns response
+
+        coEvery {
+            dao.clearChat(chatId)
+        } just Runs
+
+        repository.clearHistory(chatId)
+
+        coVerify(exactly = 1) {
+            api.deleteMessages(chatId)
+        }
+
+        coVerify(exactly = 1) {
+            dao.clearChat(chatId)
+        }
+    }
+
+    @Test
+    fun `clearHistory throws ChatException when response is unsuccessful`() = runTest {
+        val chatId = 10
+
+        val response = Response.error<Unit>(
+            500,
+            "Internal Server Error".toResponseBody()
+        )
+
+        coEvery {
+            api.deleteMessages(chatId)
+        } returns response
+
+        try {
+            repository.clearHistory(chatId)
+
+            fail("Expected ChatException")
+        } catch (e: ChatException) {
+            assertEquals(500, e.code)
+        }
+
+        coVerify(exactly = 1) {
+            api.deleteMessages(chatId)
+        }
+
+        coVerify(exactly = 0) {
+            dao.clearChat(any())
+        }
+    }
+
+    @Test
+    fun `deleteMessagesList deletes messages when response is successful`() = runTest {
+        val chatId = 10
+        val messageIds = listOf(101L, 102L, 103L)
+
+        val response = Response.success<Unit>(Unit)
+
+        coEvery {
+            api.deleteMessagesList(
+                chatId = chatId,
+                messageIds = messageIds
+            )
+        } returns response
+
+        coEvery {
+            dao.deleteByServerIds(messageIds)
+        } just Runs
+
+        repository.deleteMessagesList(
+            chatId = chatId,
+            messageIds = messageIds
+        )
+
+        coVerify(exactly = 1) {
+            api.deleteMessagesList(
+                chatId = chatId,
+                messageIds = messageIds
+            )
+        }
+
+        coVerify(exactly = 1) {
+            dao.deleteByServerIds(messageIds)
+        }
+    }
+
+    @Test
+    fun `deleteMessagesList throws ChatException when response is unsuccessful`() = runTest {
+        val chatId = 10
+        val messageIds = listOf(101L, 102L)
+
+        val response = Response.error<Unit>(
+            404,
+            "Not Found".toResponseBody()
+        )
+
+        coEvery {
+            api.deleteMessagesList(
+                chatId = chatId,
+                messageIds = messageIds
+            )
+        } returns response
+
+        try {
+            repository.deleteMessagesList(
+                chatId = chatId,
+                messageIds = messageIds
+            )
+
+            fail("Expected ChatException")
+        } catch (e: ChatException) {
+            assertEquals(404, e.code)
+        }
+
+        coVerify(exactly = 1) {
+            api.deleteMessagesList(
+                chatId = chatId,
+                messageIds = messageIds
+            )
+        }
+
+        coVerify(exactly = 0) {
+            dao.deleteByServerIds(any())
+        }
+    }
+
+    @Test
+    fun `clearAll clears all messages`() = runTest {
+        coEvery {
+            dao.clearAll()
+        } just Runs
+
+        repository.clearAll()
+
+        coVerify(exactly = 1) {
+            dao.clearAll()
+        }
+    }
 }
