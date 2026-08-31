@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
@@ -44,8 +45,27 @@ fun MessagesScreen(
     onSendMessage: (String) -> Unit,
     selectedMessages: SnapshotStateSet<Message>,
     onDeleteMessages: (List<Long>) -> Unit,
+    searchQuery: String,
+    searchResults: List<Int>,
 ) {
     val layoutDirection = LocalLayoutDirection.current
+
+    val listState = rememberLazyListState()
+
+    // Переход к найденному сообщению
+    LaunchedEffect(searchResults) {
+        searchResults.firstOrNull()?.let { index ->
+            listState.animateScrollToItem(index)
+        }
+    }
+
+    // Автоскролл вниз при появлении нового сообщения,
+    // но не во время поиска
+    LaunchedEffect(messages.size) {
+        if (messages.isNotEmpty() && searchQuery.isBlank()) {
+            listState.scrollToItem(messages.lastIndex)
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -58,6 +78,7 @@ fun MessagesScreen(
     ) {
         Messages(
             messages = messages,
+            listState = listState,
             modifier = Modifier.weight(1f),
             selectedMessages = selectedMessages,
             onDeleteMessages = onDeleteMessages,
@@ -72,12 +93,11 @@ fun MessagesScreen(
 @Composable
 fun Messages(
     messages: List<Message>,
+    listState: LazyListState,
     selectedMessages: SnapshotStateSet<Message>,
     onDeleteMessages: (List<Long>) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val listState = rememberLazyListState()
-
     LaunchedEffect(messages.size) {
         if (messages.isNotEmpty()) {
             listState.scrollToItem(messages.lastIndex)
@@ -98,7 +118,6 @@ fun Messages(
                         onDeleteMessages(listOf(serverId))
                     }
                 },
-
                 onSelect = {
                     when (message in selectedMessages) {
                         true -> selectedMessages.remove(message)
@@ -108,7 +127,6 @@ fun Messages(
             )
         }
     }
-
 }
 
 @Composable

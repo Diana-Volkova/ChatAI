@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.collections.emptyList
 
 @HiltViewModel
 class ChatViewModel @Inject constructor(
@@ -28,11 +29,18 @@ class ChatViewModel @Inject constructor(
     private val _settings = MutableStateFlow<ChatSettings?>(null)
     val settings = _settings.asStateFlow()
 
+    private val _searchQuery = MutableStateFlow("")
+    val searchQuery = _searchQuery.asStateFlow()
+
+    private val _searchResults = MutableStateFlow<List<Int>>(emptyList())
+    val searchResults = _searchResults.asStateFlow()
+
     fun dispatch(intent: ChatIntent) {
         when (intent) {
             is ChatIntent.LoadHistory -> {
                 loadHistory(intent.chatId)
             }
+
             is ChatIntent.SendMessage -> {
                 sendMessage(intent.chatId, intent.text)
             }
@@ -51,6 +59,10 @@ class ChatViewModel @Inject constructor(
 
             is ChatIntent.ObserveSettings -> {
                 observeSettings(intent.chatId)
+            }
+
+            is ChatIntent.SearchMessages -> {
+                searchMessages(intent.query)
             }
         }
     }
@@ -132,5 +144,30 @@ class ChatViewModel @Inject constructor(
                 _state.value = ChatState.Error(e.message ?: "error")
             }
         }
+    }
+
+    private fun searchMessages(query: String) {
+        _searchQuery.value = query
+
+        val state = _state.value
+
+        if (state !is ChatState.Success || query.isBlank()) {
+            _searchResults.value = emptyList()
+            return
+        }
+
+        _searchResults.value = state.messages
+            .mapIndexedNotNull { index, message ->
+                if (
+                    message.text.contains(
+                        query,
+                        ignoreCase = true
+                    )
+                ) {
+                    index
+                } else {
+                    null
+                }
+            }
     }
 }

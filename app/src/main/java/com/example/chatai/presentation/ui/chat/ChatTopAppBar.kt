@@ -1,9 +1,14 @@
 package com.example.chatai.presentation.ui.chat
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.DropdownMenu
@@ -19,6 +24,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -38,12 +45,15 @@ import com.example.chatai.presentation.ui.theme.ChatThemeSunsetIcon
 fun ChatTopAppBar(
     selectedMessages: Set<Message>,
     chatId: Int,
+    searchQuery: String,
     navController: NavController,
+    onSearchQueryChange: (String) -> Unit,
     onClearSelection: () -> Unit,
     onIntent: (ChatIntent) -> Unit
 ) {
     var showMenu by remember { mutableStateOf(false) }
     var showThemeSelection by remember { mutableStateOf(false) }
+    var isSearching by remember { mutableStateOf(false) }
 
     fun ChatThemeId.icon(): ImageVector {
         return when (this) {
@@ -56,21 +66,62 @@ fun ChatTopAppBar(
 
     TopAppBar(
         title = {
-            Text(
-                text = if (selectedMessages.isEmpty()) {
-                    "Chat"
-                } else {
-                    "Выбрано: ${selectedMessages.size}"
+            if (isSearching) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp, vertical = 6.dp)
+                        .clip(RoundedCornerShape(20.dp))
+                        .background(MaterialTheme.colorScheme.surfaceVariant)
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                ) {
+                    BasicTextField(
+                        value = searchQuery,
+                        onValueChange = onSearchQueryChange,
+                        modifier = Modifier.fillMaxWidth(),
+                        singleLine = true,
+                        textStyle = MaterialTheme.typography.bodyMedium.copy(
+                            color = MaterialTheme.colorScheme.onSurface
+                        ),
+                        decorationBox = { innerTextField ->
+                            if (searchQuery.isEmpty()) {
+                                Text(
+                                    text = "Поиск по истории",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                            innerTextField()
+                        }
+                    )
+
                 }
-            )
+            } else {
+                Text(
+                    text = if (selectedMessages.isEmpty()) {
+                        "Chat"
+                    } else {
+                        "Выбрано: ${selectedMessages.size}"
+                    }
+                )
+            }
         },
         navigationIcon = {
             IconButton(
                 onClick = {
-                    if (selectedMessages.isNotEmpty()) {
-                        onClearSelection()
-                    } else {
-                        navController.popBackStack()
+                    when {
+                        isSearching -> {
+                            isSearching = false
+                            onSearchQueryChange("")
+                        }
+
+                        selectedMessages.isNotEmpty() -> {
+                            onClearSelection()
+                        }
+
+                        else -> {
+                            navController.popBackStack()
+                        }
                     }
                 }
             ) {
@@ -81,7 +132,20 @@ fun ChatTopAppBar(
             }
         },
         actions = {
-            if (selectedMessages.isNotEmpty()) {
+            if (isSearching) {
+                if (searchQuery.isNotBlank()) {
+                    IconButton(
+                        onClick = {
+                            onSearchQueryChange("")
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Clear,
+                            contentDescription = "Очистить поиск"
+                        )
+                    }
+                }
+            } else if (selectedMessages.isNotEmpty()) {
                 IconButton(
                     onClick = {
                         val messageIds = selectedMessages
@@ -192,7 +256,8 @@ fun ChatTopAppBar(
                                     )
                                 },
                                 onClick = {
-
+                                    showMenu = false
+                                    isSearching = true
                                 }
                             )
 

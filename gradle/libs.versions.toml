@@ -19,6 +19,7 @@ roomRuntime = "2.8.4"
 junit = "4.13.2"
 mockk = "1.13.13"
 kotlinxCoroutines = "1.11.0"
+material3 = "1.4.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -52,6 +53,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 material-icons = { group = "androidx.compose.material", name = "material-icons-core" }
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationComposeVersion" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

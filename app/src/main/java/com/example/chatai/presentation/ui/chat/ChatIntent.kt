@@ -26,4 +26,8 @@ sealed class ChatIntent {
         val chatId: Int,
         val chatThemeId: ChatThemeId
     ) : ChatIntent()
+
+    data class SearchMessages(
+        val query: String
+    ) : ChatIntent()
 }

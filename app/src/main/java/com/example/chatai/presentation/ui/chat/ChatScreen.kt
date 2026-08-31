@@ -30,6 +30,8 @@ fun ChatScreen(
 
     val chatState by viewModel.state.collectAsState()
     val settings by viewModel.settings.collectAsState()
+    val searchQuery by viewModel.searchQuery.collectAsState()
+    val searchResults by viewModel.searchResults.collectAsState()
 
     val selectedMessages = remember { mutableStateSetOf<Message>() }
 
@@ -52,9 +54,15 @@ fun ChatScreen(
                 ChatTopAppBar(
                     selectedMessages = selectedMessages,
                     chatId = chatId,
+                    searchQuery = searchQuery,
                     navController = navController,
                     onClearSelection = {
                         selectedMessages.clear()
+                    },
+                    onSearchQueryChange = { query ->
+                        viewModel.dispatch(
+                            ChatIntent.SearchMessages(query)
+                        )
                     },
                     onIntent = viewModel::dispatch
                 )
@@ -73,6 +81,8 @@ fun ChatScreen(
                     MessagesScreen(
                         messages = state.messages,
                         paddingValues = paddingValues,
+                        searchQuery = searchQuery,
+                        searchResults = searchResults,
                         onSendMessage = { text ->
                             viewModel.dispatch(
                                 ChatIntent.SendMessage(
