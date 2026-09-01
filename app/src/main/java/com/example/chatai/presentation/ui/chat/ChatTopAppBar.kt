@@ -1,11 +1,11 @@
 package com.example.chatai.presentation.ui.chat
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.filled.Clear
@@ -16,17 +16,21 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.chatai.domain.model.Message
@@ -39,6 +43,9 @@ import com.example.chatai.presentation.ui.theme.ChatThemeMidnightIcon
 import com.example.chatai.presentation.ui.theme.ChatThemePaletteIcon
 import com.example.chatai.presentation.ui.theme.ChatThemeSearchIcon
 import com.example.chatai.presentation.ui.theme.ChatThemeSunsetIcon
+import androidx.compose.foundation.lazy.items
+import androidx.compose.ui.draw.alpha
+import formatTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,14 +53,19 @@ fun ChatTopAppBar(
     selectedMessages: Set<Message>,
     chatId: Int,
     searchQuery: String,
+    searchResults: List<Int>,
     navController: NavController,
     onSearchQueryChange: (String) -> Unit,
     onClearSelection: () -> Unit,
-    onIntent: (ChatIntent) -> Unit
+    onIntent: (ChatIntent) -> Unit,
+    onSearchResultClick: (Int) -> Unit,
+    messages: List<Message>
 ) {
     var showMenu by remember { mutableStateOf(false) }
     var showThemeSelection by remember { mutableStateOf(false) }
-    var isSearching by remember { mutableStateOf(false) }
+    var isSearching by rememberSaveable { mutableStateOf(false) }
+    var searchExpanded by rememberSaveable { mutableStateOf(false) }
+
 
     fun ChatThemeId.icon(): ImageVector {
         return when (this) {
@@ -64,57 +76,100 @@ fun ChatTopAppBar(
         }
     }
 
-    TopAppBar(
-        title = {
-            if (isSearching) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp, vertical = 6.dp)
-                        .clip(RoundedCornerShape(20.dp))
-                        .background(MaterialTheme.colorScheme.surfaceVariant)
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                ) {
-                    BasicTextField(
-                        value = searchQuery,
-                        onValueChange = onSearchQueryChange,
-                        modifier = Modifier.fillMaxWidth(),
-                        singleLine = true,
-                        textStyle = MaterialTheme.typography.bodyMedium.copy(
-                            color = MaterialTheme.colorScheme.onSurface
-                        ),
-                        decorationBox = { innerTextField ->
-                            if (searchQuery.isEmpty()) {
-                                Text(
-                                    text = "Поиск по истории",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+    if (isSearching) {
+        SearchBar(
+            inputField = {
+                SearchBarDefaults.InputField(
+                    query = searchQuery,
+                    onQueryChange = onSearchQueryChange,
+                    onSearch = {
+                        searchExpanded = false
+                    },
+                    expanded = searchExpanded,
+                    onExpandedChange = {
+                        searchExpanded = it
+                    },
+                    placeholder = {
+                        Text("Поиск по истории")
+                    },
+                    leadingIcon = {
+                        IconButton(
+                            onClick = {
+                                isSearching = false
+                                searchExpanded = false
+                                onSearchQueryChange("")
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
+                                contentDescription = "Назад"
+                            )
+                        }
+                    },
+                    trailingIcon = {
+                        if (searchQuery.isNotEmpty()) {
+                            IconButton(
+                                onClick = {
+                                    onSearchQueryChange("")
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Clear,
+                                    contentDescription = "Очистить поиск"
                                 )
                             }
-                            innerTextField()
                         }
-                    )
-
-                }
-            } else {
-                Text(
-                    text = if (selectedMessages.isEmpty()) {
-                        "Chat"
-                    } else {
-                        "Выбрано: ${selectedMessages.size}"
                     }
                 )
+            },
+            expanded = searchExpanded,
+            onExpandedChange = {
+                searchExpanded = it
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp)
+        ) {
+            if (searchQuery.isNotBlank()) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    items(
+                        items = searchResults,
+                        key = { it }
+                    ) { index ->
+                        val message = messages.getOrNull(index)
+                        if (message != null) {
+                            SearchResultItem(
+                                message = message,
+                                query = searchQuery,
+                                onClick = {
+                                    onSearchResultClick(index)
+                                }
+                            )
+                        }
+                    }
+                }
             }
+        }
+
+        return
+    }
+
+    TopAppBar(
+        title = {
+            Text(
+                text = if (selectedMessages.isEmpty()) {
+                    "Chat"
+                } else {
+                    "Выбрано: ${selectedMessages.size}"
+                }
+            )
         },
         navigationIcon = {
             IconButton(
                 onClick = {
                     when {
-                        isSearching -> {
-                            isSearching = false
-                            onSearchQueryChange("")
-                        }
-
                         selectedMessages.isNotEmpty() -> {
                             onClearSelection()
                         }
@@ -132,20 +187,7 @@ fun ChatTopAppBar(
             }
         },
         actions = {
-            if (isSearching) {
-                if (searchQuery.isNotBlank()) {
-                    IconButton(
-                        onClick = {
-                            onSearchQueryChange("")
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Clear,
-                            contentDescription = "Очистить поиск"
-                        )
-                    }
-                }
-            } else if (selectedMessages.isNotEmpty()) {
+            if (selectedMessages.isNotEmpty()) {
                 IconButton(
                     onClick = {
                         val messageIds = selectedMessages
@@ -245,6 +287,7 @@ fun ChatTopAppBar(
                                     showThemeSelection = true
                                 }
                             )
+
                             DropdownMenuItem(
                                 text = {
                                     Text("Поиск по истории")
@@ -258,6 +301,7 @@ fun ChatTopAppBar(
                                 onClick = {
                                     showMenu = false
                                     isSearching = true
+                                    searchExpanded = true
                                 }
                             )
 
@@ -288,3 +332,31 @@ fun ChatTopAppBar(
         }
     )
 }
+
+@Composable
+private fun SearchResultItem(
+    message: Message,
+    query: String,
+    onClick: () -> Unit
+) {
+    ListItem(
+        headlineContent = {
+            Text(
+                text = message.text,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
+        },
+        supportingContent = {
+            Text(
+                text = formatTime(message.timestamp),
+                modifier = Modifier.alpha(0.7f),
+                style = MaterialTheme.typography.labelSmall,
+            )
+        },
+        modifier = Modifier.clickable(
+            onClick = onClick
+        )
+    )
+}
+
