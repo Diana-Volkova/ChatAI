@@ -144,6 +144,9 @@ fun ChatTopAppBar(
                                 message = message,
                                 query = searchQuery,
                                 onClick = {
+                                    isSearching = false
+                                    searchExpanded = false
+                                    onSearchQueryChange("")
                                     onSearchResultClick(index)
                                 }
                             )

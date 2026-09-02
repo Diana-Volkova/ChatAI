@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.TextFieldState
@@ -42,27 +41,19 @@ import com.example.chatai.presentation.ui.components.MessageItem
 fun MessagesScreen(
     messages: List<Message>,
     paddingValues: PaddingValues,
+    listState: LazyListState,
     onSendMessage: (String) -> Unit,
     selectedMessages: SnapshotStateSet<Message>,
     onDeleteMessages: (List<Long>) -> Unit,
     searchQuery: String,
-    searchResults: List<Int>,
 ) {
     val layoutDirection = LocalLayoutDirection.current
 
-    val listState = rememberLazyListState()
-
-    // Переход к найденному сообщению
-    LaunchedEffect(searchResults) {
-        searchResults.firstOrNull()?.let { index ->
-            listState.animateScrollToItem(index)
-        }
-    }
-
-    // Автоскролл вниз при появлении нового сообщения,
-    // но не во время поиска
     LaunchedEffect(messages.size) {
-        if (messages.isNotEmpty() && searchQuery.isBlank()) {
+        if (
+            messages.isNotEmpty() &&
+            searchQuery.isBlank()
+        ) {
             listState.scrollToItem(messages.lastIndex)
         }
     }
@@ -89,6 +80,7 @@ fun MessagesScreen(
         )
     }
 }
+
 
 @Composable
 fun Messages(

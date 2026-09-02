@@ -96,8 +96,8 @@ fun ChatScreen(
                     MessagesScreen(
                         messages = state.messages,
                         paddingValues = paddingValues,
+                        listState = lazyListState,
                         searchQuery = searchQuery,
-                        searchResults = searchResults,
                         onSendMessage = { text ->
                             viewModel.dispatch(
                                 ChatIntent.SendMessage(
