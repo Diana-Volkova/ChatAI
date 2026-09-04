@@ -1,8 +1,12 @@
 package com.example.chatai.presentation.ui.chat
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,7 +20,6 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
@@ -44,7 +47,6 @@ import com.example.chatai.presentation.ui.theme.ChatThemePaletteIcon
 import com.example.chatai.presentation.ui.theme.ChatThemeSearchIcon
 import com.example.chatai.presentation.ui.theme.ChatThemeSunsetIcon
 import androidx.compose.foundation.lazy.items
-import androidx.compose.ui.draw.alpha
 import formatTime
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -90,7 +92,10 @@ fun ChatTopAppBar(
                         searchExpanded = it
                     },
                     placeholder = {
-                        Text("Поиск по истории")
+                        Text(
+                            text = "Поиск по истории",
+                            style = MaterialTheme.typography.bodyLarge
+                        )
                     },
                     leadingIcon = {
                         IconButton(
@@ -107,7 +112,9 @@ fun ChatTopAppBar(
                         }
                     },
                     trailingIcon = {
-                        if (searchQuery.isNotEmpty()) {
+                        AnimatedVisibility(
+                            visible = searchQuery.isNotEmpty()
+                        ) {
                             IconButton(
                                 onClick = {
                                     onSearchQueryChange("")
@@ -128,7 +135,12 @@ fun ChatTopAppBar(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 8.dp)
+                .padding(horizontal = 12.dp),
+            colors = SearchBarDefaults.colors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainer,
+            ),
+            tonalElevation = 0.dp,
+            shadowElevation = 0.dp
         ) {
             if (searchQuery.isNotBlank()) {
                 LazyColumn(
@@ -342,24 +354,29 @@ private fun SearchResultItem(
     query: String,
     onClick: () -> Unit
 ) {
-    ListItem(
-        headlineContent = {
-            Text(
-                text = message.text,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(
+                horizontal = 20.dp,
+                vertical = 14.dp
             )
-        },
-        supportingContent = {
-            Text(
-                text = formatTime(message.timestamp),
-                modifier = Modifier.alpha(0.7f),
-                style = MaterialTheme.typography.labelSmall,
-            )
-        },
-        modifier = Modifier.clickable(
-            onClick = onClick
+    ) {
+        Text(
+            text = message.text,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+            style = MaterialTheme.typography.bodyLarge
         )
-    )
+
+        Spacer(Modifier.height(5.dp))
+
+        Text(
+            text = formatTime(message.timestamp),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
 }
 
