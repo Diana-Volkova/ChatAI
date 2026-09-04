@@ -47,6 +47,7 @@ import com.example.chatai.presentation.ui.theme.ChatThemePaletteIcon
 import com.example.chatai.presentation.ui.theme.ChatThemeSearchIcon
 import com.example.chatai.presentation.ui.theme.ChatThemeSunsetIcon
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.HorizontalDivider
 import formatTime
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -161,6 +162,10 @@ fun ChatTopAppBar(
                                     onSearchQueryChange("")
                                     onSearchResultClick(index)
                                 }
+                            )
+                            HorizontalDivider(
+                                modifier = Modifier.padding(horizontal = 20.dp),
+                                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f)
                             )
                         }
                     }
