@@ -48,6 +48,13 @@ import com.example.chatai.presentation.ui.theme.ChatThemeSearchIcon
 import com.example.chatai.presentation.ui.theme.ChatThemeSunsetIcon
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
+import com.example.chatai.R
 import formatTime
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -94,7 +101,7 @@ fun ChatTopAppBar(
                     },
                     placeholder = {
                         Text(
-                            text = "Поиск по истории",
+                            text = stringResource(R.string.search_history),
                             style = MaterialTheme.typography.bodyLarge
                         )
                     },
@@ -108,7 +115,7 @@ fun ChatTopAppBar(
                         ) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
-                                contentDescription = "Назад"
+                                contentDescription = stringResource(R.string.back)
                             )
                         }
                     },
@@ -123,7 +130,7 @@ fun ChatTopAppBar(
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Clear,
-                                    contentDescription = "Очистить поиск"
+                                    contentDescription = stringResource(R.string.clear_search)
                                 )
                             }
                         }
@@ -180,9 +187,9 @@ fun ChatTopAppBar(
         title = {
             Text(
                 text = if (selectedMessages.isEmpty()) {
-                    "Chat"
+                    stringResource(R.string.chat)
                 } else {
-                    "Выбрано: ${selectedMessages.size}"
+                    stringResource(R.string.selected_messages, selectedMessages.size)
                 }
             )
         },
@@ -202,7 +209,7 @@ fun ChatTopAppBar(
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
-                    contentDescription = "Назад"
+                    contentDescription = stringResource(R.string.back)
                 )
             }
         },
@@ -225,7 +232,7 @@ fun ChatTopAppBar(
                 ) {
                     Icon(
                         imageVector = Icons.Outlined.Delete,
-                        contentDescription = "Удалить сообщения"
+                        contentDescription = stringResource(R.string.delete_messages)
                     )
                 }
             } else {
@@ -237,7 +244,7 @@ fun ChatTopAppBar(
                     ) {
                         Icon(
                             imageVector = Icons.Default.MoreVert,
-                            contentDescription = "Дополнительные действия"
+                            contentDescription = stringResource(R.string.more_actions)
                         )
                     }
 
@@ -295,7 +302,7 @@ fun ChatTopAppBar(
                         } else {
                             DropdownMenuItem(
                                 text = {
-                                    Text("Тема")
+                                    Text(stringResource(R.string.theme_name))
                                 },
                                 leadingIcon = {
                                     Icon(
@@ -310,7 +317,7 @@ fun ChatTopAppBar(
 
                             DropdownMenuItem(
                                 text = {
-                                    Text("Поиск по истории")
+                                    Text(stringResource(R.string.search_history))
                                 },
                                 leadingIcon = {
                                     Icon(
@@ -327,7 +334,7 @@ fun ChatTopAppBar(
 
                             DropdownMenuItem(
                                 text = {
-                                    Text("Очистить историю")
+                                    Text(stringResource(R.string.clear_history))
                                 },
                                 leadingIcon = {
                                     Icon(
@@ -369,7 +376,10 @@ private fun SearchResultItem(
             )
     ) {
         Text(
-            text = message.text,
+            text = highlightQuery(
+                text = message.text,
+                query = query,
+            ),
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
             style = MaterialTheme.typography.bodyLarge
@@ -385,3 +395,34 @@ private fun SearchResultItem(
     }
 }
 
+private fun highlightQuery(
+    text: String,
+    query: String,
+): AnnotatedString {
+    if (query.isBlank()) return AnnotatedString(text)
+
+    return buildAnnotatedString {
+        var start = 0
+
+        while (start < text.length) {
+            val index = text.indexOf(
+                query,
+                startIndex = start,
+                ignoreCase = true,
+            )
+
+            if (index == -1) {
+                append(text, start, text.length)
+                break
+            }
+
+            append(text, start, index)
+
+            withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+                append(text, index, index + query.length)
+            }
+
+            start = index + query.length
+        }
+    }
+}

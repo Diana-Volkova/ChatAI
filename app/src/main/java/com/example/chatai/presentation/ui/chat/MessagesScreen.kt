@@ -51,8 +51,7 @@ fun MessagesScreen(
 
     LaunchedEffect(messages.size) {
         if (
-            messages.isNotEmpty() &&
-            searchQuery.isBlank()
+            messages.isNotEmpty() && searchQuery.isBlank()
         ) {
             listState.scrollToItem(messages.lastIndex)
         }
@@ -90,17 +89,14 @@ fun Messages(
     onDeleteMessages: (List<Long>) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    LaunchedEffect(messages.size) {
-        if (messages.isNotEmpty()) {
-            listState.scrollToItem(messages.lastIndex)
-        }
-    }
-
     LazyColumn(
         state = listState,
         modifier = modifier,
     ) {
-        items(messages) { message ->
+        items(
+            messages,
+            key = { message -> message.id }
+        ) { message ->
             MessageItem(
                 message = message,
                 selected = message in selectedMessages,
@@ -111,9 +107,10 @@ fun Messages(
                     }
                 },
                 onSelect = {
-                    when (message in selectedMessages) {
-                        true -> selectedMessages.remove(message)
-                        false -> selectedMessages.add(message)
+                    if (message in selectedMessages) {
+                        selectedMessages.remove(message)
+                    } else {
+                        selectedMessages.add(message)
                     }
                 },
             )

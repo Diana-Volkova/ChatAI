@@ -60,6 +60,8 @@ fun SettingsScreen(navController: NavHostController) {
             ThemeSelector()
 
             Spacer(modifier = Modifier.height(24.dp))
+
+            LanguageSelector()
         }
     }
 }

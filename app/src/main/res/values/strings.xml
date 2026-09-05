@@ -1,3 +1,21 @@
 <resources>
     <string name="app_name">ChatAI</string>
+    <string name="theme">Theme</string>
+    <string name="language">Language</string>
+
+    <string name="language_russian">Русский</string>
+    <string name="language_english">English</string>
+
+    <string name="search_history">Search history</string>
+    <string name="message_placeholder">Message</string>
+    <string name="send_message">Send message</string>
+    <string name="delete_message">Delete message</string>
+    <string name="delete_messages">Delete messages</string>
+    <string name="back">Back</string>
+    <string name="clear_search">Clear search</string>
+    <string name="clear_history">Clear history</string>
+    <string name="more_actions">More actions</string>
+    <string name="chat">Chat</string>
+    <string name="selected_messages">Selected: %1$d</string>
+    <string name="theme_name">Theme</string>
 </resources>
