@@ -5,14 +5,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.chatai.domain.interactors.HistoryInteractor
 import com.example.chatai.domain.interactors.MessageInteractor
 import com.example.chatai.domain.model.ChatSettings
-import com.example.chatai.domain.model.Message
 import com.example.chatai.domain.repository.ChatSettingsRepository
 import com.example.chatai.domain.theme.ChatThemeId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.collections.emptyList
@@ -88,7 +87,6 @@ class ChatViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 messageInteractor.sendMessage(chatId, text)
-                    .collect(::addMessage)
             } catch (e: Exception) {
                 _state.value = ChatState.Error(e.message ?: "error")
             }
@@ -98,25 +96,16 @@ class ChatViewModel @Inject constructor(
     private fun loadHistory(chatId: Int) {
         viewModelScope.launch {
             try {
-                val history = historyInteractor.loadHistory(chatId)
-                _state.value = ChatState.Success(history)
-
-                historyInteractor.syncHistory(chatId)
-
-                val syncedHistory = historyInteractor.loadHistory(chatId)
-                _state.value = ChatState.Success(syncedHistory)
-
+                historyInteractor
+                    .observeHistory(chatId)
+                    .onStart {
+                        historyInteractor.syncHistory(chatId)
+                    }
+                    .collect { history ->
+                        _state.value = ChatState.Success(history)
+                    }
             } catch (e: Exception) {
                 _state.value = ChatState.Error(e.message ?: "error")
-            }
-        }
-    }
-
-    private fun addMessage(message: Message) {
-        _state.update { state ->
-            when (state) {
-                is ChatState.Success -> state.copy(messages = state.messages + message)
-                else -> state
             }
         }
     }
@@ -125,10 +114,6 @@ class ChatViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 messageInteractor.deleteMessages(chatId, messageIds)
-
-                val history = historyInteractor.loadHistory(chatId)
-                _state.value = ChatState.Success(history)
-
             } catch (e: Exception) {
                 _state.value = ChatState.Error(e.message ?: "error")
             }

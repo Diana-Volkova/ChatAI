@@ -12,21 +12,19 @@ import com.example.chatai.data.remote.dto.ChatDto
 import com.example.chatai.data.remote.dto.MessageDto
 import com.example.chatai.domain.error.ChatException
 import com.example.chatai.domain.repository.ChatRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class ChatRepositoryImpl(
     private val api: ChatApi,
     private val dao: MessageDao
 ) : ChatRepository {
-    override suspend fun loadHistory(chatId: Int): List<Message> {
-        Log.d("CHAT_SYNC", "loadHistory: $chatId")
-        val messages = dao.getByChatId(chatId)
 
-        Log.d("CHAT_SYNC", "local messages: $messages")
-
-        return messages.map {
-            Log.d("CHAT_SYNC", "mapping: $it")
-            it.toDomain()
-        }
+    override fun observeHistory(chatId: Int): Flow<List<Message>> {
+        return dao.observeMessages(chatId)
+            .map { messages ->
+                messages.map { it.toDomain() }
+            }
     }
 
     override suspend fun loadChats(): List<ChatDto> {
@@ -105,24 +103,17 @@ class ChatRepositoryImpl(
     override suspend fun syncMessages(chatId: Int) {
         val response = api.getMessages(chatId)
 
-        Log.d("CHAT_SYNC", "GET messages: ${response.code()}")
-
         if (!response.isSuccessful) {
-            val error = response.errorBody()?.string()
-
-            Log.e("CHAT_SYNC", "GET messages error: $error")
-
             throw ChatException(response.code())
         }
 
         val messages = response.body()
             ?: throw ChatException(response.code())
 
-        dao.clearChat(chatId)
-
-        messages.forEach { message ->
-            dao.insert(message.toEntity())
-        }
+        dao.replaceChatMessages(
+            chatId = chatId,
+            messages = messages.map { it.toEntity() }
+        )
     }
 
     override suspend fun clearHistory(chatId: Int) {
