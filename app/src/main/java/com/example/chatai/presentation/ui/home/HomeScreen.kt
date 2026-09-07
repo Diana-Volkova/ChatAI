@@ -37,10 +37,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.example.chatai.R
 import com.example.chatai.data.remote.dto.ChatDto
 import com.example.chatai.presentation.navigation.Screen
 
@@ -71,7 +73,7 @@ fun HomeScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text("Home")
+                    Text(stringResource(R.string.home))
                 },
                 actions = {
                     IconButton(
@@ -81,7 +83,7 @@ fun HomeScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.Settings,
-                            contentDescription = "Settings"
+                            contentDescription = stringResource(R.string.settings)
                         )
                     }
                 },
@@ -181,7 +183,7 @@ private fun HomeContent(
                     contentColor = MaterialTheme.colorScheme.error
                 )
             ) {
-                Text("Delete account")
+                Text(stringResource(R.string.delete_account))
             }
         }
     }
@@ -242,12 +244,12 @@ private fun DeleteAccountDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
-            Text("Удалить аккаунт?")
+            Text(stringResource(R.string.acc_deletion_confirmation))
         },
         text = {
             Text(
-                "Это действие нельзя отменить. " +
-                        "Все данные аккаунта будут удалены."
+                stringResource(R.string.delete_account_warning1) +
+                        stringResource(R.string.delete_account_warning)
             )
         },
         confirmButton = {
@@ -257,14 +259,14 @@ private fun DeleteAccountDialog(
                     contentColor = MaterialTheme.colorScheme.error
                 )
             ) {
-                Text("Удалить")
+                Text(stringResource(R.string.delete))
             }
         },
         dismissButton = {
             TextButton(
                 onClick = onDismiss
             ) {
-                Text("Отмена")
+                Text(stringResource(R.string.cancel))
             }
         }
     )

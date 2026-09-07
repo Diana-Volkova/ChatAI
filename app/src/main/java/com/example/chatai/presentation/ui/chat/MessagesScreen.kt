@@ -33,7 +33,9 @@ import androidx.compose.runtime.snapshots.SnapshotStateSet
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.chatai.R
 import com.example.chatai.domain.model.Message
 import com.example.chatai.presentation.ui.components.MessageItem
 
@@ -139,7 +141,7 @@ fun MessageInput(
         OutlinedTextField(
             state = fieldState,
             placeholder = {
-                Text("Message...")
+                Text(stringResource(R.string.message))
             },
             modifier = Modifier.weight(1f),
             shape = RoundedCornerShape(24.dp),
@@ -158,7 +160,7 @@ fun MessageInput(
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.Send,
-                contentDescription = "Send",
+                contentDescription = stringResource(R.string.send),
                 tint = MaterialTheme.colorScheme.onPrimary,
             )
         }

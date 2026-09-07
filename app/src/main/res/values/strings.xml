@@ -18,4 +18,14 @@
     <string name="chat">Chat</string>
     <string name="selected_messages">Selected: %1$d</string>
     <string name="theme_name">Theme</string>
+    <string name="message">Message…</string>
+    <string name="send">Send</string>
+    <string name="home">Home</string>
+    <string name="settings">Settings</string>
+    <string name="delete_account">Delete account</string>
+    <string name="acc_deletion_confirmation">Delete account?</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete_account_warning1">"This action cannot be undone. "</string>
+    <string name="delete_account_warning">All account data will be deleted.</string>
 </resources>

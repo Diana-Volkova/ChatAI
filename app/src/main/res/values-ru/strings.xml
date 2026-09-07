@@ -19,4 +19,14 @@
     <string name="chat">Chat</string>
     <string name="selected_messages">Выбрано: %1$d</string>
     <string name="theme_name">Тема</string>
+    <string name="message">Сообщение…</string>
+    <string name="send">Отправить</string>
+    <string name="home">Дом</string>
+    <string name="settings">Настройки</string>
+    <string name="delete_account">Удалить аккаунт</string>
+    <string name="acc_deletion_confirmation">Удалить аккаунт?</string>
+    <string name="delete">Удалить</string>
+    <string name="cancel">Отмена</string>
+    <string name="delete_account_warning1">"Это действие нельзя отменить. "</string>
+    <string name="delete_account_warning">Все данные аккаунта будут удалены.</string>
 </resources>
