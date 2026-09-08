@@ -35,7 +35,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -53,7 +53,7 @@ fun HomeScreen(
 ) {
     val chats by viewModel.chats.collectAsStateWithLifecycle()
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(viewModel) {
         viewModel.effects.collect { effect ->
             when (effect) {
                 AuthEffect.NavigateToLogin -> {
@@ -97,7 +97,6 @@ fun HomeScreen(
         HomeContent(
             chats = chats,
             modifier = Modifier
-                .fillMaxSize()
                 .padding(paddingValues),
             onChatClick = { chatId ->
                 navController.navigate(
@@ -118,7 +117,7 @@ private fun HomeContent(
     onLogout: () -> Unit,
     onDeleteAccount: () -> Unit
 ) {
-    var showDeleteDialog by remember {
+    var showDeleteDialog by rememberSaveable {
         mutableStateOf(false)
     }
 
@@ -126,7 +125,7 @@ private fun HomeContent(
         modifier = modifier
     ) {
         Text(
-            text = "Мои чаты",
+            text = stringResource(R.string.chats),
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier.padding(
                 start = 16.dp,
@@ -151,9 +150,7 @@ private fun HomeContent(
 
                 ChatItem(
                     chat = chat,
-                    onClick = {
-                        onChatClick(chat.id)
-                    }
+                    onClick = onChatClick
                 )
             }
         }
@@ -171,7 +168,7 @@ private fun HomeContent(
                 onClick = onLogout,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Logout")
+                Text(stringResource(R.string.logout))
             }
 
             OutlinedButton(
@@ -204,12 +201,14 @@ private fun HomeContent(
 @Composable
 private fun ChatItem(
     chat: ChatDto,
-    onClick: () -> Unit
+    onClick: (Int) -> Unit
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick),
+            .clickable {
+                onClick(chat.id)
+            },
         shape = MaterialTheme.shapes.large,
         elevation = CardDefaults.cardElevation(
             defaultElevation = 2.dp

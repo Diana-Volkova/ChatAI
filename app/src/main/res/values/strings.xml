@@ -28,4 +28,8 @@
     <string name="cancel">Cancel</string>
     <string name="delete_account_warning1">"This action cannot be undone. "</string>
     <string name="delete_account_warning">All account data will be deleted.</string>
+    <string name="chats">My chats</string>
+    <string name="logout">Logout</string>
+    <string name="server_connection_error">No connection to the server</string>
+    <string name="unexpected_error">An unexpected error occurred</string>
 </resources>
