@@ -2,6 +2,7 @@
 agp = "9.3.0"
 converterGson = "3.0.0"
 converterScalars = "3.0.0"
+core = "1.7.0"
 hilt = "2.60.1"
 kotlin = "2.4.10"
 coreKtx = "1.19.0"
@@ -15,13 +16,16 @@ kspVersion = "2.3.10"
 navigationComposeVersion = "2.9.8"
 hiltNavigation = "1.4.0"
 retrofit = "3.0.0"
+robolectric = "4.16"
 roomRuntime = "2.8.4"
 junit = "4.13.2"
 mockk = "1.13.13"
 kotlinxCoroutines = "1.11.0"
 material3 = "1.4.0"
+truth = "1.4.5"
 
 [libraries]
+androidx-core = { module = "androidx.test:core", version.ref = "core" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntime" }
@@ -32,6 +36,7 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
@@ -54,6 +59,8 @@ material-icons = { group = "androidx.compose.material", name = "material-icons-c
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationComposeVersion" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
+robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
+truth = { module = "com.google.truth:truth", version.ref = "truth" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
