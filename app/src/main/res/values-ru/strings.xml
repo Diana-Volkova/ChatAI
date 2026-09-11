@@ -33,4 +33,6 @@
     <string name="logout">Выйти</string>
     <string name="server_connection_error">Нет соединения с сервером</string>
     <string name="unexpected_error">Произошла непредвиденная ошибка</string>
+    <string name="language_change">Language</string>
+    <string name="appearance">Тема</string>
 </resources>

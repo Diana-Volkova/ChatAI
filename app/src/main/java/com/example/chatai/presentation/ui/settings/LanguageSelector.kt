@@ -49,7 +49,7 @@ fun LanguageSelector() {
                 }
                 .padding(16.dp)
         ) {
-            Text("English")
+            Text(stringResource(R.string.language_english))
         }
 
         Row(
@@ -65,7 +65,7 @@ fun LanguageSelector() {
                 }
                 .padding(16.dp)
         ) {
-            Text("Русский")
+            Text(stringResource(R.string.language_russian))
         }
     }
 }

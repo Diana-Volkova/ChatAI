@@ -32,4 +32,6 @@
     <string name="logout">Logout</string>
     <string name="server_connection_error">No connection to the server</string>
     <string name="unexpected_error">An unexpected error occurred</string>
+    <string name="language_change">Language</string>
+    <string name="appearance">Appearance</string>
 </resources>
