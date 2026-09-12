@@ -33,6 +33,16 @@
     <string name="logout">Выйти</string>
     <string name="server_connection_error">Нет соединения с сервером</string>
     <string name="unexpected_error">Произошла непредвиденная ошибка</string>
-    <string name="language_change">Language</string>
+    <string name="language_change">Язык</string>
     <string name="appearance">Тема</string>
+    <string name="accessibility_selected">Выбрано</string>
+
+    <string name="theme_system">Как в системе</string>
+    <string name="theme_light">Светлая</string>
+    <string name="theme_dark">Тёмная</string>
+
+    <string name="theme_system_description">Тема устройства</string>
+    <string name="theme_light_description">Всегда светлая тема</string>
+    <string name="theme_dark_description">Всегда тёмная тема</string>
+
 </resources>

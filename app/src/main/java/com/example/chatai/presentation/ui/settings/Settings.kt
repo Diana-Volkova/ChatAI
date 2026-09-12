@@ -1,8 +1,8 @@
 package com.example.chatai.presentation.ui.settings
 
+import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,18 +22,36 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.chatai.R
+import com.example.chatai.core.localization.LanguageManager
+import com.example.chatai.presentation.ui.theme.ThemeState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     navController: NavHostController
 ) {
+    val context = LocalContext.current
+    val activity = context as? Activity
+
+    var selectedLanguage by remember {
+        mutableStateOf(
+            LanguageManager(context).getLanguage()
+        )
+    }
+
+    val selectedTheme = ThemeState.mode
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
@@ -41,13 +59,14 @@ fun SettingsScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = stringResource(R.string.settings),
-                        style = MaterialTheme.typography.titleLarge
+                        text = stringResource(R.string.settings)
                     )
                 },
                 navigationIcon = {
                     IconButton(
-                        onClick = { navController.popBackStack() }
+                        onClick = {
+                            navController.popBackStack()
+                        }
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
@@ -72,16 +91,33 @@ fun SettingsScreen(
             SettingsSection(
                 title = stringResource(R.string.appearance)
             ) {
-                ThemeSelector()
+                ThemeSelector(
+                    selectedMode = selectedTheme,
+                    onModeSelected = { mode ->
+                        ThemeState.mode = mode
+                    }
+                )
             }
 
             SettingsSection(
-                title = stringResource(R.string.language_change)
+                title = stringResource(R.string.language)
             ) {
-                LanguageSelector()
+                LanguageSelector(
+                    selectedLanguage = selectedLanguage,
+                    onLanguageSelected = { language ->
+                        selectedLanguage = language
+
+                        LanguageManager(context)
+                            .setLanguage(language)
+
+                        activity?.recreate()
+                    }
+                )
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(
+                modifier = Modifier.height(32.dp)
+            )
         }
     }
 }
@@ -89,7 +125,7 @@ fun SettingsScreen(
 @Composable
 private fun SettingsSection(
     title: String,
-    content: @Composable ColumnScope.() -> Unit
+    content: @Composable () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -111,8 +147,8 @@ private fun SettingsSection(
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(16.dp))
                 .background(MaterialTheme.colorScheme.surface)
-                .padding(vertical = 4.dp),
-            content = content
-        )
+        ) {
+            content()
+        }
     }
 }

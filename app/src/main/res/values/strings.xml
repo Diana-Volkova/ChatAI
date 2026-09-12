@@ -34,4 +34,11 @@
     <string name="unexpected_error">An unexpected error occurred</string>
     <string name="language_change">Language</string>
     <string name="appearance">Appearance</string>
+    <string name="accessibility_selected">Selected</string>
+    <string name="theme_system">System</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_system_description">Follow device settings</string>
+    <string name="theme_light_description">Always use light theme</string>
+    <string name="theme_dark_description">Always use dark theme</string>
 </resources>

@@ -1,71 +1,104 @@
 package com.example.chatai.presentation.ui.settings
 
-import android.app.Activity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.chatai.R
 import com.example.chatai.core.localization.LanguageManager
 
 @Composable
-fun LanguageSelector() {
+fun LanguageSelector(
+    selectedLanguage: String,
+    onLanguageSelected: (String) -> Unit
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        LanguageOption(
+            language = LanguageManager.EN,
+            title = stringResource(
+                R.string.language_english
+            ),
+            selected = selectedLanguage == LanguageManager.EN,
+            onClick = {
+                onLanguageSelected(LanguageManager.EN)
+            },
+            showDivider = true
+        )
 
-    val context = LocalContext.current
-    val activity = context as? Activity
-
-    var currentLanguage by remember {
-        mutableStateOf(
-            LanguageManager(context).getLanguage()
+        LanguageOption(
+            language = LanguageManager.RU,
+            title = stringResource(
+                R.string.language_russian
+            ),
+            selected = selectedLanguage == LanguageManager.RU,
+            onClick = {
+                onLanguageSelected(LanguageManager.RU)
+            },
+            showDivider = false
         )
     }
+}
 
+@Composable
+private fun LanguageOption(
+    language: String,
+    title: String,
+    selected: Boolean,
+    onClick: () -> Unit,
+    showDivider: Boolean
+) {
     Column {
-        Text(
-            text = stringResource(R.string.language)
-        )
 
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable {
-                    currentLanguage = LanguageManager.EN
-
-                    LanguageManager(context)
-                        .setLanguage(LanguageManager.EN)
-
-                    activity?.recreate()
-                }
-                .padding(16.dp)
+                .clickable(onClick = onClick)
+                .padding(
+                    horizontal = 20.dp,
+                    vertical = 16.dp
+                ),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(stringResource(R.string.language_english))
+
+            Text(
+                text = title,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.weight(1f)
+            )
+
+            if (selected) {
+                Icon(
+                    imageVector = Icons.Default.Check,
+                    contentDescription = stringResource(
+                        R.string.accessibility_selected
+                    ),
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
         }
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable {
-                    currentLanguage = LanguageManager.RU
-
-                    LanguageManager(context)
-                        .setLanguage(LanguageManager.RU)
-
-                    activity?.recreate()
-                }
-                .padding(16.dp)
-        ) {
-            Text(stringResource(R.string.language_russian))
+        if (showDivider) {
+            HorizontalDivider(
+                modifier = Modifier.padding(
+                    horizontal = 20.dp
+                ),
+                color = MaterialTheme.colorScheme.outlineVariant
+            )
         }
     }
 }
