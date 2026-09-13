@@ -3,6 +3,10 @@
     <string name="theme">Theme</string>
     <string name="language">Language</string>
 
+    <string name="email">Log in</string>
+    <string name="password">Password</string>
+    <string name="login">Email</string>
+
     <string name="language_russian">Русский</string>
     <string name="language_english">English</string>
 
@@ -41,4 +45,6 @@
     <string name="theme_system_description">Follow device settings</string>
     <string name="theme_light_description">Always use light theme</string>
     <string name="theme_dark_description">Always use dark theme</string>
+    <string name="create_account">Create account</string>
+    <string name="forgot_password">Forgot password?</string>
 </resources>

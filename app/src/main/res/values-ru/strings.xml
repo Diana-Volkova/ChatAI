@@ -4,6 +4,10 @@
     <string name="theme">Тема</string>
     <string name="language">Язык</string>
 
+    <string name="password">Пароль</string>
+    <string name="email">Email</string>
+    <string name="login">Войти</string>
+
     <string name="language_russian">Русский</string>
     <string name="language_english">English</string>
 
@@ -44,5 +48,7 @@
     <string name="theme_system_description">Тема устройства</string>
     <string name="theme_light_description">Всегда светлая тема</string>
     <string name="theme_dark_description">Всегда тёмная тема</string>
+    <string name="create_account">Создать аккаунт</string>
+    <string name="forgot_password">Забыли пароль?</string>
 
 </resources>

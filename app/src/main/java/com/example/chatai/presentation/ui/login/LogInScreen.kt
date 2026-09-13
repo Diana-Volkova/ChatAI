@@ -23,20 +23,23 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.chatai.R
 import com.example.chatai.presentation.navigation.Screen
 
 @Composable
-fun LogInScreen(navController: NavController) {
+fun LogInScreen(
+    navController: NavController,
+    viewModel: LogInViewModel = hiltViewModel()
+) {
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-
-    val viewModel: LogInViewModel = hiltViewModel()
 
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -90,7 +93,7 @@ fun LogInScreen(navController: NavController) {
                     onValueChange = { email = it },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
-                    label = { Text("Email") },
+                    label = { Text(stringResource(R.string.email)) },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Email
                     )
@@ -103,7 +106,7 @@ fun LogInScreen(navController: NavController) {
                     onValueChange = { password = it },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
-                    label = { Text("Пароль") },
+                    label = { Text(stringResource(R.string.password)) },
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Password
@@ -118,7 +121,7 @@ fun LogInScreen(navController: NavController) {
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Войти")
+                    Text(stringResource(R.string.login))
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -129,7 +132,7 @@ fun LogInScreen(navController: NavController) {
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Создать аккаунт")
+                    Text(stringResource(R.string.create_account))
                 }
 
                 TextButton(
@@ -138,7 +141,7 @@ fun LogInScreen(navController: NavController) {
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Забыли пароль?")
+                    Text(stringResource(R.string.forgot_password))
                 }
             }
         }
