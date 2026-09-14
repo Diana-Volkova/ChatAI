@@ -82,7 +82,7 @@ fun LogInScreen(
             ) {
 
                 Text(
-                    text = "Вход",
+                    text = stringResource(R.string.login_title),
                     style = MaterialTheme.typography.headlineMedium
                 )
 

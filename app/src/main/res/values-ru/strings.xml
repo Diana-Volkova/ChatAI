@@ -50,5 +50,6 @@
     <string name="theme_dark_description">Всегда тёмная тема</string>
     <string name="create_account">Создать аккаунт</string>
     <string name="forgot_password">Забыли пароль?</string>
+    <string name="login_title">Вход</string>
 
 </resources>
