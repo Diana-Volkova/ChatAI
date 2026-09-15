@@ -23,18 +23,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.chatai.R
 import com.example.chatai.presentation.navigation.Screen
 
 @Composable
-fun RegisterScreen(navController: NavController) {
-
-    val viewModel: RegisterViewModel = hiltViewModel()
-
+fun RegisterScreen(
+    navController: NavController,
+    viewModel: RegisterViewModel = hiltViewModel()
+) {
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -92,7 +94,7 @@ fun RegisterScreen(navController: NavController) {
             onValueChange = { email = it },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
-            label = { Text("Email") },
+            label = { Text(stringResource(R.string.email)) },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email
             )
@@ -105,7 +107,7 @@ fun RegisterScreen(navController: NavController) {
             onValueChange = { password = it },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
-            label = { Text("Пароль") },
+            label = { Text(stringResource(R.string.password)) },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password
