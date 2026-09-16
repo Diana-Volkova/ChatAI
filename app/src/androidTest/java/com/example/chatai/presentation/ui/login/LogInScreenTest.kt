@@ -9,9 +9,8 @@ import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.navigation.NavController
 import androidx.navigation.NavOptionsBuilder
-import androidx.test.platform.app.InstrumentationRegistry
-import com.example.chatai.R
 import com.example.chatai.presentation.navigation.Screen
+import com.example.chatai.presentation.ui.TestStrings
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -41,35 +40,20 @@ class LogInScreenTest {
             )
         }
 
-        val passwordLabel = InstrumentationRegistry
-            .getInstrumentation()
-            .targetContext
-            .getString(R.string.password)
-
-        val emailLabel = InstrumentationRegistry
-            .getInstrumentation()
-            .targetContext
-            .getString(R.string.email)
-
-        val logInLabel = InstrumentationRegistry
-            .getInstrumentation()
-            .targetContext
-            .getString(R.string.login)
-
         composeTestRule
             .onNode(
-                hasSetTextAction() and hasText(emailLabel)
+                hasSetTextAction() and hasText(TestStrings.email)
             )
             .performTextInput("test@test.com")
 
         composeTestRule
             .onNode(
-                hasSetTextAction() and hasText(passwordLabel)
+                hasSetTextAction() and hasText(TestStrings.password)
             )
             .performTextInput("12345678")
 
         composeTestRule
-            .onNodeWithText(logInLabel)
+            .onNodeWithText(TestStrings.logIn)
             .performClick()
 
         verify {
@@ -93,36 +77,28 @@ class LogInScreenTest {
             )
         }
 
-        val context = InstrumentationRegistry.getInstrumentation().targetContext
-        val titleLabel = context.getString(R.string.login_title)
-        val emailLabel = context.getString(R.string.email)
-        val passwordLabel = context.getString(R.string.password)
-        val logInLabel = context.getString(R.string.login)
-        val createAccountLabel = context.getString(R.string.create_account)
-        val forgotPasswordLabel = context.getString(R.string.forgot_password)
-
         composeTestRule
-            .onNodeWithText(titleLabel)
+            .onNodeWithText(TestStrings.logInTitle)
             .assertIsDisplayed()
 
         composeTestRule
-            .onNode(hasSetTextAction() and hasText(emailLabel))
+            .onNode(hasSetTextAction() and hasText(TestStrings.email))
             .assertIsDisplayed()
 
         composeTestRule
-            .onNode(hasSetTextAction() and hasText(passwordLabel))
+            .onNode(hasSetTextAction() and hasText(TestStrings.password))
             .assertIsDisplayed()
 
         composeTestRule
-            .onNodeWithText(logInLabel)
+            .onNodeWithText(TestStrings.logIn)
             .assertIsDisplayed()
 
         composeTestRule
-            .onNodeWithText(createAccountLabel)
+            .onNodeWithText(TestStrings.createAccount)
             .assertIsDisplayed()
 
         composeTestRule
-            .onNodeWithText(forgotPasswordLabel)
+            .onNodeWithText(TestStrings.forgotPassword)
             .assertIsDisplayed()
     }
     @Test
@@ -136,11 +112,8 @@ class LogInScreenTest {
             )
         }
 
-        val context = InstrumentationRegistry.getInstrumentation().targetContext
-        val createAccountLabel = context.getString(R.string.create_account)
-
         composeTestRule
-            .onNodeWithText(createAccountLabel)
+            .onNodeWithText(TestStrings.createAccount)
             .performClick()
 
         verify {

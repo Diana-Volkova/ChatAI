@@ -51,5 +51,9 @@
     <string name="create_account">Создать аккаунт</string>
     <string name="forgot_password">Забыли пароль?</string>
     <string name="login_title">Вход</string>
+    <string name="registration">Регистрация</string>
+    <string name="user_name">Имя</string>
+    <string name="repeat_password">Повторите пароль</string>
+    <string name="already_have_account">Уже есть аккаунт? Войти</string>
 
 </resources>

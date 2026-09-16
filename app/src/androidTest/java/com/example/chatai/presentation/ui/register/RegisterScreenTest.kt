@@ -2,15 +2,13 @@ package com.example.chatai.presentation.ui.register
 
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.navigation.NavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
-import com.example.chatai.R
+import com.example.chatai.presentation.ui.TestStrings
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -43,26 +41,16 @@ class RegisterScreenTest {
 
     @Test
     fun registerButton_dispatchesRegisterIntent() {
-        val emailLabel = InstrumentationRegistry
-            .getInstrumentation()
-            .targetContext
-            .getString(R.string.email)
-
-        val passwordLabel = InstrumentationRegistry
-            .getInstrumentation()
-            .targetContext
-            .getString(R.string.password)
-
         composeTestRule
-            .onNodeWithText(emailLabel)
+            .onNodeWithText(TestStrings.email)
             .performTextInput("test@example.com")
 
         composeTestRule
-            .onNodeWithText(passwordLabel)
+            .onNodeWithText(TestStrings.password)
             .performTextInput("12345678")
 
         composeTestRule
-            .onNodeWithText("Создать аккаунт")
+            .onNodeWithText(TestStrings.createAccount)
             .performClick()
 
         verify {
@@ -77,41 +65,31 @@ class RegisterScreenTest {
 
     @Test
     fun registerScreen_displaysAllElements() {
-        val emailLabel = InstrumentationRegistry
-            .getInstrumentation()
-            .targetContext
-            .getString(R.string.email)
-
-        val passwordLabel = InstrumentationRegistry
-            .getInstrumentation()
-            .targetContext
-            .getString(R.string.password)
-
-        composeTestRule .onNodeWithText("Регистрация")
+        composeTestRule .onNodeWithText(TestStrings.registration)
             .assertIsDisplayed()
 
-        composeTestRule .onNodeWithText("Имя")
+        composeTestRule .onNodeWithText(TestStrings.userName)
             .assertIsDisplayed()
 
-        composeTestRule .onNodeWithText(emailLabel)
+        composeTestRule .onNodeWithText(TestStrings.email)
             .assertIsDisplayed()
 
-        composeTestRule.onNodeWithText(passwordLabel)
+        composeTestRule.onNodeWithText(TestStrings.password)
             .assertIsDisplayed()
 
-        composeTestRule.onNodeWithText("Повторите пароль")
+        composeTestRule.onNodeWithText(TestStrings.repeatPassword)
             .assertIsDisplayed()
 
-        composeTestRule.onNodeWithText("Создать аккаунт")
+        composeTestRule.onNodeWithText(TestStrings.createAccount)
             .assertIsDisplayed()
 
-        composeTestRule.onNodeWithText("Уже есть аккаунт? Войти")
+        composeTestRule.onNodeWithText(TestStrings.alreadyHaveAccount)
             .assertIsDisplayed()
     }
 
     @Test
     fun nameField_acceptsInput() {
-        composeTestRule.onNodeWithText("Имя")
+        composeTestRule.onNodeWithText(TestStrings.userName)
             .performTextInput("Alex")
 
         composeTestRule.onNodeWithText("Alex")
@@ -120,13 +98,8 @@ class RegisterScreenTest {
 
     @Test
     fun passwordField_hidesText() {
-        val passwordLabel = InstrumentationRegistry
-            .getInstrumentation()
-            .targetContext
-            .getString(R.string.password)
-
         composeTestRule
-            .onNodeWithText(passwordLabel)
+            .onNodeWithText(TestStrings.password)
             .performTextInput("12345678")
 
         composeTestRule
@@ -137,7 +110,7 @@ class RegisterScreenTest {
     @Test
     fun confirmPasswordField_hidesPassword() {
         composeTestRule
-            .onNodeWithText("Повторите пароль")
+            .onNodeWithText(TestStrings.repeatPassword)
             .performTextInput("12345678")
 
         composeTestRule
@@ -146,7 +119,7 @@ class RegisterScreenTest {
     }
 
     @Test fun loginButton_popsBackStack() {
-        composeTestRule.onNodeWithText("Уже есть аккаунт? Войти")
+        composeTestRule.onNodeWithText(TestStrings.alreadyHaveAccount)
             .performClick()
         verify { navController.popBackStack() }
     }

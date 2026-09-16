@@ -48,4 +48,8 @@
     <string name="create_account">Create account</string>
     <string name="forgot_password">Forgot password?</string>
     <string name="login_title">Log in</string>
+    <string name="registration">Registration</string>
+    <string name="user_name">Name</string>
+    <string name="repeat_password">Repeat password</string>
+    <string name="already_have_account">Already have an account? Log in</string>
 </resources>

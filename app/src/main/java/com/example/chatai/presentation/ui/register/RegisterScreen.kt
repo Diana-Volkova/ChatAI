@@ -73,7 +73,7 @@ fun RegisterScreen(
     ) {
 
         Text(
-            text = "Регистрация",
+            text = stringResource(R.string.registration),
             style = MaterialTheme.typography.headlineMedium
         )
 
@@ -84,7 +84,7 @@ fun RegisterScreen(
             onValueChange = { name = it },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
-            label = { Text("Имя") }
+            label = { Text(stringResource(R.string.user_name)) }
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -121,7 +121,7 @@ fun RegisterScreen(
             onValueChange = { confirmPassword = it },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
-            label = { Text("Повторите пароль") },
+            label = { Text(stringResource(R.string.repeat_password)) },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password
@@ -136,7 +136,7 @@ fun RegisterScreen(
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Создать аккаунт")
+            Text(stringResource(R.string.create_account))
         }
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -147,7 +147,7 @@ fun RegisterScreen(
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Уже есть аккаунт? Войти")
+            Text(stringResource(R.string.already_have_account))
         }
     }
 }
