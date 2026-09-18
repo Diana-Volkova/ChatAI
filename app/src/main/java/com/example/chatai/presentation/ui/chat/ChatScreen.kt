@@ -14,6 +14,7 @@ import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.chatai.domain.model.Message
@@ -27,10 +28,9 @@ import kotlinx.coroutines.launch
 @Composable
 fun ChatScreen(
     navController: NavController,
+    viewModel: ChatViewModel = hiltViewModel(),
     chatId: Int,
 ) {
-    val viewModel = hiltViewModel<ChatViewModel>()
-
     val chatState by viewModel.state.collectAsState()
     val settings by viewModel.settings.collectAsState()
     val searchQuery by viewModel.searchQuery.collectAsState()
@@ -88,7 +88,9 @@ fun ChatScreen(
             when (val state = chatState) {
                 ChatState.Loading -> {
                     LoadingScreen(
-                        modifier = Modifier.padding(paddingValues)
+                        modifier = Modifier
+                            .padding(paddingValues)
+                            .testTag("loading_screen")
                     )
                 }
 
@@ -121,7 +123,9 @@ fun ChatScreen(
                 is ChatState.Error -> {
                     Error(
                         message = state.message,
-                        modifier = Modifier.padding(paddingValues)
+                        modifier = Modifier
+                            .padding(paddingValues)
+                            .testTag("error_message")
                     )
                 }
             }
