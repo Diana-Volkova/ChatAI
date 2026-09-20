@@ -100,6 +100,8 @@ dependencies {
     testImplementation(libs.androidx.core)
     testImplementation(libs.truth)
 
+    testImplementation(libs.byte.buddy)
+    testImplementation(libs.byte.buddy.agent)
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
     testImplementation(libs.kotlinx.coroutines.core)
@@ -109,7 +111,6 @@ dependencies {
     androidTestImplementation(libs.mockk.android)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    //androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }
