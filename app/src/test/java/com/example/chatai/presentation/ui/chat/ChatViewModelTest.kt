@@ -117,4 +117,85 @@ class ChatViewModelTest {
             viewModel.state.value
         )
     }
+
+
+
+    @Test
+    fun `sendMessage calls messageInteractor`() = runTest {
+        val chatId = 1
+        val text = "Test message"
+
+        coEvery {
+            messageInteractor.sendMessage(chatId, text)
+        } just Runs
+
+        viewModel.dispatch(ChatIntent.SendMessage(chatId, text))
+        advanceUntilIdle()
+
+        coVerify(exactly = 1) {
+            messageInteractor.sendMessage(chatId, text)
+        }
+    }
+
+    @Test
+    fun `sendMessage emits Error when exception occurs`() = runTest {
+        val chatId = 1
+        val text = "Test message"
+        val errorMessage = "Network error"
+
+        coEvery {
+            messageInteractor.sendMessage(chatId, text)
+        } throws RuntimeException(errorMessage)
+
+        viewModel.dispatch(ChatIntent.SendMessage(chatId, text))
+        advanceUntilIdle()
+
+        assertEquals(
+            ChatState.Error(errorMessage),
+            viewModel.state.value
+        )
+    }
+
+    @Test
+    fun `clearHistory clears messages and emits Success with empty list`() = runTest {
+        val chatId = 1
+
+        coEvery {
+            historyInteractor.clearHistory(chatId)
+        } just Runs
+
+        viewModel.dispatch(ChatIntent.ClearHistory(chatId))
+        advanceUntilIdle()
+
+        assertEquals(
+            ChatState.Success(emptyList()),
+            viewModel.state.value
+        )
+
+        coVerify(exactly = 1) {
+            historyInteractor.clearHistory(chatId)
+        }
+    }
+
+    @Test
+    fun `searchMessages finds matching message indices correctly`() = runTest {
+        val chatId = 1
+        val messages = listOf(
+            Message(id = 1L, chatId = chatId, text = "Kotlin is awesome", sender = Sender.USER, timestamp = 1L),
+            Message(id = 2L, chatId = chatId, text = "Java is fine too", sender = Sender.ASSISTANT, timestamp = 2L),
+            Message(id = 3L, chatId = chatId, text = "Learning Kotlin coroutines", sender = Sender.USER, timestamp = 3L)
+        )
+
+        coEvery { historyInteractor.syncHistory(chatId) } just Runs
+        every { historyInteractor.observeHistory(chatId) } returns flowOf(messages)
+
+        viewModel.dispatch(ChatIntent.LoadHistory(chatId))
+        advanceUntilIdle()
+
+        viewModel.dispatch(ChatIntent.SearchMessages("kotlin"))
+        advanceUntilIdle()
+
+        assertEquals("kotlin", viewModel.searchQuery.value)
+        assertEquals(listOf(0, 2), viewModel.searchResults.value)
+    }
 }
