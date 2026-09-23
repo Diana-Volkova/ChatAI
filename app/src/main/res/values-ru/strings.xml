@@ -56,4 +56,18 @@
     <string name="repeat_password">Повторите пароль</string>
     <string name="already_have_account">Уже есть аккаунт? Войти</string>
 
+    <string name="yesterday">Вчера</string>
+    <string name="month_january">янв.</string>
+    <string name="month_february">февр.</string>
+    <string name="month_march">мар.</string>
+    <string name="month_april">апр.</string>
+    <string name="month_may">мая</string>
+    <string name="month_june">июн.</string>
+    <string name="month_july">июл.</string>
+    <string name="month_august">авг.</string>
+    <string name="month_september">сент.</string>
+    <string name="month_october">окт.</string>
+    <string name="month_november">нояб.</string>
+    <string name="month_december">дек.</string>
+
 </resources>

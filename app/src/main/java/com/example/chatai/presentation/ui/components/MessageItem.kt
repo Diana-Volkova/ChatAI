@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.example.chatai.domain.model.Message
 import com.example.chatai.domain.model.Sender
-import formatTime
+import com.example.chatai.presentation.ui.utils.formatTime
 
 @Composable
 fun MessageItem(

@@ -91,6 +91,7 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.converter.scalars)
+    implementation(libs.kotlinx.datetime)
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)

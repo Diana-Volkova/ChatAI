@@ -49,6 +49,7 @@ import androidx.navigation.NavController
 import com.example.chatai.R
 import com.example.chatai.data.remote.dto.ChatDto
 import com.example.chatai.presentation.navigation.Screen
+import com.example.chatai.presentation.ui.utils.formatLastMessageTime
 
 @Composable
 fun HomeScreen(
@@ -240,7 +241,7 @@ private fun ChatItem(
                 }
 
                 Text(
-                    text = "Вчера", // TODO: взять из dto
+                    text = formatLastMessageTime(chat.lastMessageAt),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.outline
                 )

@@ -55,7 +55,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import com.example.chatai.R
-import formatTime
+import com.example.chatai.presentation.ui.utils.formatTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

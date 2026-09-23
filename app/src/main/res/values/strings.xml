@@ -52,4 +52,18 @@
     <string name="user_name">Name</string>
     <string name="repeat_password">Repeat password</string>
     <string name="already_have_account">Already have an account? Log in</string>
+
+    <string name="yesterday">Yesterday</string>
+    <string name="month_january">Jan.</string>
+    <string name="month_february">Feb.</string>
+    <string name="month_march">Mar.</string>
+    <string name="month_april">Apr.</string>
+    <string name="month_may">May</string>
+    <string name="month_june">Jun.</string>
+    <string name="month_july">Jul.</string>
+    <string name="month_august">Aug.</string>
+    <string name="month_september">Sep.</string>
+    <string name="month_october">Oct.</string>
+    <string name="month_november">Nov.</string>
+    <string name="month_december">Dec.</string>
 </resources>
