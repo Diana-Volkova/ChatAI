@@ -2,7 +2,6 @@ package com.example.chatai.domain.usecase
 
 import com.example.chatai.data.local.SessionManager
 import com.example.chatai.domain.repository.AuthRepository
-import com.example.chatai.domain.repository.ChatRepository
 import com.example.chatai.domain.repository.MessageRepository
 import javax.inject.Inject
 
