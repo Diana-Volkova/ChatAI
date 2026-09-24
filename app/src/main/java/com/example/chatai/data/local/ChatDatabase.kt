@@ -27,16 +27,35 @@ val MIGRATION_2_3 = object : Migration(2, 3) {
     }
 }
 
+val MIGRATION_3_4 = object : Migration(3, 4) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL(
+            """
+            CREATE TABLE chats (
+                chatId INTEGER NOT NULL,
+                title TEXT NOT NULL,
+                model TEXT NOT NULL,
+                lastMessageAt INTEGER,
+                PRIMARY KEY(chatId)
+            )
+            """.trimIndent()
+        )
+    }
+}
+
 @Database(
     entities = [
         MessageEntity::class,
+        ChatEntity::class,
         ChatSettingsEntity::class
     ],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 abstract class ChatDatabase : RoomDatabase() {
 
     abstract fun messageDao(): MessageDao
+
+    abstract fun chatDao() : ChatDao
     abstract fun settingsDao() : ChatSettingsDao
 }
