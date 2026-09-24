@@ -2,6 +2,7 @@ package com.example.chatai.di
 
 import android.content.Context
 import androidx.room.Room
+import com.example.chatai.data.local.ChatDao
 import com.example.chatai.data.local.ChatDatabase
 import com.example.chatai.data.local.ChatSettingsDao
 import com.example.chatai.data.local.MIGRATION_1_2
@@ -40,6 +41,13 @@ object DatabaseModule {
         database: ChatDatabase
     ): MessageDao {
         return database.messageDao()
+    }
+
+    @Provides
+    fun provideChatDao(
+        database: ChatDatabase
+    ): ChatDao {
+        return database.chatDao()
     }
 
     @Provides

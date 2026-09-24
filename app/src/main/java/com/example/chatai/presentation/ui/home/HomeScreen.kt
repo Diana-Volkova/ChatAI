@@ -47,7 +47,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.chatai.R
-import com.example.chatai.data.remote.dto.ChatDto
+import com.example.chatai.domain.model.Chat
 import com.example.chatai.presentation.navigation.Screen
 import com.example.chatai.presentation.ui.utils.formatLastMessageTime
 
@@ -116,7 +116,7 @@ fun HomeScreen(
 
 @Composable
 private fun HomeContent(
-    chats: List<ChatDto>,
+    chats: List<Chat>,
     modifier: Modifier = Modifier,
     onChatClick: (Int) -> Unit,
     onLogout: () -> Unit,
@@ -194,7 +194,7 @@ private fun HomeContent(
 
 @Composable
 private fun ChatItem(
-    chat: ChatDto,
+    chat: Chat,
     onClick: (Int) -> Unit
 ) {
     Surface(

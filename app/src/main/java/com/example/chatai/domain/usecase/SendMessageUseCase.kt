@@ -2,13 +2,13 @@ package com.example.chatai.domain.usecase
 
 import com.example.chatai.domain.model.Message
 import com.example.chatai.domain.model.Sender
-import com.example.chatai.domain.repository.ChatRepository
+import com.example.chatai.domain.repository.MessageRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class SendMessageUseCase @Inject constructor(
-    private val repo: ChatRepository
+    private val repo: MessageRepository
 ) {
     operator fun invoke(
         chatId: Int,

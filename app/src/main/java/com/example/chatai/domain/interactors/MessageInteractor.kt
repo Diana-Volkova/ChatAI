@@ -2,11 +2,11 @@ package com.example.chatai.domain.interactors
 
 import com.example.chatai.domain.model.Message
 import com.example.chatai.domain.model.Sender
-import com.example.chatai.domain.repository.ChatRepository
+import com.example.chatai.domain.repository.MessageRepository
 import javax.inject.Inject
 
 class MessageInteractor @Inject constructor(
-    private val repo: ChatRepository
+    private val repo: MessageRepository
 ) {
     suspend fun sendMessage(
         chatId: Int,

@@ -2,29 +2,39 @@ package com.example.chatai.presentation.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.chatai.data.remote.dto.ChatDto
 import com.example.chatai.domain.error.AuthException
 import com.example.chatai.domain.error.ChatException
+import com.example.chatai.domain.model.Chat
 import com.example.chatai.domain.usecase.DeleteAccountUseCase
-import com.example.chatai.domain.usecase.LoadChatsUseCase
 import com.example.chatai.domain.usecase.LogoutUseCase
+import com.example.chatai.domain.usecase.ObserveChatsUseCase
+import com.example.chatai.domain.usecase.SyncChatsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val loadChatsUseCase: LoadChatsUseCase,
+    private val observeChatsUseCase: ObserveChatsUseCase,
+    private val syncChatsUseCase: SyncChatsUseCase,
     private val logoutUseCase: LogoutUseCase,
     private val deleteAccountUseCase: DeleteAccountUseCase
 ) : ViewModel() {
-    private val _chats = MutableStateFlow<List<ChatDto>>(emptyList())
-    val chats = _chats.asStateFlow()
+    val chats: StateFlow<List<Chat>> = observeChatsUseCase()
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            emptyList()
+        )
+
     private val _effects = MutableSharedFlow<AuthEffect>()
     val effects = _effects.asSharedFlow()
     private val _error = MutableStateFlow<String?>(null)
@@ -37,7 +47,7 @@ class HomeViewModel @Inject constructor(
     private fun loadChats() {
         viewModelScope.launch {
             try {
-                _chats.value = loadChatsUseCase()
+                syncChatsUseCase()
             } catch (e: ChatException) {
                 _error.value = e.message()
             } catch (e: IOException) {

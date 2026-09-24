@@ -2,27 +2,12 @@ package com.example.chatai.domain.repository
 
 import com.example.chatai.data.remote.dto.ChatDto
 import com.example.chatai.data.remote.dto.MessageDto
+import com.example.chatai.domain.model.Chat
 import com.example.chatai.domain.model.Message
 import kotlinx.coroutines.flow.Flow
 
 interface ChatRepository {
-    fun observeHistory(chatId: Int): Flow<List<Message>>
-    suspend fun loadChats(): List<ChatDto>
-    suspend fun sendMessage(
-        chatId: Int,
-        message: Message
-    ): Message
+    fun observeChats(): Flow<List<Chat>>
 
-    suspend fun getRemoteMessages(
-        chatId: Int
-    ): List<MessageDto>
-
-    suspend fun deleteMessagesList(
-        chatId: Int,
-        messageIds: List<Long>
-    )
-
-    suspend fun syncMessages(chatId: Int)
-    suspend fun clearHistory(chatId: Int)
-    suspend fun clearAll()
+    suspend fun syncChats()
 }
