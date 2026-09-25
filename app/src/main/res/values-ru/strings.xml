@@ -56,6 +56,7 @@
     <string name="repeat_password">Повторите пароль</string>
     <string name="already_have_account">Уже есть аккаунт? Войти</string>
 
+    <string name="account">Аккаунт</string>
     <string name="yesterday">Вчера</string>
     <string name="month_january">янв.</string>
     <string name="month_february">февр.</string>

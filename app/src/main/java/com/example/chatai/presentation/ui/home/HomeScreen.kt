@@ -15,26 +15,17 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -57,20 +48,6 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val chats by viewModel.chats.collectAsStateWithLifecycle()
-
-    LaunchedEffect(viewModel) {
-        viewModel.effects.collect { effect ->
-            when (effect) {
-                AuthEffect.NavigateToLogin -> {
-                    navController.navigate(Screen.LogInScreen) {
-                        popUpTo(Screen.HomeScreen) {
-                            inclusive = true
-                        }
-                    }
-                }
-            }
-        }
-    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -107,9 +84,7 @@ fun HomeScreen(
                 navController.navigate(
                     Screen.ChatScreen(chatId)
                 )
-            },
-            onLogout = viewModel::logout,
-            onDeleteAccount = viewModel::deleteAccount
+            }
         )
     }
 }
@@ -118,14 +93,8 @@ fun HomeScreen(
 private fun HomeContent(
     chats: List<Chat>,
     modifier: Modifier = Modifier,
-    onChatClick: (Int) -> Unit,
-    onLogout: () -> Unit,
-    onDeleteAccount: () -> Unit
+    onChatClick: (Int) -> Unit
 ) {
-    var showDeleteDialog by rememberSaveable {
-        mutableStateOf(false)
-    }
-
     Column(
         modifier = modifier
     ) {
@@ -148,47 +117,6 @@ private fun HomeContent(
                 )
             }
         }
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    horizontal = 16.dp,
-                    vertical = 12.dp
-                ),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Button(
-                onClick = onLogout,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(stringResource(R.string.logout))
-            }
-
-            OutlinedButton(
-                onClick = {
-                    showDeleteDialog = true
-                },
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.outlinedButtonColors(
-                    contentColor = MaterialTheme.colorScheme.error
-                )
-            ) {
-                Text(stringResource(R.string.delete_account))
-            }
-        }
-    }
-
-    if (showDeleteDialog) {
-        DeleteAccountDialog(
-            onDismiss = {
-                showDeleteDialog = false
-            },
-            onConfirm = {
-                showDeleteDialog = false
-                onDeleteAccount()
-            }
-        )
     }
 }
 
@@ -248,39 +176,4 @@ private fun ChatItem(
             }
         }
     }
-}
-@Composable
-private fun DeleteAccountDialog(
-    onDismiss: () -> Unit,
-    onConfirm: () -> Unit
-) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = {
-            Text(stringResource(R.string.acc_deletion_confirmation))
-        },
-        text = {
-            Text(
-                stringResource(R.string.delete_account_warning1) +
-                        stringResource(R.string.delete_account_warning)
-            )
-        },
-        confirmButton = {
-            TextButton(
-                onClick = onConfirm,
-                colors = ButtonDefaults.textButtonColors(
-                    contentColor = MaterialTheme.colorScheme.error
-                )
-            ) {
-                Text(stringResource(R.string.delete))
-            }
-        },
-        dismissButton = {
-            TextButton(
-                onClick = onDismiss
-            ) {
-                Text(stringResource(R.string.cancel))
-            }
-        }
-    )
 }

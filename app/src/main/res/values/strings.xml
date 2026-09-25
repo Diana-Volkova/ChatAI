@@ -53,6 +53,8 @@
     <string name="repeat_password">Repeat password</string>
     <string name="already_have_account">Already have an account? Log in</string>
 
+
+    <string name="account">Account</string>
     <string name="yesterday">Yesterday</string>
     <string name="month_january">Jan.</string>
     <string name="month_february">Feb.</string>

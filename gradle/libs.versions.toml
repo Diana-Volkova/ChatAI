@@ -28,6 +28,7 @@ uiTestJunit4 = "1.12.0"
 byteBuddy = "1.17.7"
 
 [libraries]
+androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
 byte-buddy = { module = "net.bytebuddy:byte-buddy", version.ref = "byteBuddy" }
 byte-buddy-agent = { module = "net.bytebuddy:byte-buddy-agent", version.ref = "byteBuddy" }
 androidx-compose-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "uiTestJunit4" }
