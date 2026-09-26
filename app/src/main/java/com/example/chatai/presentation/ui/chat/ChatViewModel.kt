@@ -96,13 +96,22 @@ class ChatViewModel @Inject constructor(
     private fun loadHistory(chatId: Int) {
         viewModelScope.launch {
             try {
+                var warning: String? = null
+
                 historyInteractor
                     .observeHistory(chatId)
                     .onStart {
-                        historyInteractor.syncHistory(chatId)
+                        try {
+                            historyInteractor.syncHistory(chatId)
+                        } catch (e: Exception) {
+                            warning = e.message
+                        }
                     }
                     .collect { history ->
-                        _state.value = ChatState.Success(history)
+                        _state.value = ChatState.Success(
+                            messages = history,
+                            warning = warning
+                        )
                     }
             } catch (e: Exception) {
                 _state.value = ChatState.Error(e.message ?: "error")

@@ -68,4 +68,6 @@
     <string name="month_october">Oct.</string>
     <string name="month_november">Nov.</string>
     <string name="month_december">Dec.</string>
+    <string name="chat_offline_cached"> No internet connection. Showing saved messages. </string>
+
 </resources>

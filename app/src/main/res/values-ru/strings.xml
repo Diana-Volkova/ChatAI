@@ -71,4 +71,6 @@
     <string name="month_november">нояб.</string>
     <string name="month_december">дек.</string>
 
+    <string name="chat_offline_cached"> Нет подключения к интернету. Показаны сохранённые сообщения. </string>
+
 </resources>
