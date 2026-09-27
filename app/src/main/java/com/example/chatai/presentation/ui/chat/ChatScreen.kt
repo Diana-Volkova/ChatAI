@@ -115,11 +115,14 @@ fun ChatScreen(
                             .fillMaxSize()
                             .padding(paddingValues)
                     ) {
-                        state.warning?.let { _ ->
-                            SyncWarning(message = stringResource(R.string.chat_offline_cached))
+                        state.warning?.let {
+                            SyncWarning(
+                                message = stringResource(R.string.chat_offline_cached)
+                            )
                         }
 
                         MessagesScreen(
+                            modifier = Modifier.weight(1f),
                             messages = state.messages,
                             paddingValues = PaddingValues(),
                             listState = lazyListState,
