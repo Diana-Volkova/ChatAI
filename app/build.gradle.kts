@@ -85,6 +85,8 @@ dependencies {
     implementation(libs.material.icons)
     implementation(libs.androidx.compose.material.icons.extended)
 
+    implementation(libs.androidx.core.splashscreen)
+
     implementation(libs.hilt)
     implementation(libs.hilt.navigation.compose)
     ksp(libs.hilt.compiler)

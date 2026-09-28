@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">ChatAI</string>
 
+    <string name="splash_message">тот,&#10;кому доверяешь</string>
+
     <string name="theme">Тема</string>
     <string name="language">Язык</string>
 
