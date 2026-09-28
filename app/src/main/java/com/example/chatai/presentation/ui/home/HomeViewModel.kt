@@ -6,6 +6,7 @@ import com.example.chatai.domain.error.ChatException
 import com.example.chatai.domain.model.Chat
 import com.example.chatai.domain.usecase.ObserveChatsUseCase
 import com.example.chatai.domain.usecase.SyncChatsUseCase
+import com.example.chatai.presentation.ui.sync.SyncStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -27,6 +28,9 @@ class HomeViewModel @Inject constructor(
             SharingStarted.WhileSubscribed(5000),
             emptyList()
         )
+    private val _syncStatus = MutableStateFlow<SyncStatus>(SyncStatus.Synced)
+    val syncStatus = _syncStatus.asStateFlow()
+
     private val _error = MutableStateFlow<String?>(null)
     val error = _error.asStateFlow()
 
@@ -38,11 +42,12 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 syncChatsUseCase()
+                _syncStatus.value = SyncStatus.Synced
+            }catch (_: IOException) {
+                _syncStatus.value = SyncStatus.OfflineCached
             } catch (e: ChatException) {
                 _error.value = e.message()
-            } catch (e: IOException) {
-                _error.value = "Нет соединения с сервером: " + e.localizedMessage
-            } catch (e: Exception) {
+            }  catch (e: Exception) {
                 _error.value = "Не удалось загрузить чаты: " + e.localizedMessage
             }
         }

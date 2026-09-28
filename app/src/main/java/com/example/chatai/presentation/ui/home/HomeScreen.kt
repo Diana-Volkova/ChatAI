@@ -40,6 +40,8 @@ import androidx.navigation.NavController
 import com.example.chatai.R
 import com.example.chatai.domain.model.Chat
 import com.example.chatai.presentation.navigation.Screen
+import com.example.chatai.presentation.ui.sync.SyncStatus
+import com.example.chatai.presentation.ui.components.SyncWarning
 import com.example.chatai.presentation.ui.utils.formatLastMessageTime
 
 @Composable
@@ -48,6 +50,7 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val chats by viewModel.chats.collectAsStateWithLifecycle()
+    val syncStatus by viewModel.syncStatus.collectAsStateWithLifecycle()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -78,6 +81,7 @@ fun HomeScreen(
 
         HomeContent(
             chats = chats,
+            syncStatus = syncStatus,
             modifier = Modifier
                 .padding(paddingValues),
             onChatClick = { chatId ->
@@ -92,12 +96,19 @@ fun HomeScreen(
 @Composable
 private fun HomeContent(
     chats: List<Chat>,
+    syncStatus: SyncStatus,
     modifier: Modifier = Modifier,
     onChatClick: (Int) -> Unit
 ) {
     Column(
         modifier = modifier
     ) {
+        if (syncStatus is SyncStatus.OfflineCached) {
+            SyncWarning(
+                message = stringResource(R.string.chat_offline_cached)
+            )
+        }
+
         LazyColumn(
             modifier = Modifier.weight(1f),
             contentPadding = PaddingValues(

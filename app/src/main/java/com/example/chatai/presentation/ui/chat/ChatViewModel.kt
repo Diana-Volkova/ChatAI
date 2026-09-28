@@ -7,6 +7,7 @@ import com.example.chatai.domain.interactors.MessageInteractor
 import com.example.chatai.domain.model.ChatSettings
 import com.example.chatai.domain.repository.ChatSettingsRepository
 import com.example.chatai.domain.theme.ChatThemeId
+import com.example.chatai.presentation.ui.sync.SyncStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -27,6 +28,10 @@ class ChatViewModel @Inject constructor(
 
     private val _settings = MutableStateFlow<ChatSettings?>(null)
     val settings = _settings.asStateFlow()
+
+    private val _syncStatus = MutableStateFlow<SyncStatus>(SyncStatus.Synced)
+
+    val syncStatus = _syncStatus.asStateFlow()
 
     private val _searchQuery = MutableStateFlow("")
     val searchQuery = _searchQuery.asStateFlow()
@@ -68,9 +73,7 @@ class ChatViewModel @Inject constructor(
 
     private fun observeSettings(chatId: Int) {
         viewModelScope.launch {
-            chatSettingsRepository
-                .observe(chatId)
-                .collect { settings ->
+            chatSettingsRepository.observe(chatId).collect { settings ->
                     _settings.value = settings
                 }
         }
@@ -96,21 +99,17 @@ class ChatViewModel @Inject constructor(
     private fun loadHistory(chatId: Int) {
         viewModelScope.launch {
             try {
-                var warning: String? = null
-
-                historyInteractor
-                    .observeHistory(chatId)
-                    .onStart {
+                historyInteractor.observeHistory(chatId).onStart {
                         try {
                             historyInteractor.syncHistory(chatId)
-                        } catch (e: Exception) {
-                            warning = e.message
+
+                            _syncStatus.value = SyncStatus.Synced
+                        } catch (_: Exception) {
+                            _syncStatus.value = SyncStatus.OfflineCached
                         }
-                    }
-                    .collect { history ->
+                    }.collect { history ->
                         _state.value = ChatState.Success(
-                            messages = history,
-                            warning = warning
+                            messages = history
                         )
                     }
             } catch (e: Exception) {
@@ -150,12 +149,9 @@ class ChatViewModel @Inject constructor(
             return
         }
 
-        _searchResults.value = state.messages
-            .mapIndexedNotNull { index, message ->
-                if (
-                    message.text.contains(
-                        query,
-                        ignoreCase = true
+        _searchResults.value = state.messages.mapIndexedNotNull { index, message ->
+                if (message.text.contains(
+                        query, ignoreCase = true
                     )
                 ) {
                     index
