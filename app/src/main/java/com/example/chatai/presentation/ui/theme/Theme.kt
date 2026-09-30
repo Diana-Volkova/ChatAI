@@ -30,7 +30,9 @@ private val LightColorScheme = lightColorScheme(
     onSurface = Color(0xFF1C1B1F)
 )
 @Composable
-fun ChatAITheme(content: @Composable () -> Unit) {
+fun ChatAITheme(
+    content: @Composable () -> Unit
+) {
 
     val darkTheme = when (ThemeState.mode) {
         ThemeMode.SYSTEM -> isSystemInDarkTheme()

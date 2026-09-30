@@ -1,6 +1,7 @@
 package com.example.chatai.presentation
 
 import android.content.Context
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,9 +12,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.navigation.compose.rememberNavController
-import com.example.chatai.presentation.navigation.Navigation
 import com.example.chatai.core.localization.LanguageManager
 import com.example.chatai.core.localization.LocaleContextWrapper
+import com.example.chatai.presentation.navigation.Navigation
 import com.example.chatai.presentation.ui.splash.SplashScreen
 import com.example.chatai.presentation.ui.theme.ChatAITheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,7 +33,14 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        androidx.core.view.WindowCompat.setDecorFitsSystemWindows(window, false)
+
         enableEdgeToEdge()
+        window.isNavigationBarContrastEnforced = false
+        androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { _, insets ->
+            insets
+        }
         setContent {
             ChatAITheme {
                 var showSplash by remember {
