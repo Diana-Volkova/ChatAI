@@ -13,6 +13,16 @@
     <string name="language_russian">Русский</string>
     <string name="language_english">English</string>
 
+    <string name="password_restore_title">Восстановление пароля</string>
+    <string name="password_restore_description">
+        Введите ваш email, и мы отправим вам ссылку для сброса пароля.
+    </string>
+    <string name="back_to_login">Назад к входу</string>
+
+    <string name="password_reset_email_sent">
+        Ссылка для сброса пароля отправлена на ваш email.
+    </string>
+
     <string name="search_history">Поиск по истории</string>
     <string name="message_placeholder">Сообщение</string>
     <string name="send_message">Отправить сообщение</string>

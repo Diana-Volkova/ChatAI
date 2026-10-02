@@ -20,4 +20,6 @@ sealed class Screen {
 
     @Serializable
     object SettingsScreen : Screen()
+    @Serializable
+    object PasswordRestoreScreen : Screen()
 }

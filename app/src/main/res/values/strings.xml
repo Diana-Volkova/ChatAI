@@ -12,6 +12,16 @@
     <string name="language_russian">Русский</string>
     <string name="language_english">English</string>
 
+    <string name="password_restore_title">Password recovery</string>
+    <string name="password_restore_description">
+        Enter your email, and we will send you a link to reset your password.
+    </string>
+    <string name="back_to_login">Back to login</string>
+
+    <string name="password_reset_email_sent">
+        A password reset link has been sent to your email.
+    </string>
+
     <string name="search_history">Search history</string>
     <string name="message_placeholder">Message</string>
     <string name="send_message">Send message</string>

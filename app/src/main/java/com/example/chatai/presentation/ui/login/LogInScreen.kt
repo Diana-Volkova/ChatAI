@@ -137,7 +137,7 @@ fun LogInScreen(
 
                 TextButton(
                     onClick = {
-                        // TODO: Восстановление пароля
+                        navController.navigate(Screen.PasswordRestoreScreen)
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {

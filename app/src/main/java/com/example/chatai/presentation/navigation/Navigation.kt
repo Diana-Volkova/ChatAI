@@ -13,6 +13,7 @@ import androidx.navigation.toRoute
 import com.example.chatai.presentation.ui.register.RegisterScreen
 import com.example.chatai.presentation.ui.settings.SettingsScreen
 import com.example.chatai.presentation.ui.login.LogInScreen
+import com.example.chatai.presentation.ui.password_restore.PasswordRestoreScreen
 
 
 @Composable
@@ -64,6 +65,9 @@ fun Navigation(
         }
         composable<Screen.RegisterScreen> {
             RegisterScreen(navController)
+        }
+        composable<Screen.PasswordRestoreScreen> {
+            PasswordRestoreScreen(navController)
         }
     }
 }
