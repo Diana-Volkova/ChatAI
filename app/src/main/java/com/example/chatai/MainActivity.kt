@@ -1,7 +1,7 @@
-package com.example.chatai.presentation
+package com.example.chatai
 
 import android.content.Context
-
+import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
@@ -12,6 +12,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
 import com.example.chatai.core.localization.LanguageManager
 import com.example.chatai.core.localization.LocaleContextWrapper
@@ -37,20 +39,20 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.auto(
-                lightScrim = android.graphics.Color.TRANSPARENT,
-                darkScrim = android.graphics.Color.TRANSPARENT
+                lightScrim = Color.TRANSPARENT,
+                darkScrim = Color.TRANSPARENT
             ),
             navigationBarStyle = SystemBarStyle.auto(
-                lightScrim = android.graphics.Color.TRANSPARENT,
-                darkScrim = android.graphics.Color.TRANSPARENT
+                lightScrim = Color.TRANSPARENT,
+                darkScrim = Color.TRANSPARENT
             )
         )
 
-        androidx.core.view.WindowCompat.setDecorFitsSystemWindows(window, false)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         enableEdgeToEdge()
         window.isNavigationBarContrastEnforced = false
-        androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { _, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { _, insets ->
             insets
         }
         setContent {
@@ -59,7 +61,7 @@ class MainActivity : ComponentActivity() {
                     mutableStateOf(true)
                 }
 
-                if(showSplash) {
+                if (showSplash) {
                     SplashScreen(
                         onFinished = {
                             showSplash = false
