@@ -20,4 +20,6 @@ object TestStrings {
     val repeatPassword = context.getString(R.string.repeat_password)
     val createAccount = context.getString(R.string.create_account)
     val alreadyHaveAccount = context.getString(R.string.already_have_account)
+    val send = context.getString(R.string.send)
+    val backToLogin = context.getString(R.string.back_to_login)
 }

@@ -111,7 +111,7 @@ fun PasswordRestoreScreen(
             Button(
                 onClick = {
                     viewModel.dispatch(
-                        PassworRestoreIntent.SendResetLink(email)
+                        PasswordRestoreIntent.SendResetLink(email)
                     )
                 },
                 modifier = Modifier.fillMaxWidth(),
