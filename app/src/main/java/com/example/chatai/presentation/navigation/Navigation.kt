@@ -5,7 +5,9 @@ import com.example.chatai.presentation.ui.home.HomeScreen
 import com.example.chatai.presentation.ui.chat.ChatScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -37,7 +39,11 @@ fun Navigation(
         }
     }
 
-    NavHost(navController, startDestination = startDestination) {
+    NavHost(
+        navController,
+        startDestination = startDestination,
+        modifier = Modifier.testTag("navigation")
+    ) {
         composable<Screen.HomeScreen> {
             // todo
             // HomeScreen(
