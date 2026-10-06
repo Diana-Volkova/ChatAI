@@ -41,7 +41,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.example.chatai.R
 import com.example.chatai.core.localization.LanguageManager
+import com.example.chatai.core.theme.ThemeManager
 import com.example.chatai.presentation.navigation.Screen
+import com.example.chatai.presentation.ui.theme.ThemeMode
 import com.example.chatai.presentation.ui.theme.ThemeState
 
 
@@ -64,6 +66,10 @@ fun SettingsScreen(
         mutableStateOf(false)
     }
 
+    val themeManager = remember {
+        ThemeManager(context)
+    }
+
     val selectedTheme = ThemeState.mode
 
     val snackbarHostState = remember {
@@ -72,7 +78,6 @@ fun SettingsScreen(
 
     val error by viewModel.error.collectAsStateWithLifecycle()
 
-    // Обработка одноразовых эффектов
     LaunchedEffect(Unit) {
         viewModel.effects.collect { effect ->
             when (effect) {
@@ -142,6 +147,14 @@ fun SettingsScreen(
                     selectedMode = selectedTheme,
                     onModeSelected = { mode ->
                         ThemeState.mode = mode
+
+                        themeManager.setTheme(
+                            when (mode) {
+                                ThemeMode.SYSTEM -> ThemeManager.SYSTEM
+                                ThemeMode.LIGHT -> ThemeManager.LIGHT
+                                ThemeMode.DARK -> ThemeManager.DARK
+                            }
+                        )
                     }
                 )
             }

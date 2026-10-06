@@ -17,9 +17,12 @@ import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
 import com.example.chatai.core.localization.LanguageManager
 import com.example.chatai.core.localization.LocaleContextWrapper
+import com.example.chatai.core.theme.ThemeManager
 import com.example.chatai.presentation.navigation.Navigation
 import com.example.chatai.presentation.ui.splash.SplashScreen
 import com.example.chatai.presentation.ui.theme.ChatAITheme
+import com.example.chatai.presentation.ui.theme.ThemeMode
+import com.example.chatai.presentation.ui.theme.ThemeState
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -54,6 +57,14 @@ class MainActivity : ComponentActivity() {
         window.isNavigationBarContrastEnforced = false
         ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { _, insets ->
             insets
+        }
+
+        val themeManager = ThemeManager(this)
+
+        ThemeState.mode = when (themeManager.getTheme()) {
+            ThemeManager.LIGHT -> ThemeMode.LIGHT
+            ThemeManager.DARK -> ThemeMode.DARK
+            else -> ThemeMode.SYSTEM
         }
         setContent {
             ChatAITheme {
