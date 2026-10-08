@@ -44,7 +44,7 @@ class ChatRepositoryImplTest {
     }
 
     @Test
-    fun `syncChats inserts chats when response is successful`() = runTest {
+    fun `syncChats refreshes chats when response is successful`() = runTest {
         val chats = listOf(
             ChatDto(
                 id = 1,
@@ -65,7 +65,7 @@ class ChatRepositoryImplTest {
         } returns Response.success(chats)
 
         coEvery {
-            dao.insertAll(any())
+            dao.refreshChats(any())
         } just Runs
 
         repository.syncChats()
@@ -75,7 +75,7 @@ class ChatRepositoryImplTest {
         }
 
         coVerify(exactly = 1) {
-            dao.insertAll(
+            dao.refreshChats(
                 chats.map { it.toEntity() }
             )
         }

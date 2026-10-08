@@ -31,7 +31,7 @@ class ChatRepositoryImpl(
         val chats = response.body()
             ?: throw ChatException(response.code())
 
-        dao.insertAll(
+        dao.refreshChats(
             chats.map { it.toEntity() }
         )
     }
