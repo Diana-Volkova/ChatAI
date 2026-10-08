@@ -45,9 +45,14 @@ object RepositoryModule {
     @Singleton
     fun provideMessageRepository(
         api: ChatApi,
-        dao: MessageDao
+        chatDao: ChatDao,
+        messageDao: MessageDao
     ): MessageRepository {
-        return MessageRepositoryImpl(api, dao)
+        return MessageRepositoryImpl(
+            api,
+            chatDao,
+            messageDao
+        )
     }
 
     @Provides

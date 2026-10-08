@@ -44,7 +44,9 @@ fun ChatScreen(
     val searchQuery by viewModel.searchQuery.collectAsState()
     val searchResults by viewModel.searchResults.collectAsState()
 
-    val messages = (chatState as? ChatState.Success)?.messages.orEmpty()
+    val chatDetails = (chatState as? ChatState.Success)?.data
+    val messages = chatDetails?.messages.orEmpty()
+    val chatName = chatDetails?.chat?.title.orEmpty()
 
     val selectedMessages = remember { mutableStateSetOf<Message>() }
 
@@ -87,7 +89,8 @@ fun ChatScreen(
                             lazyListState.animateScrollToItem(index)
                         }
                     },
-                    messages = messages
+                    messages = messages,
+                    chatName = chatName
                 )
             },
             containerColor = MaterialTheme.colorScheme.background
@@ -116,7 +119,7 @@ fun ChatScreen(
 
                         MessagesScreen(
                             modifier = Modifier.weight(1f),
-                            messages = state.messages,
+                            messages = messages,
                             paddingValues = PaddingValues(),
                             listState = lazyListState,
                             searchQuery = searchQuery,

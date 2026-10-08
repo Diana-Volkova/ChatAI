@@ -14,6 +14,9 @@ interface ChatDao {
     fun observeChats(): Flow<List<ChatEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(chat: ChatEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(chats: List<ChatEntity>)
 
     @Query("DELETE FROM chats")
@@ -24,4 +27,8 @@ interface ChatDao {
         clearAll()
         insertAll(chats)
     }
+
+    @Transaction
+    @Query("SELECT * FROM chats WHERE chatId = :chatId")
+    fun observeChatDetails(chatId: Int): Flow<ChatDetailsEntity?>
 }

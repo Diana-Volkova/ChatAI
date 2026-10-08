@@ -1,13 +1,13 @@
 package com.example.chatai.presentation.ui.chat
 
-import com.example.chatai.domain.model.Message
+import com.example.chatai.domain.model.ChatDetails
 
 sealed interface ChatState {
 
     data object Loading : ChatState
 
     data class Success(
-        val messages: List<Message> = emptyList()
+        val data: ChatDetails
     ) : ChatState
 
     data class Error(

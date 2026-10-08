@@ -69,7 +69,8 @@ fun ChatTopAppBar(
     onClearSelection: () -> Unit,
     onIntent: (ChatIntent) -> Unit,
     onSearchResultClick: (Int) -> Unit,
-    messages: List<Message>
+    messages: List<Message>,
+    chatName: String = "",
 ) {
     var showMenu by remember { mutableStateOf(false) }
     var showThemeSelection by remember { mutableStateOf(false) }
@@ -187,7 +188,7 @@ fun ChatTopAppBar(
         title = {
             Text(
                 text = if (selectedMessages.isEmpty()) {
-                    stringResource(R.string.chat)
+                    chatName
                 } else {
                     stringResource(R.string.selected_messages, selectedMessages.size)
                 }

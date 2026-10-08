@@ -1,5 +1,6 @@
 package com.example.chatai.data.remote.api
 
+import com.example.chatai.data.remote.dto.ChatDetailsDto
 import com.example.chatai.data.remote.dto.ChatDto
 import com.example.chatai.data.remote.dto.LoginRequest
 import com.example.chatai.data.remote.dto.MessageDto
@@ -44,10 +45,9 @@ interface ChatApi {
     suspend fun getChats(): Response<List<ChatDto>>
 
     @GET("chats/{chat_id}/messages")
-    suspend fun getMessages(
+    suspend fun getChat(
         @Path("chat_id") chatId: Int
-    ): Response<List<MessageDto>>
-
+    ): Response<ChatDetailsDto>
     @DELETE("chats/{chat_id}/messages")
     suspend fun deleteMessages(
         @Path("chat_id") chatId: Int

@@ -99,21 +99,24 @@ class ChatViewModel @Inject constructor(
     private fun loadHistory(chatId: Int) {
         viewModelScope.launch {
             try {
-                historyInteractor.observeHistory(chatId).onStart {
+                historyInteractor.observeHistory(chatId)
+                    .onStart {
                         try {
                             historyInteractor.syncHistory(chatId)
-
                             _syncStatus.value = SyncStatus.Synced
                         } catch (_: Exception) {
                             _syncStatus.value = SyncStatus.OfflineCached
                         }
-                    }.collect { history ->
+                    }
+                    .collect { data ->
                         _state.value = ChatState.Success(
-                            messages = history
+                            data = data
                         )
                     }
             } catch (e: Exception) {
-                _state.value = ChatState.Error(e.message ?: "error")
+                _state.value = ChatState.Error(
+                    e.message ?: "error"
+                )
             }
         }
     }
@@ -132,9 +135,20 @@ class ChatViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 historyInteractor.clearHistory(chatId)
-                _state.value = ChatState.Success(emptyList())
+
+                val currentState = _state.value
+
+                if (currentState is ChatState.Success) {
+                    _state.value = ChatState.Success(
+                        data = currentState.data.copy(
+                            messages = emptyList()
+                        )
+                    )
+                }
             } catch (e: Exception) {
-                _state.value = ChatState.Error(e.message ?: "error")
+                _state.value = ChatState.Error(
+                    e.message ?: "error"
+                )
             }
         }
     }
@@ -149,7 +163,7 @@ class ChatViewModel @Inject constructor(
             return
         }
 
-        _searchResults.value = state.messages.mapIndexedNotNull { index, message ->
+            _searchResults.value = state.data.messages.mapIndexedNotNull { index, message ->
                 if (message.text.contains(
                         query, ignoreCase = true
                     )

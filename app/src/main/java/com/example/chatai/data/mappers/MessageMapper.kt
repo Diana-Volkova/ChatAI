@@ -5,7 +5,7 @@ import com.example.chatai.data.remote.dto.MessageDto
 import com.example.chatai.domain.model.Sender
 import com.example.chatai.data.local.MessageEntity
 
-fun MessageDto.toDomain(): Message {
+fun MessageDto.toDomain(chatId: Int): Message {
     return Message(
         id = id,
         serverId = id,
@@ -25,7 +25,6 @@ fun MessageDto.toDomain(): Message {
 fun Message.toDto(): MessageDto {
     return MessageDto(
         id = serverId ?: 0,
-        chatId = chatId,
         text = text,
         sender = when (sender) {
             Sender.USER -> "user"
@@ -35,7 +34,7 @@ fun Message.toDto(): MessageDto {
     )
 }
 
-fun MessageDto.toEntity(): MessageEntity {
+fun MessageDto.toEntity(chatId: Int): MessageEntity {
     return MessageEntity(
         serverId = id,
         chatId = chatId,
