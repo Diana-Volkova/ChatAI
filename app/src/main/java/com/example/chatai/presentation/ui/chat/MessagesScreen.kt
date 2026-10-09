@@ -111,6 +111,10 @@ fun Messages(
                         selectedMessages.add(message)
                     }
                 },
+                onGenerateAnotherAnswer = {
+                    // todo запросить следующий ответ
+                }
+
             )
         }
     }

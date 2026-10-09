@@ -84,5 +84,8 @@
     <string name="month_december">дек.</string>
 
     <string name="chat_offline_cached"> Нет подключения к интернету. Показаны сохранённые сообщения. </string>
-
+    <string name="alternate_answer_placeholder">Это тестовый альтернативный ответ. Позже здесь появится ответ второй AI-модели.</string>
+    <string name="generate_another_answer">Другой ответ</string>
+    <string name="previous_answer">previous answer</string>
+    <string name="next_answer">next answer</string>
 </resources>
