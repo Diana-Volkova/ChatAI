@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -32,12 +31,10 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import com.example.chatai.R
 import com.example.chatai.domain.model.Message
 import com.example.chatai.domain.model.Sender
 import com.example.chatai.presentation.ui.utils.formatTime
@@ -135,57 +132,58 @@ fun MessageItem(
                                 .fillMaxWidth()
                                 .padding(top = 18.dp),
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Start
+                            horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Box(
                                 modifier = Modifier
                                     .size(24.dp)
-                                    .combinedClickable(
-                                        onClick = onGenerateAnotherAnswer
-                                    ),
+                                    .combinedClickable(onClick = onGenerateAnotherAnswer),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Refresh,
-                                    contentDescription = stringResource(
-                                        R.string.generate_another_answer
-                                    ),
-                                    modifier = Modifier.size(16.dp)
+                                    contentDescription = null,
+                                    modifier = Modifier.size(16.dp),
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
                                 )
                             }
 
-                            Spacer(modifier = Modifier.weight(1f))
-
                             if (!hasAlternate) {
-                                IconButton(
-                                    onClick = {
-                                        hasAlternate = true
-                                        showingAlternate = true
-                                    },
-                                    modifier = Modifier.size(24.dp)
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(2.dp)
                                 ) {
-                                    Icon(
-                                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                                        contentDescription = stringResource(
-                                            R.string.previous_answer
+                                    IconButton(
+                                        onClick = {
+                                            hasAlternate = true
+                                            showingAlternate = true
+                                        },
+                                        modifier = Modifier.size(24.dp)
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
                                         )
+                                    }
+
+                                    Text(
+                                        text = if (showingAlternate) "2/2" else "1/2",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
                                     )
-                                }
 
-                                Text(
-                                    text = if (showingAlternate) "2/2" else "1/2"
-                                )
-
-                                IconButton(
-                                    onClick = { showingAlternate = true },
-                                    enabled = !showingAlternate
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                                        contentDescription = stringResource(
-                                            R.string.next_answer
+                                    IconButton(
+                                        onClick = { showingAlternate = true },
+                                        enabled = !showingAlternate,
+                                        modifier = Modifier.size(24.dp)
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
                                         )
-                                    )
+                                    }
                                 }
                             }
                         }
