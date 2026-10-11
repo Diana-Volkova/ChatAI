@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.chatai.domain.interactors.HistoryInteractor
 import com.example.chatai.domain.interactors.MessageInteractor
 import com.example.chatai.domain.model.ChatSettings
+import com.example.chatai.domain.model.Message
 import com.example.chatai.domain.repository.ChatSettingsRepository
 import com.example.chatai.domain.theme.ChatThemeId
 import com.example.chatai.presentation.ui.sync.SyncStatus
@@ -47,6 +48,10 @@ class ChatViewModel @Inject constructor(
 
             is ChatIntent.SendMessage -> {
                 sendMessage(intent.chatId, intent.text)
+            }
+
+            is ChatIntent.GenerateAlternative -> {
+                generateAlternative(intent.chatId, intent.message)
             }
 
             is ChatIntent.DeleteMessages -> {
@@ -92,6 +97,16 @@ class ChatViewModel @Inject constructor(
                 messageInteractor.sendMessage(chatId, text)
             } catch (e: Exception) {
                 _state.value = ChatState.Error(e.message ?: "error")
+            }
+        }
+    }
+
+    private fun generateAlternative(chatId: Int, message: Message) {
+        viewModelScope.launch {
+            try {
+                messageInteractor.generateAlternative(chatId, message)
+            } catch (e: Exception) {
+                _state.value = ChatState.Error(e.message ?: "Failed to generate alternative")
             }
         }
     }

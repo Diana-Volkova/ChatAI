@@ -1,5 +1,6 @@
 package com.example.chatai.presentation.ui.chat
 
+import com.example.chatai.domain.model.Message
 import com.example.chatai.domain.theme.ChatThemeId
 
 sealed class ChatIntent {
@@ -11,6 +12,11 @@ sealed class ChatIntent {
     data class SendMessage(
         val chatId: Int,
         val text: String
+    ) : ChatIntent()
+
+    data class GenerateAlternative(
+        val chatId: Int,
+        val message: Message
     ) : ChatIntent()
 
     data class DeleteMessages(

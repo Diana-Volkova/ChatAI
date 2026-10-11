@@ -9,5 +9,7 @@ data class MessageDto(
     val timestamp: Long,
 
     @SerializedName("user_message_id")
-    val userMessageId: Long? = null
+    val userMessageId: Long? = null,
+
+    val alternatives: List<String> = emptyList()
 )

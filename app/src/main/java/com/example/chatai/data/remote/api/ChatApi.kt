@@ -41,6 +41,12 @@ interface ChatApi {
         @Body msg: MessageDto
     ): Response<MessageDto>
 
+    @POST("chats/{chat_id}/messages/{message_id}/alternatives")
+    suspend fun generateAlternative(
+        @Path("chat_id") chatId: Int,
+        @Path("message_id") messageId: Long
+    ): Response<MessageDto>
+
     @GET("chats")
     suspend fun getChats(): Response<List<ChatDto>>
 

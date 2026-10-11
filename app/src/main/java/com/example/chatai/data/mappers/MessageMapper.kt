@@ -18,7 +18,8 @@ fun MessageDto.toDomain(chatId: Int): Message {
                 "Unknown sender: $sender"
             )
         },
-        timestamp = timestamp
+        timestamp = timestamp,
+        alternatives = alternatives
     )
 }
 
@@ -30,7 +31,8 @@ fun Message.toDto(): MessageDto {
             Sender.USER -> "user"
             Sender.ASSISTANT -> "assistant"
         },
-        timestamp = timestamp
+        timestamp = timestamp,
+        alternatives = alternatives
     )
 }
 
@@ -40,20 +42,22 @@ fun MessageDto.toEntity(chatId: Int): MessageEntity {
         chatId = chatId,
         text = text,
         sender = sender,
-        timestamp = timestamp
+        timestamp = timestamp,
+        alternatives = alternatives
     )
 }
 
 fun Message.toEntity(): MessageEntity {
     return MessageEntity(
-        serverId = null,
+        serverId = serverId,
         chatId = chatId,
         text = text,
         sender = when (sender) {
             Sender.USER -> "user"
             Sender.ASSISTANT -> "assistant"
         },
-        timestamp = timestamp
+        timestamp = timestamp,
+        alternatives = alternatives
     )
 }
 
@@ -63,13 +67,14 @@ fun MessageEntity.toDomain(): Message {
         serverId = serverId,
         chatId = chatId,
         text = text,
-        sender = when (sender) {
+        sender = when (sender.lowercase()) {
             "user" -> Sender.USER
             "assistant" -> Sender.ASSISTANT
             else -> throw IllegalStateException(
                 "Unknown sender: $sender"
             )
         },
-        timestamp = timestamp
+        timestamp = timestamp,
+        alternatives = alternatives
     )
 }

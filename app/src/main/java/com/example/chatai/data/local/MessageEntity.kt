@@ -26,5 +26,6 @@ data class MessageEntity(
     val chatId: Int,
     val text: String,
     val sender: String,
-    val timestamp: Long
+    val timestamp: Long,
+    val alternatives: List<String> = emptyList()
 )

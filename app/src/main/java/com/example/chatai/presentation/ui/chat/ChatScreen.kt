@@ -132,6 +132,14 @@ fun ChatScreen(
                                 )
                             },
                             selectedMessages = selectedMessages,
+                            onGenerateAnotherAnswer = { message ->
+                                viewModel.dispatch(
+                                    ChatIntent.GenerateAlternative(
+                                        chatId = chatId,
+                                        message = message
+                                    )
+                                )
+                            },
                             onDeleteMessages = { messageIds ->
                                 viewModel.dispatch(
                                     ChatIntent.DeleteMessages(

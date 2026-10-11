@@ -6,7 +6,8 @@ data class Message(
     val chatId: Int,
     val text: String,
     val sender: Sender,
-    val timestamp: Long
+    val timestamp: Long,
+    val alternatives: List<String> = emptyList()
 )
 enum class Sender {
     USER,

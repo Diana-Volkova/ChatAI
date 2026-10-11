@@ -23,6 +23,16 @@ class MessageInteractor @Inject constructor(
         repo.sendMessage(chatId, userMessage)
     }
 
+    suspend fun generateAlternative(
+        chatId: Int,
+        message: Message
+    ): Message {
+        return repo.generateAlternative(
+            chatId = chatId,
+            message = message
+        )
+    }
+
     suspend fun deleteMessages(
         chatId: Int,
         messageIds: List<Long>

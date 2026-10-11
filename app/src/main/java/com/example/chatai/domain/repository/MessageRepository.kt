@@ -11,6 +11,11 @@ interface MessageRepository {
         message: Message
     ): Message
 
+    suspend fun generateAlternative(
+        chatId: Int,
+        message: Message
+    ): Message
+
     suspend fun syncChat(chatId: Int)
 
     suspend fun clearHistory(chatId: Int)

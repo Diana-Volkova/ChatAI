@@ -72,6 +72,55 @@ class MessageRepositoryImpl(
         return assistantMessage
     }
 
+    override suspend fun generateAlternative(
+        chatId: Int,
+        message: Message
+    ): Message {
+        val serverId = message.serverId
+            ?: throw IllegalStateException(
+                "Cannot generate alternative for unsynced message"
+            )
+
+        val response = api.generateAlternative(
+            chatId = chatId,
+            messageId = serverId
+        )
+
+        if (!response.isSuccessful) {
+            val error = response.errorBody()?.string()
+            Log.e(
+                "CHAT_API",
+                "Alternative generation failed: HTTP ${response.code()}: $error"
+            )
+            throw ChatException(response.code())
+        }
+
+        val body = response.body()
+            ?: throw IllegalStateException("Empty alternative response")
+
+        val updatedMessage = body.toDomain(chatId)
+
+        val existing = messageDao.getByServerId(
+            chatId = chatId,
+            serverId = serverId
+        ) ?: throw IllegalStateException(
+            "Message not found in local database: $serverId"
+        )
+
+        messageDao.update(
+            existing.copy(
+                text = updatedMessage.text,
+                alternatives = updatedMessage.alternatives,
+                timestamp = updatedMessage.timestamp
+            )
+        )
+
+        return updatedMessage.copy(
+            id = existing.id,
+            serverId = serverId
+        )
+    }
+
     override fun observeHistory(chatId: Int): Flow<ChatDetails> {
         return chatDao.observeChatDetails(chatId)
             .filterNotNull()

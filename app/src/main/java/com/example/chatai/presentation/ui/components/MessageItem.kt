@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -20,8 +21,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -56,8 +59,17 @@ fun MessageItem(
     var menuExpanded by remember(message.id) {
         mutableStateOf(false)
     }
-    var hasAlternate by remember(message) { mutableStateOf(false) }
-    var showingAlternate by remember(message) { mutableStateOf(false) }
+    var selectedAnswer by remember(message.id) {
+        mutableIntStateOf(0)
+    }
+
+    val hasAlternate = message.alternatives.isNotEmpty()
+
+    LaunchedEffect(message.alternatives) {
+        if (message.alternatives.isNotEmpty()) {
+            selectedAnswer = message.alternatives.size
+        }
+    }
 
     Row(
         modifier = Modifier
@@ -105,8 +117,16 @@ fun MessageItem(
                         vertical = 8.dp,
                     ),
                 ) {
+                    val answers = remember(message.text, message.alternatives) {
+                        listOf(message.text) + message.alternatives
+                    }
+
+                    val currentAnswer = answers[
+                        selectedAnswer.coerceIn(0, answers.lastIndex)
+                    ]
+
                     Text(
-                        text = message.text,
+                        text = currentAnswer,
                         onTextLayout = {
                             layoutState.textLayout = it
                         },
@@ -132,32 +152,35 @@ fun MessageItem(
                                 .fillMaxWidth()
                                 .padding(top = 18.dp),
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
+                            horizontalArrangement = Arrangement.End
                         ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(24.dp)
-                                    .combinedClickable(onClick = onGenerateAnotherAnswer),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Refresh,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(16.dp),
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
-                                )
+                            if (!hasAlternate) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(24.dp)
+                                        .combinedClickable(onClick = onGenerateAnotherAnswer),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Refresh,
+                                        contentDescription = "Сгенерировать другой ответ",
+                                        modifier = Modifier.size(16.dp),
+                                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                                    )
+                                }
                             }
 
-                            if (!hasAlternate) {
+                            Spacer(modifier = Modifier.weight(1f))
+                            if (message.alternatives.isNotEmpty()) {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.spacedBy(2.dp)
                                 ) {
                                     IconButton(
                                         onClick = {
-                                            hasAlternate = true
-                                            showingAlternate = true
+                                            selectedAnswer = (selectedAnswer - 1).coerceAtLeast(0)
                                         },
+                                        enabled = selectedAnswer > 0,
                                         modifier = Modifier.size(24.dp)
                                     ) {
                                         Icon(
@@ -168,14 +191,17 @@ fun MessageItem(
                                     }
 
                                     Text(
-                                        text = if (showingAlternate) "2/2" else "1/2",
+                                        text = "${selectedAnswer + 1}/${message.alternatives.size + 1}",
                                         style = MaterialTheme.typography.labelSmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
                                     )
 
                                     IconButton(
-                                        onClick = { showingAlternate = true },
-                                        enabled = !showingAlternate,
+                                        onClick = {
+                                            selectedAnswer = (selectedAnswer + 1)
+                                                .coerceAtMost(message.alternatives.size)
+                                        },
+                                        enabled = selectedAnswer < message.alternatives.size,
                                         modifier = Modifier.size(24.dp)
                                     ) {
                                         Icon(

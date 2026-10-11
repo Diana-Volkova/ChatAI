@@ -45,6 +45,7 @@ fun MessagesScreen(
     onSendMessage: (String) -> Unit,
     selectedMessages: SnapshotStateSet<Message>,
     onDeleteMessages: (List<Long>) -> Unit,
+    onGenerateAnotherAnswer: (Message) -> Unit,
     searchQuery: String,
     modifier: Modifier = Modifier,
 ) {
@@ -70,6 +71,7 @@ fun MessagesScreen(
             modifier = Modifier.weight(1f),
             selectedMessages = selectedMessages,
             onDeleteMessages = onDeleteMessages,
+            onGenerateAnotherAnswer = onGenerateAnotherAnswer
         )
 
         MessageInput(
@@ -85,6 +87,7 @@ fun Messages(
     listState: LazyListState,
     selectedMessages: SnapshotStateSet<Message>,
     onDeleteMessages: (List<Long>) -> Unit,
+    onGenerateAnotherAnswer: (Message) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -112,7 +115,7 @@ fun Messages(
                     }
                 },
                 onGenerateAnotherAnswer = {
-                    // todo запросить следующий ответ
+                    onGenerateAnotherAnswer(message)
                 }
 
             )

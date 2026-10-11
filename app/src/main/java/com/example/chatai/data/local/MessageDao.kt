@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -12,11 +13,23 @@ interface MessageDao {
     @Insert
     suspend fun insert(message: MessageEntity): Long
 
+    @Query("UPDATE messages SET text = :text, alternatives = :alternatives, timestamp = :timestamp WHERE chatId = :chatId AND serverId = :serverId")
+    suspend fun updateMessage(
+        chatId: Int,
+        serverId: Long,
+        text: String,
+        alternatives: String,
+        timestamp: Long
+    )
+
+    @Update
+    suspend fun update(message: MessageEntity)
+
     @Query(" SELECT * FROM messages WHERE chatId = :chatId ORDER BY timestamp ASC, id ASC")
     suspend fun getByChatId(chatId: Int): List<MessageEntity>
 
     @Query("DELETE FROM messages WHERE chatId = :chatId ")
-    suspend fun clearChat( chatId: Int)
+    suspend fun clearChat(chatId: Int)
 
     @Query("SELECT * FROM messages WHERE id = :id LIMIT 1")
     suspend fun getById(id: Long): MessageEntity?
