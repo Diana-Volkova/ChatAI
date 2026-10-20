@@ -49,25 +49,18 @@ fun ChatScreen(
     val chatName = chatDetails?.chat?.title.orEmpty()
 
     val selectedMessages = remember { mutableStateSetOf<Message>() }
-
     val coroutineScope = rememberCoroutineScope()
     val lazyListState = rememberLazyListState()
 
     LaunchedEffect(chatId) {
-        viewModel.dispatch(
-            ChatIntent.LoadHistory(chatId)
-        )
-
-        viewModel.dispatch(
-            ChatIntent.ObserveSettings(chatId)
-        )
+        viewModel.dispatch(ChatIntent.LoadHistory(chatId))
+        viewModel.dispatch(ChatIntent.ObserveSettings(chatId))
     }
 
-    ChatTheme(
-        theme = settings?.theme ?: ChatThemeId.DEFAULT
-    ) {
+    ChatTheme(theme = settings?.theme ?: ChatThemeId.DEFAULT) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
+            containerColor = MaterialTheme.colorScheme.background,
             topBar = {
                 ChatTopAppBar(
                     selectedMessages = selectedMessages,
@@ -75,29 +68,19 @@ fun ChatScreen(
                     searchQuery = searchQuery,
                     searchResults = searchResults,
                     navController = navController,
-                    onClearSelection = {
-                        selectedMessages.clear()
-                    },
-                    onSearchQueryChange = { query ->
-                        viewModel.dispatch(
-                            ChatIntent.SearchMessages(query)
-                        )
-                    },
+                    messages = messages,
+                    chatName = chatName,
+                    onClearSelection = { selectedMessages.clear() },
+                    onSearchQueryChange = { viewModel.dispatch(ChatIntent.SearchMessages(it)) },
                     onIntent = viewModel::dispatch,
                     onSearchResultClick = { index ->
-                        coroutineScope.launch {
-                            lazyListState.animateScrollToItem(index)
-                        }
-                    },
-                    messages = messages,
-                    chatName = chatName
+                        coroutineScope.launch { lazyListState.animateScrollToItem(index) }
+                    }
                 )
-            },
-            containerColor = MaterialTheme.colorScheme.background
+            }
         ) { paddingValues ->
-
             when (val state = chatState) {
-                ChatState.Loading -> {
+                is ChatState.Loading -> {
                     LoadingScreen(
                         modifier = Modifier
                             .padding(paddingValues)
@@ -112,9 +95,7 @@ fun ChatScreen(
                             .padding(paddingValues)
                     ) {
                         if (syncStatus is SyncStatus.OfflineCached) {
-                            SyncWarning(
-                                message = stringResource(R.string.chat_offline_cached)
-                            )
+                            SyncWarning(message = stringResource(R.string.chat_offline_cached))
                         }
 
                         MessagesScreen(
@@ -123,30 +104,15 @@ fun ChatScreen(
                             paddingValues = PaddingValues(),
                             listState = lazyListState,
                             searchQuery = searchQuery,
-                            onSendMessage = { text ->
-                                viewModel.dispatch(
-                                    ChatIntent.SendMessage(
-                                        chatId = chatId,
-                                        text = text
-                                    )
-                                )
-                            },
                             selectedMessages = selectedMessages,
+                            onSendMessage = { text ->
+                                viewModel.dispatch(ChatIntent.SendMessage(chatId, text))
+                            },
                             onGenerateAnotherAnswer = { message ->
-                                viewModel.dispatch(
-                                    ChatIntent.GenerateAlternative(
-                                        chatId = chatId,
-                                        message = message
-                                    )
-                                )
+                                viewModel.dispatch(ChatIntent.GenerateAlternative(chatId, message))
                             },
                             onDeleteMessages = { messageIds ->
-                                viewModel.dispatch(
-                                    ChatIntent.DeleteMessages(
-                                        chatId = chatId,
-                                        messageIds = messageIds
-                                    )
-                                )
+                                viewModel.dispatch(ChatIntent.DeleteMessages(chatId, messageIds))
                             }
                         )
                     }
