@@ -55,6 +55,8 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import com.example.chatai.R
+import com.example.chatai.presentation.ui.theme.ChatTypography
+import com.example.chatai.presentation.ui.theme.SearchPlaceholderAlpha
 import com.example.chatai.presentation.ui.utils.formatTime
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -88,93 +90,116 @@ fun ChatTopAppBar(
     }
 
     if (isSearching) {
-        SearchBar(
-            inputField = {
-                SearchBarDefaults.InputField(
-                    query = searchQuery,
-                    onQueryChange = onSearchQueryChange,
-                    onSearch = {
-                        searchExpanded = false
-                    },
-                    expanded = searchExpanded,
-                    onExpandedChange = {
-                        searchExpanded = it
-                    },
-                    placeholder = {
-                        Text(
-                            text = stringResource(R.string.search_history),
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                    },
-                    leadingIcon = {
-                        IconButton(
-                            onClick = {
-                                isSearching = false
-                                searchExpanded = false
-                                onSearchQueryChange("")
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
-                                contentDescription = stringResource(R.string.back)
-                            )
-                        }
-                    },
-                    trailingIcon = {
-                        AnimatedVisibility(
-                            visible = searchQuery.isNotEmpty()
-                        ) {
-                            IconButton(
-                                onClick = {
-                                    onSearchQueryChange("")
-                                }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Clear,
-                                    contentDescription = stringResource(R.string.clear_search)
-                                )
-                            }
-                        }
-                    }
-                )
-            },
-            expanded = searchExpanded,
-            onExpandedChange = {
-                searchExpanded = it
-            },
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 12.dp),
-            colors = SearchBarDefaults.colors(
-                containerColor = MaterialTheme.colorScheme.surfaceContainer,
-            ),
-            tonalElevation = 0.dp,
-            shadowElevation = 0.dp
+                .padding(horizontal = 12.dp, vertical = 6.dp)
         ) {
-            if (searchQuery.isNotBlank()) {
-                LazyColumn(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    items(
-                        items = searchResults,
-                        key = { it }
-                    ) { index ->
-                        val message = messages.getOrNull(index)
-                        if (message != null) {
-                            SearchResultItem(
-                                message = message,
-                                query = searchQuery,
+            SearchBar(
+                inputField = {
+                    SearchBarDefaults.InputField(
+                        query = searchQuery,
+                        onQueryChange = onSearchQueryChange,
+                        onSearch = {
+                            searchExpanded = false
+                        },
+                        expanded = searchExpanded,
+                        onExpandedChange = {
+                            searchExpanded = it
+                        },
+                        placeholder = {
+                            Text(
+                                text = stringResource(R.string.search_history),
+                                style = ChatTypography.searchPlaceholder,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                                    alpha = SearchPlaceholderAlpha
+                                )
+                            )
+                        },
+                        leadingIcon = {
+                            IconButton(
                                 onClick = {
                                     isSearching = false
                                     searchExpanded = false
                                     onSearchQueryChange("")
-                                    onSearchResultClick(index)
                                 }
-                            )
-                            HorizontalDivider(
-                                modifier = Modifier.padding(horizontal = 20.dp),
-                                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f)
-                            )
+                            ) {
+                                Icon(
+                                    imageVector =
+                                        Icons.AutoMirrored.Outlined.ArrowBack,
+                                    contentDescription =
+                                        stringResource(R.string.back),
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        },
+                        trailingIcon = {
+                            AnimatedVisibility(
+                                visible = searchQuery.isNotEmpty()
+                            ) {
+                                IconButton(
+                                    onClick = {
+                                        onSearchQueryChange("")
+                                    }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Clear,
+                                        contentDescription =
+                                            stringResource(R.string.clear_search),
+                                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                            }
+                        }
+                    )
+                },
+                expanded = searchExpanded,
+                onExpandedChange = {
+                    searchExpanded = it
+                },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(20.dp),
+                colors = SearchBarDefaults.colors(
+                    containerColor =
+                        MaterialTheme.colorScheme.surfaceContainerHigh,
+                    dividerColor =
+                        MaterialTheme.colorScheme.outlineVariant
+                            .copy(alpha = 0.25f)
+                ),
+                tonalElevation = 0.dp,
+                shadowElevation = 0.dp
+            ) {
+                if (searchQuery.isNotBlank()) {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        items(
+                            items = searchResults,
+                            key = { it }
+                        ) { index ->
+                            val message = messages.getOrNull(index)
+
+                            if (message != null) {
+                                SearchResultItem(
+                                    message = message,
+                                    query = searchQuery,
+                                    onClick = {
+                                        isSearching = false
+                                        searchExpanded = false
+                                        onSearchQueryChange("")
+                                        onSearchResultClick(index)
+                                    }
+                                )
+
+                                HorizontalDivider(
+                                    modifier = Modifier.padding(
+                                        horizontal = 20.dp
+                                    ),
+                                    color = MaterialTheme.colorScheme
+                                        .outlineVariant
+                                        .copy(alpha = 0.35f)
+                                )
+                            }
                         }
                     }
                 }
@@ -383,14 +408,15 @@ private fun SearchResultItem(
             ),
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
-            style = MaterialTheme.typography.bodyLarge
+            style = ChatTypography.searchResult,
+            color = MaterialTheme.colorScheme.onSurface
         )
 
         Spacer(Modifier.height(5.dp))
 
         Text(
             text = formatTime(message.timestamp),
-            style = MaterialTheme.typography.labelSmall,
+            style = ChatTypography.searchTimestamp,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
