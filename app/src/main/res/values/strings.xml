@@ -82,7 +82,7 @@
     <string name="month_december">Dec.</string>
     <string name="chat_offline_cached"> No internet connection. Showing saved messages. </string>
     <string name="alternate_answer_placeholder">This is a test alternative answer. The response from the second AI model will appear here later.</string>
-    <string name="generate_another_answer">Another answer</string>
-    <string name="previous_answer">previous answer</string>
-    <string name="next_answer">next answer</string>
+    <string name="generate_another_answer">Generate another answer</string>
+    <string name="previous_answer">Previous answer</string>
+    <string name="next_answer">Next answer</string>
 </resources>

@@ -32,10 +32,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.example.chatai.R
 import com.example.chatai.domain.model.Message
 import com.example.chatai.presentation.ui.components.MessageItem
+import com.example.chatai.presentation.ui.theme.Dimens
 
 @Composable
 fun MessagesScreen(
@@ -135,9 +135,9 @@ fun MessageInput(
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surface)
-            .padding(8.dp)
+            .padding(Dimens.Spacing.small)
             .imePadding(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(Dimens.Spacing.small),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         OutlinedTextField(
@@ -146,7 +146,7 @@ fun MessageInput(
                 Text(stringResource(R.string.message))
             },
             modifier = Modifier.weight(1f),
-            shape = RoundedCornerShape(24.dp),
+            shape = RoundedCornerShape(Dimens.Shape.round),
         )
 
         IconButton(

@@ -34,12 +34,19 @@ import androidx.compose.ui.graphics.Brush.Companion.verticalGradient
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import com.example.chatai.R
 import com.example.chatai.domain.model.Message
 import com.example.chatai.domain.model.Sender
+import com.example.chatai.presentation.ui.theme.ChatUiTokens.Message.actionIconAlpha
+import com.example.chatai.presentation.ui.theme.ChatUiTokens.Message.gradientEndAlpha
+import com.example.chatai.presentation.ui.theme.ChatUiTokens.Message.selectionAlpha
+import com.example.chatai.presentation.ui.theme.ChatUiTokens.Message.timestampAlpha
+import com.example.chatai.presentation.ui.theme.Dimens
 import com.example.chatai.presentation.ui.utils.formatTime
 
 @Composable
@@ -80,7 +87,7 @@ fun MessageItem(
         verticalGradient(
             colors = listOf(
                 bubbleColor,
-                bubbleColor.copy(alpha = 0.85f),
+                bubbleColor.copy(alpha = gradientEndAlpha),
             ),
         )
     }
@@ -97,7 +104,7 @@ fun MessageItem(
             .fillMaxWidth()
             .background(
                 color = if (selected) {
-                    colors.primary.copy(alpha = 0.2f)
+                    colors.primary.copy(alpha = selectionAlpha)
                 } else {
                     Color.Transparent
                 },
@@ -117,7 +124,10 @@ fun MessageItem(
     ) {
         Surface(
             modifier = Modifier
-                .padding(horizontal = 8.dp, vertical = 4.dp)
+                .padding(
+                    horizontal = Dimens.Message.horizontalOuterPadding,
+                    vertical = Dimens.Message.verticalOuterPadding,
+                )
                 .background(bubbleGradient, bubbleShape),
             shape = bubbleShape,
             color = Color.Transparent,
@@ -126,8 +136,8 @@ fun MessageItem(
             BoxWithConstraints {
                 Column(
                     modifier = Modifier.padding(
-                        horizontal = 12.dp,
-                        vertical = 8.dp,
+                        horizontal = Dimens.Message.horizontalPadding,
+                        vertical = Dimens.Message.verticalPadding,
                     ),
                     verticalArrangement = layoutState.arrangement,
                 ) {
@@ -176,7 +186,7 @@ private fun MessageTimestamp(
     Text(
         text = formatTime(timestamp),
         modifier = modifier
-            .alpha(0.7f)
+            .alpha(timestampAlpha)
             .onSizeChanged(onSizeChanged),
         style = MaterialTheme.typography.labelSmall,
     )
@@ -192,20 +202,20 @@ private fun AssistantMessageActions(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 18.dp),
+            .padding(top = Dimens.Message.actionsTopPadding),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         if (answerCount == 1) {
             IconButton(
                 onClick = onGenerateAnotherAnswer,
-                modifier = Modifier.size(24.dp),
+                modifier = Modifier.size(Dimens.Message.actionButtonSize),
             ) {
                 Icon(
                     imageVector = Icons.Default.Refresh,
-                    contentDescription = "Сгенерировать другой ответ",
-                    modifier = Modifier.size(16.dp),
+                    contentDescription = stringResource(R.string.generate_another_answer),
+                    modifier = Modifier.size(Dimens.Message.actionIconSize),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
-                        .copy(alpha = 0.7f),
+                        .copy(alpha = actionIconAlpha),
                 )
             }
         }
@@ -229,20 +239,20 @@ private fun AnswerSwitcher(
     onSelectAnswer: (Int) -> Unit,
 ) {
     val iconTint = MaterialTheme.colorScheme.onSurfaceVariant
-        .copy(alpha = 0.7f)
+        .copy(alpha = actionIconAlpha)
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(2.dp),
+        horizontalArrangement = Arrangement.spacedBy(Dimens.Message.actionSpacing),
     ) {
         IconButton(
             onClick = { onSelectAnswer(selectedAnswer - 1) },
             enabled = selectedAnswer > 0,
-            modifier = Modifier.size(24.dp),
+            modifier = Modifier.size(Dimens.Message.actionButtonSize),
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                contentDescription = "Предыдущий ответ",
+                contentDescription = stringResource(R.string.previous_answer),
                 tint = iconTint,
             )
         }
@@ -256,11 +266,11 @@ private fun AnswerSwitcher(
         IconButton(
             onClick = { onSelectAnswer(selectedAnswer + 1) },
             enabled = selectedAnswer < answerCount - 1,
-            modifier = Modifier.size(24.dp),
+            modifier = Modifier.size(Dimens.Message.actionButtonSize),
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                contentDescription = "Следующий ответ",
+                contentDescription = stringResource(R.string.next_answer),
                 tint = iconTint,
             )
         }
@@ -269,17 +279,17 @@ private fun AnswerSwitcher(
 
 private fun Sender.toBubbleShape() = when (this) {
     Sender.USER -> RoundedCornerShape(
-        topStart = 18.dp,
-        topEnd = 18.dp,
-        bottomStart = 18.dp,
-        bottomEnd = 4.dp,
+        topStart = Dimens.Message.bubbleCorner,
+        topEnd = Dimens.Message.bubbleCorner,
+        bottomStart = Dimens.Message.bubbleCorner,
+        bottomEnd = Dimens.Message.smallCorner,
     )
 
     Sender.ASSISTANT -> RoundedCornerShape(
-        topStart = 18.dp,
-        topEnd = 18.dp,
-        bottomStart = 4.dp,
-        bottomEnd = 18.dp,
+        topStart = Dimens.Message.bubbleCorner,
+        topEnd = Dimens.Message.bubbleCorner,
+        bottomStart = Dimens.Message.smallCorner,
+        bottomEnd = Dimens.Message.bubbleCorner,
     )
 }
 
@@ -329,7 +339,7 @@ private class MessageItemLayoutState(
         if (isInline) {
             density.run {
                 timeSize.width.toDp()
-            } + 4.dp
+            } + Dimens.Message.timestampTextPadding
         } else {
             0.dp
         }

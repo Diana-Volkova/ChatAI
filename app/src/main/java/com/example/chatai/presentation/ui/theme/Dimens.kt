@@ -25,4 +25,43 @@ object Dimens {
         val small = 16.dp
         val standard = 24.dp
     }
+
+    object Message {
+        val bubbleCorner = 18.dp
+        val smallCorner = 4.dp
+
+        val horizontalPadding = 12.dp
+        val verticalPadding = 8.dp
+        val horizontalOuterPadding = 8.dp
+        val verticalOuterPadding = 4.dp
+
+        val actionsTopPadding = 18.dp
+
+        val actionButtonSize = 24.dp
+        val actionIconSize = 16.dp
+        val actionSpacing = 2.dp
+
+        val timestampTextPadding = 4.dp
+    }
+
+    object Search {
+        val horizontalPadding = 12.dp
+        val verticalPadding = 6.dp
+        val barCorner = 20.dp
+
+        val resultHorizontalPadding = 20.dp
+        val resultVerticalPadding = 14.dp
+        val resultTextSpacing = 5.dp
+        val dividerHorizontalPadding = 20.dp
+
+        val menuCorner = 16.dp
+        val menuTonalElevation = 2.dp
+        val menuShadowElevation = 4.dp
+    }
+
+    object Input {
+        val padding = 8.dp
+        val spacing = 8.dp
+        val corner = 24.dp
+    }
 }
