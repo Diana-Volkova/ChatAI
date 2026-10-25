@@ -85,4 +85,6 @@
     <string name="generate_another_answer">Generate another answer</string>
     <string name="previous_answer">Previous answer</string>
     <string name="next_answer">Next answer</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="delete_message_confirmation">Do you really want to delete this message?</string>
 </resources>

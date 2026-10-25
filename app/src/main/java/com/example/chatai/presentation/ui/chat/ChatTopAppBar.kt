@@ -56,6 +56,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import com.example.chatai.R
 import com.example.chatai.presentation.ui.theme.ChatTypography
+import com.example.chatai.presentation.ui.theme.ChatUiTokens.Search.dividerAlpha
+import com.example.chatai.presentation.ui.theme.ChatUiTokens.Search.searchBarDividerAlpha
+import com.example.chatai.presentation.ui.theme.Dimens
 import com.example.chatai.presentation.ui.theme.SearchPlaceholderAlpha
 import com.example.chatai.presentation.ui.utils.formatTime
 
@@ -93,7 +96,10 @@ fun ChatTopAppBar(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 6.dp)
+                .padding(
+                    horizontal = Dimens.Search.horizontalPadding,
+                    vertical = Dimens.Search.verticalPadding
+                )
         ) {
             SearchBar(
                 inputField = {
@@ -158,13 +164,13 @@ fun ChatTopAppBar(
                     searchExpanded = it
                 },
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(20.dp),
+                shape = RoundedCornerShape(Dimens.Search.barCorner),
                 colors = SearchBarDefaults.colors(
                     containerColor =
                         MaterialTheme.colorScheme.surfaceContainerHigh,
                     dividerColor =
                         MaterialTheme.colorScheme.outlineVariant
-                            .copy(alpha = 0.25f)
+                            .copy(alpha = searchBarDividerAlpha)
                 ),
                 tonalElevation = 0.dp,
                 shadowElevation = 0.dp
@@ -193,11 +199,11 @@ fun ChatTopAppBar(
 
                                 HorizontalDivider(
                                     modifier = Modifier.padding(
-                                        horizontal = 20.dp
+                                        horizontal = Dimens.Search.dividerHorizontalPadding
                                     ),
                                     color = MaterialTheme.colorScheme
                                         .outlineVariant
-                                        .copy(alpha = 0.35f)
+                                        .copy(alpha = dividerAlpha)
                                 )
                             }
                         }
@@ -280,10 +286,10 @@ fun ChatTopAppBar(
                             showMenu = false
                             showThemeSelection = false
                         },
-                        shape = RoundedCornerShape(16.dp),
+                        shape = RoundedCornerShape(Dimens.Search.menuCorner),
                         containerColor = MaterialTheme.colorScheme.surface,
-                        tonalElevation = 2.dp,
-                        shadowElevation = 4.dp
+                        tonalElevation = Dimens.Search.menuTonalElevation,
+                        shadowElevation = Dimens.Search.menuShadowElevation
                     ) {
                         if (showThemeSelection) {
                             DropdownMenuItem(
@@ -397,8 +403,8 @@ private fun SearchResultItem(
             .fillMaxWidth()
             .clickable(onClick = onClick)
             .padding(
-                horizontal = 20.dp,
-                vertical = 14.dp
+                horizontal = Dimens.Search.resultHorizontalPadding,
+                vertical = Dimens.Search.resultVerticalPadding
             )
     ) {
         Text(
@@ -412,7 +418,7 @@ private fun SearchResultItem(
             color = MaterialTheme.colorScheme.onSurface
         )
 
-        Spacer(Modifier.height(5.dp))
+        Spacer(Modifier.height(Dimens.Search.resultTextSpacing))
 
         Text(
             text = formatTime(message.timestamp),

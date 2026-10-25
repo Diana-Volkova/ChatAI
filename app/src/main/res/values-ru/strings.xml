@@ -88,4 +88,6 @@
     <string name="generate_another_answer">Сгенерировать другой ответ</string>
     <string name="previous_answer">Предыдущий ответ</string>
     <string name="next_answer">Следующий ответ</string>
+    <string name="something_went_wrong">Что-то пошло не так</string>
+    <string name="delete_message_confirmation">Вы действительно хотите кдалить это сообщение?</string>
 </resources>

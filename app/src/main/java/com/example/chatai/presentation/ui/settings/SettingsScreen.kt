@@ -35,7 +35,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
@@ -43,6 +42,7 @@ import com.example.chatai.R
 import com.example.chatai.core.localization.LanguageManager
 import com.example.chatai.core.theme.ThemeManager
 import com.example.chatai.presentation.navigation.Screen
+import com.example.chatai.presentation.ui.theme.Dimens
 import com.example.chatai.presentation.ui.theme.ThemeMode
 import com.example.chatai.presentation.ui.theme.ThemeState
 
@@ -197,7 +197,7 @@ fun SettingsScreen(
             }
 
             Spacer(
-                modifier = Modifier.height(32.dp)
+                modifier = Modifier.height(Dimens.Spacing.xxLarge)
             )
         }
     }
@@ -223,22 +223,22 @@ fun SettingsSection(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 20.dp)
+            .padding(top = Dimens.Spacing.contentHorizontal)
     ) {
         Text(
             text = title.uppercase(),
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(
-                horizontal = 20.dp,
-                vertical = 8.dp
+                horizontal = Dimens.Spacing.contentHorizontal,
+                vertical = Dimens.Spacing.small
             )
         )
 
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(16.dp))
+                .clip(RoundedCornerShape(Dimens.Shape.large))
                 .background(MaterialTheme.colorScheme.surface)
         ) {
             content()

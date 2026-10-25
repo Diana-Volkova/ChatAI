@@ -7,7 +7,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import com.example.chatai.presentation.ui.theme.Dimens
 
 @Composable
 fun LoadingScreen(
@@ -19,8 +19,8 @@ fun LoadingScreen(
             .fillMaxSize()
     ) {
         CircularProgressIndicator(
-            modifier = Modifier.size(32.dp),
-            strokeWidth = 3.dp,
+            modifier = Modifier.size(Dimens.Progress.size),
+            strokeWidth = Dimens.Progress.strokeWidth,
         )
     }
 }

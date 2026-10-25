@@ -13,11 +13,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
+import com.example.chatai.R
 import com.example.chatai.domain.model.Message
 import com.example.chatai.domain.model.Sender
+import com.example.chatai.presentation.ui.theme.ChatUiTokens
+import com.example.chatai.presentation.ui.theme.Dimens
 
 @Composable
 fun MessageItemMenu(
@@ -27,7 +31,7 @@ fun MessageItemMenu(
     message: Message,
     onDelete: () -> Unit,
 ) {
-    val targetOffset = containerWith * 0.15f
+    val targetOffset = containerWith * ChatUiTokens.Message.menuOffsetFactor
     var showDeleteConfirm by remember { mutableStateOf(false) }
 
     DropdownMenu(
@@ -40,18 +44,18 @@ fun MessageItemMenu(
             },
             y = 0.dp
         ),
-        modifier = Modifier.widthIn(min = 200.dp)
+        modifier = Modifier.widthIn(min = Dimens.Message.menuMinWidth)
     ) {
         DropdownMenuItem(
             text = {
                 Text(
-                    text = "Delete"
+                    text = stringResource(R.string.delete)
                 )
             },
             leadingIcon = {
                 Icon(
                     Icons.Outlined.Delete,
-                    "Delete"
+                    stringResource(R.string.delete)
                 )
             },
             onClick = {
@@ -64,7 +68,7 @@ fun MessageItemMenu(
     if (showDeleteConfirm) ConfirmDialog(
         onDismiss = { showDeleteConfirm = false },
         onConfirm = onDelete,
-        title = "Delete message",
-        text = "Do you really want to delete this message?"
+        title = stringResource(R.string.delete_message),
+        text = stringResource(R.string.delete_message_confirmation)
     )
 }

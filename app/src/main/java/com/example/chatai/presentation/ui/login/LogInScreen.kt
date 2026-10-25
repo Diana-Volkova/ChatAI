@@ -26,11 +26,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.chatai.R
 import com.example.chatai.presentation.navigation.Screen
+import com.example.chatai.presentation.ui.theme.Dimens
 
 @Composable
 fun LogInScreen(
@@ -77,7 +77,7 @@ fun LogInScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(24.dp),
+                    .padding(Dimens.Spacing.xLarge),
                 verticalArrangement = Arrangement.Center
             ) {
 
@@ -86,7 +86,7 @@ fun LogInScreen(
                     style = MaterialTheme.typography.headlineMedium
                 )
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(Dimens.Spacing.xLarge))
 
                 OutlinedTextField(
                     value = email,
@@ -99,7 +99,7 @@ fun LogInScreen(
                     )
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(Dimens.Spacing.large))
 
                 OutlinedTextField(
                     value = password,
@@ -113,7 +113,7 @@ fun LogInScreen(
                     )
                 )
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(Dimens.Spacing.xLarge))
 
                 Button(
                     onClick = {
@@ -124,7 +124,7 @@ fun LogInScreen(
                     Text(stringResource(R.string.login))
                 }
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(Dimens.Spacing.small))
 
                 TextButton(
                     onClick = {

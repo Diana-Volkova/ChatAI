@@ -28,11 +28,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.chatai.R
 import com.example.chatai.presentation.navigation.Screen
+import com.example.chatai.presentation.ui.theme.Dimens
 
 @Composable
 fun RegisterScreen(
@@ -75,7 +75,7 @@ fun RegisterScreen(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .padding(paddingValues)
-                .padding(24.dp),
+                .padding(Dimens.Spacing.xLarge),
             verticalArrangement = Arrangement.Center
         ) {
 
@@ -84,7 +84,7 @@ fun RegisterScreen(
                 style = MaterialTheme.typography.headlineMedium
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(Dimens.Spacing.xLarge))
 
             OutlinedTextField(
                 value = name,
@@ -94,7 +94,7 @@ fun RegisterScreen(
                 label = { Text(stringResource(R.string.user_name)) }
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(Dimens.Spacing.large))
 
             OutlinedTextField(
                 value = email,
@@ -107,7 +107,7 @@ fun RegisterScreen(
                 )
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(Dimens.Spacing.large))
 
             OutlinedTextField(
                 value = password,
@@ -121,7 +121,7 @@ fun RegisterScreen(
                 )
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(Dimens.Spacing.large))
 
             OutlinedTextField(
                 value = confirmPassword,
@@ -135,7 +135,7 @@ fun RegisterScreen(
                 )
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(Dimens.Spacing.xLarge))
 
             Button(
                 onClick = {
@@ -146,7 +146,7 @@ fun RegisterScreen(
                 Text(stringResource(R.string.create_account))
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(Dimens.Spacing.small))
 
             TextButton(
                 onClick = {

@@ -14,7 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import com.example.chatai.presentation.ui.theme.Dimens
 
 @Composable
 fun SyncWarning(
@@ -23,14 +23,17 @@ fun SyncWarning(
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 12.dp, vertical = 8.dp),
+            .padding(
+                horizontal = Dimens.Spacing.medium,
+                vertical = Dimens.Spacing.small
+            ),
         shape = MaterialTheme.shapes.medium,
-        tonalElevation = 2.dp
+        tonalElevation = Dimens.Elevation.low
     ) {
         Row(
             modifier = Modifier.padding(
-                horizontal = 12.dp,
-                vertical = 10.dp
+                horizontal = Dimens.Spacing.medium,
+                vertical = Dimens.Spacing.itemSpacing
             ),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -39,7 +42,7 @@ fun SyncWarning(
                 contentDescription = null
             )
 
-            Spacer(Modifier.width(8.dp))
+            Spacer(Modifier.width(Dimens.Spacing.small))
 
             Text(
                 text = message,

@@ -15,9 +15,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.example.chatai.R
 import com.example.chatai.core.localization.LanguageManager
+import com.example.chatai.presentation.ui.theme.Dimens
 
 @Composable
 fun LanguageSelector(
@@ -68,8 +68,8 @@ private fun LanguageOption(
                 .fillMaxWidth()
                 .clickable(onClick = onClick)
                 .padding(
-                    horizontal = 20.dp,
-                    vertical = 16.dp
+                    horizontal = Dimens.Spacing.contentHorizontal,
+                    vertical = Dimens.Spacing.large
                 ),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -95,7 +95,7 @@ private fun LanguageOption(
         if (showDivider) {
             HorizontalDivider(
                 modifier = Modifier.padding(
-                    horizontal = 20.dp
+                    horizontal = Dimens.Spacing.contentHorizontal
                 ),
                 color = MaterialTheme.colorScheme.outlineVariant
             )

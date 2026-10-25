@@ -14,8 +14,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
+import com.example.chatai.R
+import com.example.chatai.presentation.ui.theme.Dimens
 
 @Composable
 fun Error(
@@ -26,21 +28,21 @@ fun Error(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = 32.dp),
+            .padding(horizontal = Dimens.Spacing.xxLarge),
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+            verticalArrangement = Arrangement.spacedBy(Dimens.Spacing.medium),
         ) {
             Icon(
                 imageVector = Icons.Default.Warning,
                 contentDescription = null,
-                modifier = Modifier.size(40.dp),
+                modifier = Modifier.size(Dimens.Icon.large),
                 tint = MaterialTheme.colorScheme.error,
             )
 
             Text(
-                text = "Something went wrong",
+                text = stringResource(R.string.something_went_wrong),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onBackground,
             )

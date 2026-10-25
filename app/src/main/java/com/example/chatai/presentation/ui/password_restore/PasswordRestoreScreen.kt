@@ -25,10 +25,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.chatai.R
+import com.example.chatai.presentation.ui.theme.Dimens
 
 @Composable
 fun PasswordRestoreScreen(
@@ -74,7 +74,7 @@ fun PasswordRestoreScreen(
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize()
-                .padding(24.dp),
+                .padding(Dimens.Spacing.xLarge),
             verticalArrangement = Arrangement.Center
         ) {
 
@@ -83,7 +83,7 @@ fun PasswordRestoreScreen(
                 style = MaterialTheme.typography.headlineMedium
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(Dimens.Spacing.medium))
 
             Text(
                 text = stringResource(R.string.password_restore_description),
@@ -91,7 +91,7 @@ fun PasswordRestoreScreen(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(Dimens.Spacing.xLarge))
 
             OutlinedTextField(
                 value = email,
@@ -106,7 +106,7 @@ fun PasswordRestoreScreen(
                 )
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(Dimens.Spacing.xLarge))
 
             Button(
                 onClick = {
@@ -122,7 +122,7 @@ fun PasswordRestoreScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(Dimens.Spacing.small))
 
             TextButton(
                 onClick = {

@@ -33,7 +33,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -42,6 +41,7 @@ import com.example.chatai.domain.model.Chat
 import com.example.chatai.presentation.navigation.Screen
 import com.example.chatai.presentation.ui.sync.SyncStatus
 import com.example.chatai.presentation.ui.components.SyncWarning
+import com.example.chatai.presentation.ui.theme.Dimens
 import com.example.chatai.presentation.ui.utils.formatLastMessageTime
 
 @Composable
@@ -112,10 +112,10 @@ private fun HomeContent(
         LazyColumn(
             modifier = Modifier.weight(1f),
             contentPadding = PaddingValues(
-                horizontal = 16.dp,
-                vertical = 8.dp
+                horizontal = Dimens.Spacing.large,
+                vertical = Dimens.Spacing.small
             ),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+            verticalArrangement = Arrangement.spacedBy(Dimens.Spacing.itemSpacing)
         ) {
             items(
                 items = chats,
@@ -145,8 +145,11 @@ private fun ChatItem(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 12.dp),
-            verticalArrangement = Arrangement.spacedBy(6.dp)
+                .padding(
+                    horizontal = Dimens.Spacing.large,
+                    vertical = Dimens.Spacing.medium
+                ),
+            verticalArrangement = Arrangement.spacedBy(Dimens.Spacing.tight)
         ) {
             Text(
                 text = chat.title,
@@ -163,13 +166,13 @@ private fun ChatItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    horizontalArrangement = Arrangement.spacedBy(Dimens.Spacing.tight),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.robot),
                         contentDescription = null,
-                        modifier = Modifier.size(16.dp),
+                        modifier = Modifier.size(Dimens.Icon.small),
                         tint = MaterialTheme.colorScheme.secondary
                     )
                     Text(

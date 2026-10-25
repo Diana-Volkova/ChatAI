@@ -16,5 +16,7 @@ object ChatUiTokens {
 
         const val smallCorner = 4
         const val bubbleCorner = 18
+
+        const val menuOffsetFactor = 0.15f
     }
 }
