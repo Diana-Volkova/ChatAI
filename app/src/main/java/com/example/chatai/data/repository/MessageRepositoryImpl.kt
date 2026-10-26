@@ -8,7 +8,7 @@ import com.example.chatai.data.mappers.toDto
 import com.example.chatai.data.mappers.toEntity
 import com.example.chatai.data.mappers.toChatEntity
 import com.example.chatai.data.remote.api.ChatApi
-import com.example.chatai.domain.error.ChatException
+import com.example.chatai.domain.exception.ChatException
 import com.example.chatai.domain.model.ChatDetails
 import com.example.chatai.domain.model.Message
 import com.example.chatai.domain.model.Sender

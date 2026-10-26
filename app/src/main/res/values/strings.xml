@@ -87,4 +87,20 @@
     <string name="next_answer">Next answer</string>
     <string name="something_went_wrong">Something went wrong</string>
     <string name="delete_message_confirmation">Do you really want to delete this message?</string>
+
+    <string name="auth_exception_bad_request">Invalid request</string>
+    <string name="auth_exception_unauthorized">Session is no longer valid</string>
+    <string name="auth_exception_forbidden">Insufficient permissions to delete the account</string>
+    <string name="auth_exception_not_found">Account not found</string>
+    <string name="auth_exception_conflict">Conflict</string>
+    <string name="auth_exception_unprocessable">Invalid data</string>
+    <string name="auth_exception_rate_limit">Too many attempts. Please try again later</string>
+    <string name="auth_exception_server">Server error</string>
+    <string name="auth_exception_unavailable">Server is temporarily unavailable</string>
+    <string name="auth_exception_unknown">An error occurred: %1$d</string>
+
+    <string name="chat_exception_unknown">An error occurred</string>
+    <string name="chat_exception_unknown_code">An error occurred: %1$d</string>
+    <string name="exception_no_internet">No internet connection</string>
+
 </resources>

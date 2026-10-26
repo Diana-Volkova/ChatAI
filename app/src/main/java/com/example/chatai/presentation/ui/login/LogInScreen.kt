@@ -23,6 +23,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -31,6 +32,7 @@ import androidx.navigation.NavController
 import com.example.chatai.R
 import com.example.chatai.presentation.navigation.Screen
 import com.example.chatai.presentation.ui.theme.Dimens
+import com.example.chatai.presentation.ui.extensions.getLocalizedMessage
 
 @Composable
 fun LogInScreen(
@@ -42,6 +44,8 @@ fun LogInScreen(
     var password by remember { mutableStateOf("") }
 
     val snackbarHostState = remember { SnackbarHostState() }
+
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         viewModel.effects.collect { effect ->
@@ -55,8 +59,9 @@ fun LogInScreen(
                 }
 
                 is LogInEffect.Error -> {
+                    val message = effect.exception.getLocalizedMessage(context)
                     snackbarHostState.showSnackbar(
-                        effect.message
+                        message
                     )
                 }
             }

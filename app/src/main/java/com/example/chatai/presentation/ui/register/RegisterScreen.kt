@@ -25,6 +25,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -32,6 +33,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.chatai.R
 import com.example.chatai.presentation.navigation.Screen
+import com.example.chatai.presentation.ui.extensions.getLocalizedMessage
 import com.example.chatai.presentation.ui.theme.Dimens
 
 @Composable
@@ -46,6 +48,8 @@ fun RegisterScreen(
 
     val snackbarHostState = remember { SnackbarHostState() }
 
+    val context = LocalContext.current
+
     LaunchedEffect(Unit) {
         viewModel.effects.collect { effect ->
             when (effect) {
@@ -58,7 +62,7 @@ fun RegisterScreen(
                 }
 
                 is RegisterEffect.Error -> {
-                    snackbarHostState.showSnackbar(effect.message)
+                    snackbarHostState.showSnackbar(effect.exception.getLocalizedMessage(context))
                 }
             }
         }

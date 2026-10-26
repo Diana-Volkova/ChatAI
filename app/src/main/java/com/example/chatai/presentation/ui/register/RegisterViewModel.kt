@@ -2,7 +2,7 @@ package com.example.chatai.presentation.ui.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.chatai.domain.error.AuthException
+import com.example.chatai.domain.exception.AuthException
 import com.example.chatai.domain.usecase.RegisterUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -11,10 +11,12 @@ import kotlinx.coroutines.launch
 import java.net.SocketTimeoutException
 import javax.inject.Inject
 
+
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
     private val register: RegisterUseCase,
 ) : ViewModel() {
+
     private val _effects =
         MutableSharedFlow<RegisterEffect>(
             extraBufferCapacity = 1
@@ -40,15 +42,11 @@ class RegisterViewModel @Inject constructor(
 
                 _effects.emit(RegisterEffect.NavigateToLogIn)
             } catch (e: AuthException) {
-                _effects.emit(
-                    RegisterEffect.Error(e.message())
-                )
+                _effects.emit(RegisterEffect.Error(e))
             } catch (e: SocketTimeoutException) {
-                _effects.emit(
-                    RegisterEffect.Error("Нет подключения к интернету: " + e.localizedMessage)
-                )
+                _effects.emit(RegisterEffect.Error(e))
             } catch (e: Exception) {
-                _effects.emit(RegisterEffect.Error(e.localizedMessage ?: "Неизвестная ошибка"))
+                _effects.emit(RegisterEffect.Error(e))
             }
         }
     }

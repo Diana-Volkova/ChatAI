@@ -6,6 +6,6 @@ sealed class PasswordRestoreEffect {
     object EmailSent : PasswordRestoreEffect()
 
     data class Error(
-        val message: String
+        val exception: Exception
     ) : PasswordRestoreEffect()
 }

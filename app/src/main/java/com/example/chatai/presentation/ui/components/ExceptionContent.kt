@@ -20,7 +20,7 @@ import com.example.chatai.R
 import com.example.chatai.presentation.ui.theme.Dimens
 
 @Composable
-fun Error(
+fun ExceptionContent(
     message: String,
     modifier: Modifier = Modifier,
 ) {

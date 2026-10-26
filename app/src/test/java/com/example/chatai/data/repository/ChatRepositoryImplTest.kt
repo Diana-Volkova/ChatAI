@@ -4,7 +4,7 @@ import com.example.chatai.data.local.ChatDao
 import com.example.chatai.data.mappers.toEntity
 import com.example.chatai.data.remote.api.ChatApi
 import com.example.chatai.data.remote.dto.ChatDto
-import com.example.chatai.domain.error.ChatException
+import com.example.chatai.domain.exception.ChatException
 import io.mockk.MockKAnnotations
 import io.mockk.Runs
 import io.mockk.coEvery

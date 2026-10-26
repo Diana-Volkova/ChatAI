@@ -4,7 +4,7 @@ import com.example.chatai.data.local.ChatDao
 import com.example.chatai.data.remote.api.ChatApi
 import com.example.chatai.data.mappers.toDomain
 import com.example.chatai.data.mappers.toEntity
-import com.example.chatai.domain.error.ChatException
+import com.example.chatai.domain.exception.ChatException
 import com.example.chatai.domain.model.Chat
 import com.example.chatai.domain.repository.ChatRepository
 import kotlinx.coroutines.flow.Flow

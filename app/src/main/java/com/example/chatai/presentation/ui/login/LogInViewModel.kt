@@ -2,7 +2,7 @@ package com.example.chatai.presentation.ui.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.chatai.domain.error.AuthException
+import com.example.chatai.domain.exception.AuthException
 import com.example.chatai.domain.usecase.LoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -46,27 +46,16 @@ class LogInViewModel @Inject constructor(
                     LogInEffect.NavigateToHome
                 )
             } catch (e: AuthException) {
-                val message = when (e.code) {
-                    401 -> "Неверный email или пароль"
-                    404 -> "Сервер недоступен"
-                    500 -> "Ошибка сервера"
-                    else -> "Ошибка авторизации"
-                }
-
                 _effects.emit(
-                    LogInEffect.Error(message)
+                    LogInEffect.Error(e)
                 )
-
             } catch (e: SocketTimeoutException) {
                 _effects.emit(
-                    LogInEffect.Error("Нет подключения к интернету")
+                    LogInEffect.Error(e)
                 )
-
             } catch (e: Exception) {
                 _effects.emit(
-                    LogInEffect.Error(
-                        e.localizedMessage ?: "Неизвестная ошибка"
-                    )
+                    LogInEffect.Error(e)
                 )
             }
         }

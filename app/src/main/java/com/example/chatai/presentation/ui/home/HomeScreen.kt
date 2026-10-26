@@ -29,6 +29,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -39,8 +40,10 @@ import androidx.navigation.NavController
 import com.example.chatai.R
 import com.example.chatai.domain.model.Chat
 import com.example.chatai.presentation.navigation.Screen
+import com.example.chatai.presentation.ui.components.ExceptionContent
 import com.example.chatai.presentation.ui.sync.SyncStatus
 import com.example.chatai.presentation.ui.components.SyncWarning
+import com.example.chatai.presentation.ui.extensions.getLocalizedMessage
 import com.example.chatai.presentation.ui.theme.Dimens
 import com.example.chatai.presentation.ui.utils.formatLastMessageTime
 
@@ -51,6 +54,16 @@ fun HomeScreen(
 ) {
     val chats by viewModel.chats.collectAsStateWithLifecycle()
     val syncStatus by viewModel.syncStatus.collectAsStateWithLifecycle()
+    val exception by viewModel.exception.collectAsStateWithLifecycle()
+
+    val context = LocalContext.current
+
+    exception?.let { e ->
+        ExceptionContent(
+            message = e.getLocalizedMessage(context)
+        )
+        return
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),

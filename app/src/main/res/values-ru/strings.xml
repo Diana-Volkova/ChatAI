@@ -90,4 +90,20 @@
     <string name="next_answer">Следующий ответ</string>
     <string name="something_went_wrong">Что-то пошло не так</string>
     <string name="delete_message_confirmation">Вы действительно хотите кдалить это сообщение?</string>
+
+    <string name="auth_exception_bad_request">Некорректный запрос</string>
+    <string name="auth_exception_unauthorized">Сессия уже недействительна</string>
+    <string name="auth_exception_forbidden">Недостаточно прав для удаления аккаунта</string>
+    <string name="auth_exception_not_found">Аккаунт не найден</string>
+    <string name="auth_exception_conflict">Конфликт</string>
+    <string name="auth_exception_unprocessable">Некорректные данные</string>
+    <string name="auth_exception_rate_limit">Слишком много попыток. Попробуйте позже</string>
+    <string name="auth_exception_server">Ошибка сервера</string>
+    <string name="auth_exception_unavailable">Сервер временно недоступен</string>
+    <string name="auth_exception_unknown">Произошла ошибка: %1$d</string>
+
+    <string name="chat_exception_unknown">Произошла ошибка</string>
+    <string name="chat_exception_unknown_code">Произошла ошибка: %1$d</string>
+
+    <string name="exception_no_internet">Нет подключения к интернету</string>
 </resources>

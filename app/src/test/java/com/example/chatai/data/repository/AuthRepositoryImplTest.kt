@@ -6,7 +6,7 @@ import com.example.chatai.data.remote.dto.LoginRequest
 import com.example.chatai.data.remote.dto.RefreshRequest
 import com.example.chatai.data.remote.dto.RegisterRequest
 import com.example.chatai.data.remote.dto.TokenResponse
-import com.example.chatai.domain.error.AuthException
+import com.example.chatai.domain.exception.AuthException
 import io.mockk.MockKAnnotations
 import io.mockk.Runs
 import io.mockk.coEvery

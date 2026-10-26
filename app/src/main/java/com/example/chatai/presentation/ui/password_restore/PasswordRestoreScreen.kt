@@ -23,11 +23,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.chatai.R
+import com.example.chatai.presentation.ui.extensions.getLocalizedMessage
 import com.example.chatai.presentation.ui.theme.Dimens
 
 @Composable
@@ -44,6 +46,8 @@ fun PasswordRestoreScreen(
         R.string.password_reset_email_sent
     )
 
+    val context = LocalContext.current
+
 
     LaunchedEffect(Unit) {
         viewModel.effects.collect { effect ->
@@ -57,7 +61,7 @@ fun PasswordRestoreScreen(
 
                 is PasswordRestoreEffect.Error -> {
                     snackbarHostState.showSnackbar(
-                        effect.message
+                        effect.exception.getLocalizedMessage(context)
                     )
                 }
             }

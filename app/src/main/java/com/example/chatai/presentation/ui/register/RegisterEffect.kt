@@ -4,6 +4,6 @@ sealed class RegisterEffect {
     object NavigateToLogIn : RegisterEffect()
 
     data class Error(
-        val message: String
+        val exception: Exception
     ) : RegisterEffect()
 }

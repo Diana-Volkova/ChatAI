@@ -1,7 +1,7 @@
 package com.example.chatai.domain.usecase
 
 import com.example.chatai.data.local.SessionManager
-import com.example.chatai.domain.error.AuthException
+import com.example.chatai.domain.exception.AuthException
 import com.example.chatai.domain.repository.AuthRepository
 import javax.inject.Inject
 

@@ -24,7 +24,7 @@ import androidx.navigation.NavController
 import com.example.chatai.R
 import com.example.chatai.domain.model.Message
 import com.example.chatai.domain.theme.ChatThemeId
-import com.example.chatai.presentation.ui.components.Error
+import com.example.chatai.presentation.ui.components.ExceptionContent
 import com.example.chatai.presentation.ui.components.LoadingScreen
 import com.example.chatai.presentation.ui.sync.SyncStatus
 import com.example.chatai.presentation.ui.components.SyncWarning
@@ -119,7 +119,7 @@ fun ChatScreen(
                 }
 
                 is ChatState.Error -> {
-                    Error(
+                    ExceptionContent(
                         message = state.message,
                         modifier = Modifier
                             .padding(paddingValues)

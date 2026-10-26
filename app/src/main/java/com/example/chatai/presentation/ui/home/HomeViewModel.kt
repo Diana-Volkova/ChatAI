@@ -2,7 +2,7 @@ package com.example.chatai.presentation.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.chatai.domain.error.ChatException
+import com.example.chatai.domain.exception.ChatException
 import com.example.chatai.domain.model.Chat
 import com.example.chatai.domain.usecase.ObserveChatsUseCase
 import com.example.chatai.domain.usecase.SyncChatsUseCase
@@ -31,8 +31,8 @@ class HomeViewModel @Inject constructor(
     private val _syncStatus = MutableStateFlow<SyncStatus>(SyncStatus.Synced)
     val syncStatus = _syncStatus.asStateFlow()
 
-    private val _error = MutableStateFlow<String?>(null)
-    val error = _error.asStateFlow()
+    private val _exception = MutableStateFlow<Exception?>(null)
+    val exception = _exception.asStateFlow()
 
     init {
         loadChats()
@@ -40,15 +40,16 @@ class HomeViewModel @Inject constructor(
 
     private fun loadChats() {
         viewModelScope.launch {
+            _exception.value = null
             try {
                 syncChatsUseCase()
                 _syncStatus.value = SyncStatus.Synced
             }catch (_: IOException) {
                 _syncStatus.value = SyncStatus.OfflineCached
             } catch (e: ChatException) {
-                _error.value = e.message()
+                _exception.value = e
             }  catch (e: Exception) {
-                _error.value = "Не удалось загрузить чаты: " + e.localizedMessage
+                _exception.value = e
             }
         }
     }

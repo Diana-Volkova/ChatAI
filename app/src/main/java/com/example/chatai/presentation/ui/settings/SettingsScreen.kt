@@ -42,6 +42,7 @@ import com.example.chatai.R
 import com.example.chatai.core.localization.LanguageManager
 import com.example.chatai.core.theme.ThemeManager
 import com.example.chatai.presentation.navigation.Screen
+import com.example.chatai.presentation.ui.extensions.getLocalizedMessage
 import com.example.chatai.presentation.ui.theme.Dimens
 import com.example.chatai.presentation.ui.theme.ThemeMode
 import com.example.chatai.presentation.ui.theme.ThemeState
@@ -76,7 +77,7 @@ fun SettingsScreen(
         SnackbarHostState()
     }
 
-    val error by viewModel.error.collectAsStateWithLifecycle()
+    val exception by viewModel.exception.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.effects.collect { effect ->
@@ -92,9 +93,9 @@ fun SettingsScreen(
         }
     }
 
-    LaunchedEffect(error) {
-        error?.let { message ->
-            snackbarHostState.showSnackbar(message)
+    LaunchedEffect(exception) {
+        exception?.let { message ->
+            snackbarHostState.showSnackbar(message.getLocalizedMessage(context))
             viewModel.clearError()
         }
     }
