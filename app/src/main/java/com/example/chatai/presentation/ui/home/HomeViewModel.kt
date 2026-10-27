@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val observeChatsUseCase: ObserveChatsUseCase,
+    observeChatsUseCase: ObserveChatsUseCase,
     private val syncChatsUseCase: SyncChatsUseCase
 ) : ViewModel() {
     val chats: StateFlow<List<Chat>> = observeChatsUseCase()
