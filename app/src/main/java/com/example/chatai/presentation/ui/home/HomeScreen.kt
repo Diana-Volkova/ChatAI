@@ -4,6 +4,7 @@ package com.example.chatai.presentation.ui.home
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -30,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -41,6 +43,7 @@ import com.example.chatai.R
 import com.example.chatai.domain.model.Chat
 import com.example.chatai.presentation.navigation.Screen
 import com.example.chatai.presentation.ui.components.ExceptionContent
+import com.example.chatai.presentation.ui.components.LoadingScreen
 import com.example.chatai.presentation.ui.sync.SyncStatus
 import com.example.chatai.presentation.ui.components.SyncWarning
 import com.example.chatai.presentation.ui.extensions.getLocalizedMessage
@@ -55,6 +58,7 @@ fun HomeScreen(
     val chats by viewModel.chats.collectAsStateWithLifecycle()
     val syncStatus by viewModel.syncStatus.collectAsStateWithLifecycle()
     val exception by viewModel.exception.collectAsStateWithLifecycle()
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
 
@@ -92,17 +96,31 @@ fun HomeScreen(
         }
     ) { paddingValues ->
 
-        HomeContent(
-            chats = chats,
-            syncStatus = syncStatus,
+        Box(
             modifier = Modifier
+                .fillMaxSize()
                 .padding(paddingValues),
-            onChatClick = { chatId ->
-                navController.navigate(
-                    Screen.ChatScreen(chatId)
+            contentAlignment = Alignment.Center
+        ) {
+            if (isLoading && chats.isEmpty()) {
+                LoadingScreen(
+                    modifier = Modifier
+                        .padding(paddingValues)
+                        .testTag("home_loading_screen")
+                )
+            } else {
+                HomeContent(
+                    chats = chats,
+                    syncStatus = syncStatus,
+                    modifier = Modifier.fillMaxSize(),
+                    onChatClick = { chatId ->
+                        navController.navigate(
+                            Screen.ChatScreen(chatId)
+                        )
+                    }
                 )
             }
-        )
+        }
     }
 }
 

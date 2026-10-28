@@ -79,5 +79,7 @@ object Dimens {
     object Progress {
         val size = 32.dp
         val strokeWidth = 3.dp
+
+        val shadowElevation = 12.dp
     }
 }

@@ -2,7 +2,6 @@ package com.example.chatai.presentation.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.chatai.domain.exception.ChatException
 import com.example.chatai.domain.model.Chat
 import com.example.chatai.domain.usecase.ObserveChatsUseCase
 import com.example.chatai.domain.usecase.SyncChatsUseCase
@@ -31,6 +30,9 @@ class HomeViewModel @Inject constructor(
     private val _syncStatus = MutableStateFlow<SyncStatus>(SyncStatus.Synced)
     val syncStatus = _syncStatus.asStateFlow()
 
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
     private val _exception = MutableStateFlow<Exception?>(null)
     val exception = _exception.asStateFlow()
 
@@ -40,16 +42,17 @@ class HomeViewModel @Inject constructor(
 
     private fun loadChats() {
         viewModelScope.launch {
+            _isLoading.value = true
             _exception.value = null
             try {
                 syncChatsUseCase()
                 _syncStatus.value = SyncStatus.Synced
-            }catch (_: IOException) {
+            } catch (_: IOException) {
                 _syncStatus.value = SyncStatus.OfflineCached
-            } catch (e: ChatException) {
-                _exception.value = e
             }  catch (e: Exception) {
                 _exception.value = e
+            } finally {
+                _isLoading.value = false
             }
         }
     }

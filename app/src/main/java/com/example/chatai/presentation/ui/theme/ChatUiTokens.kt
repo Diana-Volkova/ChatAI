@@ -19,4 +19,19 @@ object ChatUiTokens {
 
         const val menuOffsetFactor = 0.15f
     }
+
+    object Loading {
+        const val floatOffset = 8f
+        const val animationDurationMillis = 1200
+        const val shadowOffset = 16
+
+        const val shadowWidthFactor = 1.8f
+        const val shadowHeightFactor = 0.55f
+        const val shadowMinAlpha = 0.04f
+        const val shadowMaxAlpha = 0.16f
+
+        const val shadowMinScale = 0.7f
+        const val shadowGradientSteps = 8
+        const val shadowGradientPower = 1.5f
+    }
 }
