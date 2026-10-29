@@ -31,7 +31,7 @@ fun MessageItemMenu(
     message: Message,
     onDelete: () -> Unit,
 ) {
-    val targetOffset = containerWith * ChatUiTokens.Message.menuOffsetFactor
+    val targetOffset = containerWith * ChatUiTokens.Message.MENU_OFFSET_FACTOR
     var showDeleteConfirm by remember { mutableStateOf(false) }
 
     DropdownMenu(

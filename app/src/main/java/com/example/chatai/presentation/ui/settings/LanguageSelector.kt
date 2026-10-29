@@ -28,7 +28,6 @@ fun LanguageSelector(
         modifier = Modifier.fillMaxWidth()
     ) {
         LanguageOption(
-            language = LanguageManager.EN,
             title = stringResource(
                 R.string.language_english
             ),
@@ -40,7 +39,6 @@ fun LanguageSelector(
         )
 
         LanguageOption(
-            language = LanguageManager.RU,
             title = stringResource(
                 R.string.language_russian
             ),
@@ -55,7 +53,6 @@ fun LanguageSelector(
 
 @Composable
 private fun LanguageOption(
-    language: String,
     title: String,
     selected: Boolean,
     onClick: () -> Unit,

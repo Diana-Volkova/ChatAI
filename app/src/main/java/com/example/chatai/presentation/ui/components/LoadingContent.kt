@@ -35,10 +35,10 @@ fun LoadingScreen(
 
     val floatOffset by transition.animateFloat(
         initialValue = 0f,
-        targetValue = -tokens.floatOffset,
+        targetValue = -tokens.FLOAT_OFFSET,
         animationSpec = infiniteRepeatable(
             animation = tween(
-                durationMillis = tokens.animationDurationMillis,
+                durationMillis = tokens.ANIMATION_DURATION_MILLIS,
                 easing = FastOutSlowInEasing,
             ),
             repeatMode = RepeatMode.Reverse,
@@ -48,10 +48,10 @@ fun LoadingScreen(
 
     val shadowScale by transition.animateFloat(
         initialValue = 1f,
-        targetValue = tokens.shadowMinScale,
+        targetValue = tokens.SHADOW_MIN_SCALE,
         animationSpec = infiniteRepeatable(
             animation = tween(
-                durationMillis = tokens.animationDurationMillis,
+                durationMillis = tokens.ANIMATION_DURATION_MILLIS,
                 easing = FastOutSlowInEasing,
             ),
             repeatMode = RepeatMode.Reverse,
@@ -60,11 +60,11 @@ fun LoadingScreen(
     )
 
     val shadowAlpha by transition.animateFloat(
-        initialValue = tokens.shadowMaxAlpha,
-        targetValue = tokens.shadowMinAlpha,
+        initialValue = tokens.SHADOW_MAX_ALPHA,
+        targetValue = tokens.SHADOW_MIN_ALPHA,
         animationSpec = infiniteRepeatable(
             animation = tween(
-                durationMillis = tokens.animationDurationMillis,
+                durationMillis = tokens.ANIMATION_DURATION_MILLIS,
                 easing = FastOutSlowInEasing,
             ),
             repeatMode = RepeatMode.Reverse,
@@ -80,10 +80,10 @@ fun LoadingScreen(
     ) {
         Canvas(
             modifier = Modifier
-                .offset(y = tokens.shadowOffset.dp)
+                .offset(y = tokens.SHADOW_OFFSET.dp)
                 .size(
-                    width = progressSize * tokens.shadowWidthFactor,
-                    height = progressSize * tokens.shadowHeightFactor,
+                    width = progressSize * tokens.SHADOW_WIDTH_FACTOR,
+                    height = progressSize * tokens.SHADOW_HEIGHT_FACTOR,
                 )
                 .graphicsLayer {
                     scaleX = shadowScale
@@ -120,8 +120,8 @@ fun LoadingScreen(
 private fun createShadowColorStops(
     alpha: Float,
 ): Array<Pair<Float, Color>> {
-    val steps = ChatUiTokens.Loading.shadowGradientSteps
-    val power = ChatUiTokens.Loading.shadowGradientPower
+    val steps = ChatUiTokens.Loading.SHADOW_GRADIENT_STEPS
+    val power = ChatUiTokens.Loading.SHADOW_GRADIENT_POWER
 
     return Array(steps + 1) { index ->
         val fraction = index.toFloat() / steps

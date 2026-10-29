@@ -56,8 +56,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import com.example.chatai.R
 import com.example.chatai.presentation.ui.theme.ChatTypography
-import com.example.chatai.presentation.ui.theme.ChatUiTokens.Search.dividerAlpha
-import com.example.chatai.presentation.ui.theme.ChatUiTokens.Search.searchBarDividerAlpha
+import com.example.chatai.presentation.ui.theme.ChatUiTokens.Search.DIVIDER_ALPHA
+import com.example.chatai.presentation.ui.theme.ChatUiTokens.Search.SEARCH_BAR_DIVIDER_ALPHA
 import com.example.chatai.presentation.ui.theme.Dimens
 import com.example.chatai.presentation.ui.theme.SearchPlaceholderAlpha
 import com.example.chatai.presentation.ui.utils.formatTime
@@ -170,7 +170,7 @@ fun ChatTopAppBar(
                         MaterialTheme.colorScheme.surfaceContainerHigh,
                     dividerColor =
                         MaterialTheme.colorScheme.outlineVariant
-                            .copy(alpha = searchBarDividerAlpha)
+                            .copy(alpha = SEARCH_BAR_DIVIDER_ALPHA)
                 ),
                 tonalElevation = 0.dp,
                 shadowElevation = 0.dp
@@ -203,7 +203,7 @@ fun ChatTopAppBar(
                                     ),
                                     color = MaterialTheme.colorScheme
                                         .outlineVariant
-                                        .copy(alpha = dividerAlpha)
+                                        .copy(alpha = DIVIDER_ALPHA)
                                 )
                             }
                         }

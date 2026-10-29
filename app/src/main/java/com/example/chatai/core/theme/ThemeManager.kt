@@ -3,7 +3,7 @@ package com.example.chatai.core.theme
 import android.content.Context
 import androidx.core.content.edit
 
-class ThemeManager(private val context: Context) {
+class ThemeManager(context: Context) {
 
     companion object {
         private const val PREFS_NAME = "theme_preferences"

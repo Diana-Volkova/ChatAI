@@ -42,10 +42,10 @@ import androidx.compose.ui.unit.dp
 import com.example.chatai.R
 import com.example.chatai.domain.model.Message
 import com.example.chatai.domain.model.Sender
-import com.example.chatai.presentation.ui.theme.ChatUiTokens.Message.actionIconAlpha
-import com.example.chatai.presentation.ui.theme.ChatUiTokens.Message.gradientEndAlpha
-import com.example.chatai.presentation.ui.theme.ChatUiTokens.Message.selectionAlpha
-import com.example.chatai.presentation.ui.theme.ChatUiTokens.Message.timestampAlpha
+import com.example.chatai.presentation.ui.theme.ChatUiTokens.Message.ACTION_ICON_ALPHA
+import com.example.chatai.presentation.ui.theme.ChatUiTokens.Message.GRADIENT_END_ALPHA
+import com.example.chatai.presentation.ui.theme.ChatUiTokens.Message.SELECTION_ALPHA
+import com.example.chatai.presentation.ui.theme.ChatUiTokens.Message.TIMESTAMP_ALPHA
 import com.example.chatai.presentation.ui.theme.Dimens
 import com.example.chatai.presentation.ui.utils.formatTime
 
@@ -87,7 +87,7 @@ fun MessageItem(
         verticalGradient(
             colors = listOf(
                 bubbleColor,
-                bubbleColor.copy(alpha = gradientEndAlpha),
+                bubbleColor.copy(alpha = GRADIENT_END_ALPHA),
             ),
         )
     }
@@ -104,7 +104,7 @@ fun MessageItem(
             .fillMaxWidth()
             .background(
                 color = if (selected) {
-                    colors.primary.copy(alpha = selectionAlpha)
+                    colors.primary.copy(alpha = SELECTION_ALPHA)
                 } else {
                     Color.Transparent
                 },
@@ -186,7 +186,7 @@ private fun MessageTimestamp(
     Text(
         text = formatTime(timestamp),
         modifier = modifier
-            .alpha(timestampAlpha)
+            .alpha(TIMESTAMP_ALPHA)
             .onSizeChanged(onSizeChanged),
         style = MaterialTheme.typography.labelSmall,
     )
@@ -215,7 +215,7 @@ private fun AssistantMessageActions(
                     contentDescription = stringResource(R.string.generate_another_answer),
                     modifier = Modifier.size(Dimens.Message.actionIconSize),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
-                        .copy(alpha = actionIconAlpha),
+                        .copy(alpha = ACTION_ICON_ALPHA),
                 )
             }
         }
@@ -239,7 +239,7 @@ private fun AnswerSwitcher(
     onSelectAnswer: (Int) -> Unit,
 ) {
     val iconTint = MaterialTheme.colorScheme.onSurfaceVariant
-        .copy(alpha = actionIconAlpha)
+        .copy(alpha = ACTION_ICON_ALPHA)
 
     Row(
         verticalAlignment = Alignment.CenterVertically,

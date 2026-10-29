@@ -8,12 +8,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Color(0xFFB388FF),       // акцент (фиолетовый)
-    secondary = Color(0xFF80CBC4),     // вторичный акцент (не обязателен)
+    primary = Color(0xFFB388FF),
+    secondary = Color(0xFF80CBC4),
     tertiary = Color(0xFFF48FB1),
 
-    background = Color(0xFF0F0F14),    // основной фон (очень важно)
-    surface = Color(0xFF1A1A22),       // карточки сообщений
+    background = Color(0xFF0F0F14),
+    surface = Color(0xFF1A1A22),
     surfaceVariant = Color(0xFF242433),
 
     onPrimary = Color.Black,
