@@ -11,10 +11,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import com.example.chatai.R
+import com.example.chatai.presentation.ui.theme.AppFonts.LatoLight
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 
@@ -37,10 +37,11 @@ fun SplashScreen(
         Text(
             text = stringResource(R.string.splash_message),
             color = Color.White,
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Normal,
+            fontSize = 32.sp,
+            fontFamily = LatoLight,
             textAlign = TextAlign.Center,
-            lineHeight = 36.sp
+            lineHeight = 40.sp,
+            letterSpacing = 0.3.sp
         )
     }
 }

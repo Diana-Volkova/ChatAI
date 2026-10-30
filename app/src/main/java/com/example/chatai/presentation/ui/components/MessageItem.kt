@@ -39,9 +39,11 @@ import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.chatai.R
 import com.example.chatai.domain.model.Message
 import com.example.chatai.domain.model.Sender
+import com.example.chatai.presentation.ui.theme.AppFonts.LatoRegular
 import com.example.chatai.presentation.ui.theme.ChatUiTokens.Message.ACTION_ICON_ALPHA
 import com.example.chatai.presentation.ui.theme.ChatUiTokens.Message.GRADIENT_END_ALPHA
 import com.example.chatai.presentation.ui.theme.ChatUiTokens.Message.SELECTION_ALPHA
@@ -147,6 +149,8 @@ fun MessageItem(
                             end = layoutState.textPadding,
                         ),
                         onTextLayout = { layoutState.textLayout = it },
+                        fontFamily = LatoRegular,
+                        letterSpacing = 0.5.sp
                     )
 
                     MessageTimestamp(
@@ -189,6 +193,7 @@ private fun MessageTimestamp(
             .alpha(TIMESTAMP_ALPHA)
             .onSizeChanged(onSizeChanged),
         style = MaterialTheme.typography.labelSmall,
+        fontFamily = LatoRegular
     )
 }
 

@@ -55,6 +55,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import com.example.chatai.R
+import com.example.chatai.presentation.ui.theme.AppFonts.LatoRegular
 import com.example.chatai.presentation.ui.theme.ChatTypography
 import com.example.chatai.presentation.ui.theme.ChatUiTokens.Search.DIVIDER_ALPHA
 import com.example.chatai.presentation.ui.theme.ChatUiTokens.Search.SEARCH_BAR_DIVIDER_ALPHA
@@ -117,6 +118,7 @@ fun ChatTopAppBar(
                             Text(
                                 text = stringResource(R.string.search_history),
                                 style = ChatTypography.searchPlaceholder,
+                                fontFamily = LatoRegular,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(
                                     alpha = SearchPlaceholderAlpha
                                 )
