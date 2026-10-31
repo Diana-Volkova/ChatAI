@@ -224,7 +224,8 @@ fun ChatTopAppBar(
                     chatName
                 } else {
                     stringResource(R.string.selected_messages, selectedMessages.size)
-                }
+                },
+                fontFamily = LatoRegular
             )
         },
         navigationIcon = {
@@ -296,7 +297,10 @@ fun ChatTopAppBar(
                         if (showThemeSelection) {
                             DropdownMenuItem(
                                 text = {
-                                    Text("Тема")
+                                    Text(
+                                        stringResource(R.string.theme),
+                                        fontFamily = LatoRegular
+                                    )
                                 },
                                 leadingIcon = {
                                     Icon(
@@ -312,7 +316,7 @@ fun ChatTopAppBar(
                             ChatThemeId.entries.forEach { theme ->
                                 DropdownMenuItem(
                                     text = {
-                                        Text(theme.label)
+                                        Text(theme.label, fontFamily = LatoRegular)
                                     },
                                     leadingIcon = {
                                         Icon(
@@ -336,7 +340,10 @@ fun ChatTopAppBar(
                         } else {
                             DropdownMenuItem(
                                 text = {
-                                    Text(stringResource(R.string.theme_name))
+                                    Text(
+                                        stringResource(R.string.theme_name),
+                                        fontFamily = LatoRegular
+                                    )
                                 },
                                 leadingIcon = {
                                     Icon(
@@ -351,7 +358,10 @@ fun ChatTopAppBar(
 
                             DropdownMenuItem(
                                 text = {
-                                    Text(stringResource(R.string.search_history))
+                                    Text(
+                                        stringResource(R.string.search_history),
+                                        fontFamily = LatoRegular
+                                    )
                                 },
                                 leadingIcon = {
                                     Icon(
@@ -368,7 +378,10 @@ fun ChatTopAppBar(
 
                             DropdownMenuItem(
                                 text = {
-                                    Text(stringResource(R.string.clear_history))
+                                    Text(
+                                        stringResource(R.string.clear_history),
+                                        fontFamily = LatoRegular
+                                    )
                                 },
                                 leadingIcon = {
                                     Icon(
