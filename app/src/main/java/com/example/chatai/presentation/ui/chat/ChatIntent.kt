@@ -1,6 +1,7 @@
 package com.example.chatai.presentation.ui.chat
 
 import com.example.chatai.domain.model.Message
+import com.example.chatai.domain.theme.ChatFontId
 import com.example.chatai.domain.theme.ChatThemeId
 
 sealed class ChatIntent {
@@ -31,6 +32,11 @@ sealed class ChatIntent {
     data class SetTheme(
         val chatId: Int,
         val chatThemeId: ChatThemeId
+    ) : ChatIntent()
+
+    data class SetFont(
+        val chatId: Int,
+        val chatFontId: ChatFontId
     ) : ChatIntent()
 
     data class SearchMessages(

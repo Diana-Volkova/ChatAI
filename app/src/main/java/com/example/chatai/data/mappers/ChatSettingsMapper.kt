@@ -2,12 +2,14 @@ package com.example.chatai.data.mappers
 
 import com.example.chatai.data.local.ChatSettingsEntity
 import com.example.chatai.domain.model.ChatSettings
+import com.example.chatai.domain.theme.ChatFontId
 import com.example.chatai.domain.theme.ChatThemeId
 
 fun ChatSettingsEntity.toDomain(): ChatSettings {
     return ChatSettings(
         chatId = chatId,
-        theme = theme.toChatThemeId()
+        theme = theme.toChatThemeId(),
+        font = font.toChatFontId()
     )
 }
 
@@ -21,4 +23,9 @@ fun ChatSettings.toEntity(): ChatSettingsEntity {
 fun String.toChatThemeId(): ChatThemeId {
     return ChatThemeId.entries.firstOrNull { it.name == this }
         ?: ChatThemeId.DEFAULT
+}
+
+fun String.toChatFontId() : ChatFontId {
+    return ChatFontId.entries.firstOrNull {it.name == this}
+        ?: ChatFontId.DEFAULT
 }

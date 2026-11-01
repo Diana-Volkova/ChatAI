@@ -7,6 +7,7 @@ import com.example.chatai.domain.interactors.MessageInteractor
 import com.example.chatai.domain.model.ChatSettings
 import com.example.chatai.domain.model.Message
 import com.example.chatai.domain.repository.ChatSettingsRepository
+import com.example.chatai.domain.theme.ChatFontId
 import com.example.chatai.domain.theme.ChatThemeId
 import com.example.chatai.presentation.ui.sync.SyncStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -66,6 +67,10 @@ class ChatViewModel @Inject constructor(
                 setTheme(intent.chatId, intent.chatThemeId)
             }
 
+            is ChatIntent.SetFont -> {
+                setFont(intent.chatId, intent.chatFontId)
+            }
+
             is ChatIntent.ObserveSettings -> {
                 observeSettings(intent.chatId)
             }
@@ -88,6 +93,12 @@ class ChatViewModel @Inject constructor(
     private fun setTheme(chatId: Int, chatThemeId: ChatThemeId) {
         viewModelScope.launch {
             chatSettingsRepository.setTheme(chatId, chatThemeId)
+        }
+    }
+
+    private fun setFont(chatId: Int, chatFontId: ChatFontId) {
+        viewModelScope.launch {
+            chatSettingsRepository.setFont(chatId, chatFontId)
         }
     }
 

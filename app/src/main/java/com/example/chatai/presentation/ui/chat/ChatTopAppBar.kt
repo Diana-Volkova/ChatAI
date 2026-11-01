@@ -52,10 +52,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import com.example.chatai.R
-import com.example.chatai.presentation.ui.theme.AppFonts.LatoRegular
+import com.example.chatai.domain.theme.ChatFontId
+import com.example.chatai.presentation.ui.theme.ChatThemeFontIcon
 import com.example.chatai.presentation.ui.theme.ChatTypography
 import com.example.chatai.presentation.ui.theme.ChatUiTokens.Search.DIVIDER_ALPHA
 import com.example.chatai.presentation.ui.theme.ChatUiTokens.Search.SEARCH_BAR_DIVIDER_ALPHA
@@ -68,6 +70,7 @@ import com.example.chatai.presentation.ui.utils.formatTime
 fun ChatTopAppBar(
     selectedMessages: Set<Message>,
     chatId: Int,
+    chatFontFamily: FontFamily,
     searchQuery: String,
     searchResults: List<Int>,
     navController: NavController,
@@ -80,6 +83,7 @@ fun ChatTopAppBar(
 ) {
     var showMenu by remember { mutableStateOf(false) }
     var showThemeSelection by remember { mutableStateOf(false) }
+    var showFontSelection by remember { mutableStateOf(false) }
     var isSearching by rememberSaveable { mutableStateOf(false) }
     var searchExpanded by rememberSaveable { mutableStateOf(false) }
 
@@ -118,7 +122,7 @@ fun ChatTopAppBar(
                             Text(
                                 text = stringResource(R.string.search_history),
                                 style = ChatTypography.searchPlaceholder,
-                                fontFamily = LatoRegular,
+                                fontFamily = chatFontFamily,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(
                                     alpha = SearchPlaceholderAlpha
                                 )
@@ -225,7 +229,7 @@ fun ChatTopAppBar(
                 } else {
                     stringResource(R.string.selected_messages, selectedMessages.size)
                 },
-                fontFamily = LatoRegular
+                fontFamily = chatFontFamily
             )
         },
         navigationIcon = {
@@ -288,117 +292,177 @@ fun ChatTopAppBar(
                         onDismissRequest = {
                             showMenu = false
                             showThemeSelection = false
+                            showFontSelection = false
                         },
                         shape = RoundedCornerShape(Dimens.Search.menuCorner),
                         containerColor = MaterialTheme.colorScheme.surface,
                         tonalElevation = Dimens.Search.menuTonalElevation,
                         shadowElevation = Dimens.Search.menuShadowElevation
                     ) {
-                        if (showThemeSelection) {
-                            DropdownMenuItem(
-                                text = {
-                                    Text(
-                                        stringResource(R.string.theme),
-                                        fontFamily = LatoRegular
-                                    )
-                                },
-                                leadingIcon = {
-                                    Icon(
-                                        imageVector = ChatThemeBackIcon,
-                                        contentDescription = null
-                                    )
-                                },
-                                onClick = {
-                                    showThemeSelection = false
-                                }
-                            )
-
-                            ChatThemeId.entries.forEach { theme ->
+                        when {
+                            showThemeSelection -> {
                                 DropdownMenuItem(
                                     text = {
-                                        Text(theme.label, fontFamily = LatoRegular)
+                                        Text(
+                                            stringResource(R.string.theme),
+                                            fontFamily = chatFontFamily
+                                        )
                                     },
                                     leadingIcon = {
                                         Icon(
-                                            imageVector = theme.icon(),
+                                            imageVector = ChatThemeBackIcon,
                                             contentDescription = null
                                         )
                                     },
                                     onClick = {
-                                        onIntent(
-                                            ChatIntent.SetTheme(
-                                                chatId = chatId,
-                                                chatThemeId = theme
-                                            )
-                                        )
-
-                                        showMenu = false
                                         showThemeSelection = false
                                     }
                                 )
+
+                                ChatThemeId.entries.forEach { theme ->
+                                    DropdownMenuItem(
+                                        text = {
+                                            Text(theme.label, fontFamily = chatFontFamily)
+                                        },
+                                        leadingIcon = {
+                                            Icon(
+                                                imageVector = theme.icon(),
+                                                contentDescription = null
+                                            )
+                                        },
+                                        onClick = {
+                                            onIntent(
+                                                ChatIntent.SetTheme(
+                                                    chatId = chatId,
+                                                    chatThemeId = theme
+                                                )
+                                            )
+
+                                            showMenu = false
+                                            showThemeSelection = false
+                                        }
+                                    )
+                                }
                             }
-                        } else {
-                            DropdownMenuItem(
-                                text = {
-                                    Text(
-                                        stringResource(R.string.theme_name),
-                                        fontFamily = LatoRegular
-                                    )
-                                },
-                                leadingIcon = {
-                                    Icon(
-                                        imageVector = ChatThemePaletteIcon,
-                                        contentDescription = null
-                                    )
-                                },
-                                onClick = {
-                                    showThemeSelection = true
-                                }
-                            )
 
-                            DropdownMenuItem(
-                                text = {
-                                    Text(
-                                        stringResource(R.string.search_history),
-                                        fontFamily = LatoRegular
-                                    )
-                                },
-                                leadingIcon = {
-                                    Icon(
-                                        imageVector = ChatThemeSearchIcon,
-                                        contentDescription = null
-                                    )
-                                },
-                                onClick = {
-                                    showMenu = false
-                                    isSearching = true
-                                    searchExpanded = true
-                                }
-                            )
-
-                            DropdownMenuItem(
-                                text = {
-                                    Text(
-                                        stringResource(R.string.clear_history),
-                                        fontFamily = LatoRegular
-                                    )
-                                },
-                                leadingIcon = {
-                                    Icon(
-                                        imageVector = ChatThemeDeleteIcon,
-                                        contentDescription = null
-                                    )
-                                },
-                                onClick = {
-                                    showMenu = false
-
-                                    onIntent(
-                                        ChatIntent.ClearHistory(
-                                            chatId = chatId
+                            showFontSelection -> {
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            stringResource(R.string.font),
+                                            fontFamily = chatFontFamily
                                         )
+                                    },
+                                    leadingIcon = {
+                                        Icon(
+                                            imageVector = ChatThemeBackIcon,
+                                            contentDescription = null
+                                        )
+                                    },
+                                    onClick = {
+                                        showFontSelection = false
+                                    }
+                                )
+
+                                ChatFontId.entries.forEach { font ->
+                                    DropdownMenuItem(
+                                        text = {
+                                            Text(font.label, fontFamily = chatFontFamily)
+                                        },
+                                        onClick = {
+                                            onIntent(
+                                                ChatIntent.SetFont(
+                                                    chatId = chatId,
+                                                    chatFontId = font
+                                                )
+                                            )
+
+                                            showMenu = false
+                                            showFontSelection = false
+                                        }
                                     )
                                 }
-                            )
+                            }
+
+                            else -> {
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            stringResource(R.string.theme_name),
+                                            fontFamily = chatFontFamily
+                                        )
+                                    },
+                                    leadingIcon = {
+                                        Icon(
+                                            imageVector = ChatThemePaletteIcon,
+                                            contentDescription = null
+                                        )
+                                    },
+                                    onClick = {
+                                        showThemeSelection = true
+                                    }
+                                )
+
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            stringResource(R.string.font),
+                                            fontFamily = chatFontFamily
+                                        )
+                                    },
+                                    leadingIcon = {
+                                        Icon(
+                                            imageVector = ChatThemeFontIcon,
+                                            contentDescription = null
+                                        )
+                                    },
+                                    onClick = {
+                                        showFontSelection = true
+                                    }
+                                )
+
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            stringResource(R.string.search_history),
+                                            fontFamily = chatFontFamily
+                                        )
+                                    },
+                                    leadingIcon = {
+                                        Icon(
+                                            imageVector = ChatThemeSearchIcon,
+                                            contentDescription = null
+                                        )
+                                    },
+                                    onClick = {
+                                        showMenu = false
+                                        isSearching = true
+                                        searchExpanded = true
+                                    }
+                                )
+
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            stringResource(R.string.clear_history),
+                                            fontFamily = chatFontFamily
+                                        )
+                                    },
+                                    leadingIcon = {
+                                        Icon(
+                                            imageVector = ChatThemeDeleteIcon,
+                                            contentDescription = null
+                                        )
+                                    },
+                                    onClick = {
+                                        showMenu = false
+
+                                        onIntent(
+                                            ChatIntent.ClearHistory(chatId = chatId)
+                                        )
+                                    }
+                                )
+                            }
                         }
                     }
                 }

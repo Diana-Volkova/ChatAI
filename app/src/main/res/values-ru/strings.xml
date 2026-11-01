@@ -106,4 +106,5 @@
     <string name="chat_exception_unknown_code">Произошла ошибка: %1$d</string>
 
     <string name="exception_no_internet">Нет подключения к интернету</string>
+    <string name="font">Шрифт</string>
 </resources>

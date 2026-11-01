@@ -380,3 +380,55 @@ val ChatThemeSunsetIcon = ImageVector.Builder(
         lineTo(19f, 16f)
     }
 }.build()
+
+val ChatThemeFontIcon = ImageVector.Builder(
+    name = "ChatThemeFont",
+    defaultWidth = 24.dp,
+    defaultHeight = 24.dp,
+    viewportWidth = 24f,
+    viewportHeight = 24f
+).apply {
+    path(
+        fill = null,
+        stroke = SolidColor(Color.Black),
+        strokeLineWidth = 2f,
+        strokeLineCap = StrokeCap.Round,
+        strokeLineJoin = StrokeJoin.Round
+    ) {
+        // Большая буква A
+        moveTo(3f, 19f)
+        lineTo(9f, 5f)
+        lineTo(15f, 19f)
+
+        // Перекладина A
+        moveTo(5.5f, 13f)
+        lineTo(12.5f, 13f)
+
+        // Маленькая буква a
+        moveTo(20f, 13f)
+        curveTo(
+            20f, 11.3f,
+            18.7f, 10f,
+            17f, 10f
+        )
+        curveTo(
+            15.3f, 10f,
+            14f, 11.3f,
+            14f, 13f
+        )
+        curveTo(
+            14f, 14.7f,
+            15.3f, 16f,
+            17f, 16f
+        )
+        curveTo(
+            18.7f, 16f,
+            20f, 14.7f,
+            20f, 13f
+        )
+
+        // Правая сторона маленькой a
+        moveTo(20f, 10f)
+        lineTo(20f, 16f)
+    }
+}.build()

@@ -18,16 +18,19 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.chatai.R
 import com.example.chatai.domain.model.Message
+import com.example.chatai.domain.theme.ChatFontId
 import com.example.chatai.domain.theme.ChatThemeId
 import com.example.chatai.presentation.ui.components.ExceptionContent
 import com.example.chatai.presentation.ui.components.LoadingScreen
 import com.example.chatai.presentation.ui.sync.SyncStatus
 import com.example.chatai.presentation.ui.components.SyncWarning
+import com.example.chatai.presentation.ui.theme.AppFonts.LatoRegular
 import com.example.chatai.presentation.ui.theme.ChatTheme
 import kotlinx.coroutines.launch
 
@@ -52,12 +55,29 @@ fun ChatScreen(
     val coroutineScope = rememberCoroutineScope()
     val lazyListState = rememberLazyListState()
 
+    fun ChatFontId.toFontFamily(): FontFamily {
+        return when (this) {
+            ChatFontId.DEFAULT -> LatoRegular
+            ChatFontId.LATO -> LatoRegular
+            ChatFontId.ROBOTO -> LatoRegular
+            ChatFontId.SERIF -> FontFamily.Serif
+            ChatFontId.MONOSPACE -> FontFamily.Cursive
+        }
+    }
+
+    val chatFontId = settings?.font ?: ChatFontId.DEFAULT
+    val chatFontFamily = remember(chatFontId) {
+        chatFontId.toFontFamily()
+    }
+
     LaunchedEffect(chatId) {
         viewModel.dispatch(ChatIntent.LoadHistory(chatId))
         viewModel.dispatch(ChatIntent.ObserveSettings(chatId))
     }
 
-    ChatTheme(theme = settings?.theme ?: ChatThemeId.DEFAULT) {
+    ChatTheme(
+        theme = settings?.theme ?: ChatThemeId.DEFAULT
+    ) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             containerColor = MaterialTheme.colorScheme.background,
@@ -65,6 +85,7 @@ fun ChatScreen(
                 ChatTopAppBar(
                     selectedMessages = selectedMessages,
                     chatId = chatId,
+                    chatFontFamily = chatFontFamily,
                     searchQuery = searchQuery,
                     searchResults = searchResults,
                     navController = navController,
@@ -101,6 +122,7 @@ fun ChatScreen(
                         MessagesScreen(
                             modifier = Modifier.weight(1f),
                             messages = messages,
+                            fontFamily = chatFontFamily,
                             paddingValues = PaddingValues(),
                             listState = lazyListState,
                             searchQuery = searchQuery,

@@ -102,5 +102,6 @@
     <string name="chat_exception_unknown">An error occurred</string>
     <string name="chat_exception_unknown_code">An error occurred: %1$d</string>
     <string name="exception_no_internet">No internet connection</string>
+    <string name="font">Font</string>
 
 </resources>
