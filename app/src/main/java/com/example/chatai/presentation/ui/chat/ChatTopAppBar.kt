@@ -367,7 +367,7 @@ fun ChatTopAppBar(
                                 ChatFontId.entries.forEach { font ->
                                     DropdownMenuItem(
                                         text = {
-                                            Text(font.label, fontFamily = chatFontFamily)
+                                            Text(font.label, fontFamily = font.fontFamily)
                                         },
                                         onClick = {
                                             onIntent(

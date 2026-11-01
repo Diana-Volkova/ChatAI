@@ -8,8 +8,12 @@ import com.example.chatai.domain.theme.ChatThemeId
 fun ChatSettingsEntity.toDomain(): ChatSettings {
     return ChatSettings(
         chatId = chatId,
-        theme = theme.toChatThemeId(),
-        font = font.toChatFontId()
+        theme = runCatching {
+            ChatThemeId.valueOf(theme)
+        }.getOrDefault(ChatThemeId.DEFAULT),
+        font = runCatching {
+            ChatFontId.valueOf(font)
+        }.getOrDefault(ChatFontId.DEFAULT)
     )
 }
 

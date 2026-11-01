@@ -7,6 +7,9 @@ import com.example.chatai.R
 
 object AppFonts {
 
+    val IndieFlower = FontFamily(
+        Font(R.font.indie_flower_regular)
+    )
     val LatoThin = FontFamily(
         Font(R.font.lato_thin)
     )
