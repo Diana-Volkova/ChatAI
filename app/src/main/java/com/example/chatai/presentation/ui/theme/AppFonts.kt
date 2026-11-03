@@ -1,19 +1,22 @@
 package com.example.chatai.presentation.ui.theme
 
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import com.example.chatai.R
 
 object AppFonts {
 
-    val IndieFlower = FontFamily(
-        Font(R.font.indie_flower_regular)
+    val MarckScriptRegular = FontFamily(
+        Font(R.font.marck_script_regular)
     )
-    val LatoThin = FontFamily(
-        Font(R.font.lato_thin)
+    val MarckScriptStyle = TextStyle(
+        fontFamily = MarckScriptRegular,
+        fontSize = 20.sp,
+        lineHeight = 30.sp
     )
-
     val LatoLight = FontFamily(
         Font(R.font.lato_light)
     )
@@ -26,19 +29,10 @@ object AppFonts {
         Font(R.font.lato_regular)
     )
 
-    val LatoLightItalic = FontFamily(
-        Font(R.font.lato_light_italic)
-    )
-
-    val LatoThinItalic = FontFamily(
-        Font(R.font.lato_thin_italic)
-    )
-
-    val LatoBold = FontFamily(
-        Font(R.font.lato_bold, FontWeight.Bold)
-    )
-
-    val LatoBlack = FontFamily(
-        Font(R.font.lato_black, FontWeight.Black)
+    val LatoStyle = TextStyle(
+        fontFamily = LatoRegular,
+        fontSize = 18.sp,
+        lineHeight = 26.sp,
+        letterSpacing = 0.5.sp
     )
 }

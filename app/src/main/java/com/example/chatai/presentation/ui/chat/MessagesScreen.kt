@@ -32,7 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.TextStyle
 import com.example.chatai.R
 import com.example.chatai.domain.model.Message
 import com.example.chatai.presentation.ui.components.MessageItem
@@ -43,7 +43,7 @@ fun MessagesScreen(
     messages: List<Message>,
     paddingValues: PaddingValues,
     listState: LazyListState,
-    fontFamily: FontFamily,
+    textStyle: TextStyle,
     onSendMessage: (String) -> Unit,
     selectedMessages: SnapshotStateSet<Message>,
     onDeleteMessages: (List<Long>) -> Unit,
@@ -70,7 +70,7 @@ fun MessagesScreen(
         Messages(
             messages = messages,
             listState = listState,
-            fontFamily = fontFamily,
+            textStyle = textStyle,
             modifier = Modifier.weight(1f),
             selectedMessages = selectedMessages,
             onDeleteMessages = onDeleteMessages,
@@ -88,7 +88,7 @@ fun MessagesScreen(
 fun Messages(
     messages: List<Message>,
     listState: LazyListState,
-    fontFamily: FontFamily,
+    textStyle: TextStyle,
     selectedMessages: SnapshotStateSet<Message>,
     onDeleteMessages: (List<Long>) -> Unit,
     onGenerateAnotherAnswer: (Message) -> Unit,
@@ -104,7 +104,7 @@ fun Messages(
         ) { message ->
             MessageItem(
                 message = message,
-                fontFamily = fontFamily,
+                textStyle = textStyle,
                 selected = message in selectedMessages,
                 selecting = selectedMessages.isNotEmpty(),
                 onDelete = {

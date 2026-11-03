@@ -36,11 +36,10 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextLayoutResult
-import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.chatai.R
 import com.example.chatai.domain.model.Message
 import com.example.chatai.domain.model.Sender
@@ -54,7 +53,7 @@ import com.example.chatai.presentation.ui.utils.formatTime
 @Composable
 fun MessageItem(
     message: Message,
-    fontFamily: FontFamily,
+    textStyle: TextStyle,
     selected: Boolean,
     selecting: Boolean,
     onDelete: () -> Unit,
@@ -150,14 +149,20 @@ fun MessageItem(
                             end = layoutState.textPadding,
                         ),
                         onTextLayout = { layoutState.textLayout = it },
-                        fontFamily = fontFamily,
-                        letterSpacing = 0.5.sp
+                        style = textStyle
                     )
 
                     MessageTimestamp(
                         timestamp = message.timestamp,
-                        modifier = Modifier.align(Alignment.End),
-                        fontFamily = fontFamily,
+                        modifier = Modifier
+                            .align(Alignment.End)
+                            .padding(
+                                start = Dimens.Spacing.small,
+                                top = Dimens.Spacing.itemSpacing
+                            ),
+                        textStyle = textStyle.copy(
+                            fontSize = textStyle.fontSize * 0.8f
+                        ),
                         onSizeChanged = { layoutState.timeSize = it },
                     )
 
@@ -186,7 +191,7 @@ fun MessageItem(
 @Composable
 private fun MessageTimestamp(
     timestamp: Long,
-    fontFamily: FontFamily,
+    textStyle: TextStyle,
     modifier: Modifier = Modifier,
     onSizeChanged: (IntSize) -> Unit,
 ) {
@@ -195,8 +200,7 @@ private fun MessageTimestamp(
         modifier = modifier
             .alpha(TIMESTAMP_ALPHA)
             .onSizeChanged(onSizeChanged),
-        style = MaterialTheme.typography.labelSmall,
-        fontFamily = fontFamily
+        style = MaterialTheme.typography.labelSmall.merge(textStyle)
     )
 }
 

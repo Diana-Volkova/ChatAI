@@ -1,15 +1,16 @@
 package com.example.chatai.domain.theme
 
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import com.example.chatai.presentation.ui.theme.AppFonts
 
 enum class ChatFontId(
     val label: String,
-    val fontFamily: FontFamily
+    val fontStyle: TextStyle
 ) {
-    DEFAULT("По умолчанию", AppFonts.LatoRegular),
-    LATO("Lato", AppFonts.LatoRegular),
-    SERIF("Serif", FontFamily.Serif),
-    MONOSPACE("Monospace", FontFamily.Monospace),
-    INDIE_FLOWER("Indie Flower", AppFonts.IndieFlower)
+    DEFAULT("По умолчанию", AppFonts.LatoStyle),
+    LATO("Lato", AppFonts.LatoStyle),
+    SERIF("Serif", TextStyle(fontFamily = FontFamily.Serif)),
+    MONOSPACE("Monospace", TextStyle(fontFamily = FontFamily.Monospace)),
+    MARCK_SCRIPT("Marck Script", AppFonts.MarckScriptStyle)
 }
