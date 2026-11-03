@@ -3,7 +3,6 @@ package com.example.chatai.presentation.ui.theme
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.chatai.R
 
@@ -29,10 +28,24 @@ object AppFonts {
         Font(R.font.lato_regular)
     )
 
-    val LatoStyle = TextStyle(
+    val Lato = TextStyle(
         fontFamily = LatoRegular,
         fontSize = 18.sp,
         lineHeight = 26.sp,
         letterSpacing = 0.5.sp
+    )
+
+    val Serif = TextStyle(
+        fontFamily = FontFamily.Serif,
+        fontSize = 16.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.2.sp
+    )
+
+    val Monospace = TextStyle(
+        fontFamily = FontFamily.Monospace,
+        fontSize = 16.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.sp
     )
 }
