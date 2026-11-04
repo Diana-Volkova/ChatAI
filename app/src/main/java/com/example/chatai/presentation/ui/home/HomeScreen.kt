@@ -34,6 +34,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -46,8 +47,7 @@ import com.example.chatai.presentation.ui.components.LoadingScreen
 import com.example.chatai.presentation.ui.sync.SyncStatus
 import com.example.chatai.presentation.ui.components.SyncWarning
 import com.example.chatai.presentation.ui.extensions.getLocalizedMessage
-import com.example.chatai.presentation.ui.theme.AppFonts.LatoItalic
-import com.example.chatai.presentation.ui.theme.AppFonts.LatoRegular
+import com.example.chatai.presentation.ui.theme.AppFonts.Lato
 import com.example.chatai.presentation.ui.theme.Dimens
 import com.example.chatai.presentation.ui.utils.formatLastMessageTime
 
@@ -78,7 +78,7 @@ fun HomeScreen(
                 title = {
                     Text(
                         stringResource(R.string.chats),
-                        fontFamily = LatoRegular,
+                        fontFamily = Lato,
                     )
                 },
                 actions = {
@@ -189,7 +189,7 @@ private fun ChatItem(
             Text(
                 text = chat.title,
                 style = MaterialTheme.typography.titleMedium,
-                fontFamily = LatoRegular,
+                fontFamily = Lato,
                 color = MaterialTheme.colorScheme.onSurface,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
@@ -213,7 +213,8 @@ private fun ChatItem(
                     Text(
                         text = chat.model,
                         style = MaterialTheme.typography.bodyMedium,
-                        fontFamily = LatoItalic,
+                        fontFamily = Lato,
+                        fontStyle = FontStyle.Italic,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
@@ -221,7 +222,8 @@ private fun ChatItem(
                 Text(
                     text = formatLastMessageTime(chat.lastMessageAt),
                     style = MaterialTheme.typography.bodySmall,
-                    fontFamily = LatoRegular,
+                    fontFamily = Lato,
+                    fontStyle = FontStyle.Italic,
                     color = MaterialTheme.colorScheme.outline
                 )
             }

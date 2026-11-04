@@ -53,7 +53,7 @@ fun ChatScreen(
     val coroutineScope = rememberCoroutineScope()
     val lazyListState = rememberLazyListState()
 
-    val textStyle = (settings?.font ?: ChatFontId.DEFAULT).fontStyle
+    val fontFamily = (settings?.font ?: ChatFontId.DEFAULT).font
 
     LaunchedEffect(chatId) {
         viewModel.dispatch(ChatIntent.LoadHistory(chatId))
@@ -70,7 +70,7 @@ fun ChatScreen(
                 ChatTopAppBar(
                     selectedMessages = selectedMessages,
                     chatId = chatId,
-                    textStyle = textStyle,
+                    fontFamily = fontFamily,
                     searchQuery = searchQuery,
                     searchResults = searchResults,
                     navController = navController,
@@ -107,7 +107,7 @@ fun ChatScreen(
                         MessagesScreen(
                             modifier = Modifier.weight(1f),
                             messages = messages,
-                            textStyle = textStyle,
+                            fontFamily = fontFamily,
                             paddingValues = PaddingValues(),
                             listState = lazyListState,
                             searchQuery = searchQuery,

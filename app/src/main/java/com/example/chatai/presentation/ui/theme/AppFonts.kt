@@ -1,51 +1,22 @@
 package com.example.chatai.presentation.ui.theme
 
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import com.example.chatai.R
 
 object AppFonts {
 
-    val MarckScriptRegular = FontFamily(
-        Font(R.font.marck_script_regular)
+    val MarckScript = FontFamily(
+        Font(R.font.marck_script_regular, FontWeight.Normal, FontStyle.Normal)
     )
-    val MarckScriptStyle = TextStyle(
-        fontFamily = MarckScriptRegular,
-        fontSize = 20.sp,
-        lineHeight = 30.sp
+    val Lato = FontFamily(
+        Font(R.font.lato_light, FontWeight.Light, FontStyle.Normal),
+        Font(R.font.lato_regular, FontWeight.Normal, FontStyle.Normal),
+        Font(R.font.lato_italic, FontWeight.Normal, FontStyle.Italic)
     )
-    val LatoLight = FontFamily(
-        Font(R.font.lato_light)
-    )
-
-    val LatoItalic = FontFamily(
-        Font(R.font.lato_italic)
-    )
-
-    val LatoRegular = FontFamily(
-        Font(R.font.lato_regular)
-    )
-
-    val Lato = TextStyle(
-        fontFamily = LatoRegular,
-        fontSize = 18.sp,
-        lineHeight = 26.sp,
-        letterSpacing = 0.5.sp
-    )
-
-    val Serif = TextStyle(
-        fontFamily = FontFamily.Serif,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.2.sp
-    )
-
-    val Monospace = TextStyle(
-        fontFamily = FontFamily.Monospace,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.sp
+    val HachiMaruPopRegular = FontFamily(
+        Font(R.font.hachi_maru_pop_regular, FontWeight.Normal, FontStyle.Normal)
     )
 }

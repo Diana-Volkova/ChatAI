@@ -51,8 +51,8 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import com.example.chatai.R
@@ -70,7 +70,7 @@ import com.example.chatai.presentation.ui.utils.formatTime
 fun ChatTopAppBar(
     selectedMessages: Set<Message>,
     chatId: Int,
-    textStyle: TextStyle,
+    fontFamily: FontFamily,
     searchQuery: String,
     searchResults: List<Int>,
     navController: NavController,
@@ -121,7 +121,7 @@ fun ChatTopAppBar(
                         placeholder = {
                             Text(
                                 text = stringResource(R.string.search_history),
-                                style = ChatTypography.searchPlaceholder.merge(textStyle),
+                                fontFamily = fontFamily,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(
                                     alpha = SearchPlaceholderAlpha
                                 )
@@ -228,7 +228,7 @@ fun ChatTopAppBar(
                 } else {
                     stringResource(R.string.selected_messages, selectedMessages.size)
                 },
-                style = textStyle
+                fontFamily = fontFamily
             )
         },
         navigationIcon = {
@@ -304,7 +304,7 @@ fun ChatTopAppBar(
                                     text = {
                                         Text(
                                             stringResource(R.string.theme),
-                                            style = textStyle
+                                            fontFamily = fontFamily
                                         )
                                     },
                                     leadingIcon = {
@@ -321,7 +321,7 @@ fun ChatTopAppBar(
                                 ChatThemeId.entries.forEach { theme ->
                                     DropdownMenuItem(
                                         text = {
-                                            Text(theme.label, style = textStyle)
+                                            Text(theme.label, fontFamily = fontFamily)
                                         },
                                         leadingIcon = {
                                             Icon(
@@ -349,7 +349,7 @@ fun ChatTopAppBar(
                                     text = {
                                         Text(
                                             stringResource(R.string.font),
-                                            style = textStyle
+                                            fontFamily = fontFamily
                                         )
                                     },
                                     leadingIcon = {
@@ -366,7 +366,7 @@ fun ChatTopAppBar(
                                 ChatFontId.entries.forEach { font ->
                                     DropdownMenuItem(
                                         text = {
-                                            Text(font.label, style = font.fontStyle)
+                                            Text(font.label, fontFamily = font.font)
                                         },
                                         onClick = {
                                             onIntent(
@@ -388,7 +388,7 @@ fun ChatTopAppBar(
                                     text = {
                                         Text(
                                             stringResource(R.string.theme_name),
-                                            style = textStyle
+                                            fontFamily = fontFamily
                                         )
                                     },
                                     leadingIcon = {
@@ -406,7 +406,7 @@ fun ChatTopAppBar(
                                     text = {
                                         Text(
                                             stringResource(R.string.font),
-                                            style = textStyle
+                                            fontFamily = fontFamily
                                         )
                                     },
                                     leadingIcon = {
@@ -424,7 +424,7 @@ fun ChatTopAppBar(
                                     text = {
                                         Text(
                                             stringResource(R.string.search_history),
-                                            style = textStyle
+                                            fontFamily = fontFamily
                                         )
                                     },
                                     leadingIcon = {
@@ -444,7 +444,7 @@ fun ChatTopAppBar(
                                     text = {
                                         Text(
                                             stringResource(R.string.clear_history),
-                                            style = textStyle
+                                            fontFamily = fontFamily
                                         )
                                     },
                                     leadingIcon = {

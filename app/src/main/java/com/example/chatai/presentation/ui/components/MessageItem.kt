@@ -36,7 +36,7 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextLayoutResult
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
@@ -53,7 +53,7 @@ import com.example.chatai.presentation.ui.utils.formatTime
 @Composable
 fun MessageItem(
     message: Message,
-    textStyle: TextStyle,
+    fontFamily: FontFamily,
     selected: Boolean,
     selecting: Boolean,
     onDelete: () -> Unit,
@@ -149,20 +149,13 @@ fun MessageItem(
                             end = layoutState.textPadding,
                         ),
                         onTextLayout = { layoutState.textLayout = it },
-                        style = textStyle
+                        fontFamily = fontFamily
                     )
 
                     MessageTimestamp(
                         timestamp = message.timestamp,
-                        modifier = Modifier
-                            .align(Alignment.End)
-                            .padding(
-                                start = Dimens.Spacing.small,
-                                top = Dimens.Spacing.itemSpacing
-                            ),
-                        textStyle = textStyle.copy(
-                            fontSize = textStyle.fontSize * 0.8f
-                        ),
+                        modifier = Modifier.align(Alignment.End),
+                        fontFamily = fontFamily,
                         onSizeChanged = { layoutState.timeSize = it },
                     )
 
@@ -170,6 +163,7 @@ fun MessageItem(
                         AssistantMessageActions(
                             selectedAnswer = answerIndex,
                             answerCount = answers.size,
+                            fontFamily = fontFamily,
                             onGenerateAnotherAnswer = onGenerateAnotherAnswer,
                             onSelectAnswer = { selectedAnswer = it },
                         )
@@ -191,8 +185,8 @@ fun MessageItem(
 @Composable
 private fun MessageTimestamp(
     timestamp: Long,
-    textStyle: TextStyle,
-    modifier: Modifier = Modifier,
+    fontFamily: FontFamily,
+    modifier: Modifier,
     onSizeChanged: (IntSize) -> Unit,
 ) {
     Text(
@@ -200,7 +194,8 @@ private fun MessageTimestamp(
         modifier = modifier
             .alpha(TIMESTAMP_ALPHA)
             .onSizeChanged(onSizeChanged),
-        style = MaterialTheme.typography.labelSmall.merge(textStyle)
+        style = MaterialTheme.typography.labelSmall,
+        fontFamily = fontFamily
     )
 }
 
@@ -208,6 +203,7 @@ private fun MessageTimestamp(
 private fun AssistantMessageActions(
     selectedAnswer: Int,
     answerCount: Int,
+    fontFamily: FontFamily,
     onGenerateAnotherAnswer: () -> Unit,
     onSelectAnswer: (Int) -> Unit,
 ) {
@@ -238,6 +234,7 @@ private fun AssistantMessageActions(
             AnswerSwitcher(
                 selectedAnswer = selectedAnswer,
                 answerCount = answerCount,
+                fontFamily = fontFamily,
                 onSelectAnswer = onSelectAnswer,
             )
         }
@@ -248,6 +245,7 @@ private fun AssistantMessageActions(
 private fun AnswerSwitcher(
     selectedAnswer: Int,
     answerCount: Int,
+    fontFamily: FontFamily,
     onSelectAnswer: (Int) -> Unit,
 ) {
     val iconTint = MaterialTheme.colorScheme.onSurfaceVariant
@@ -272,6 +270,7 @@ private fun AnswerSwitcher(
         Text(
             text = "${selectedAnswer + 1}/$answerCount",
             style = MaterialTheme.typography.labelSmall,
+            fontFamily = fontFamily,
             color = iconTint,
         )
 
