@@ -29,4 +29,9 @@ object ChatUiTokens {
         const val SHADOW_GRADIENT_STEPS = 8
         const val SHADOW_GRADIENT_POWER = 1.5f
     }
+
+    object Input {
+        const val PLACEHOLDER_ALPHA = 0.6f
+        const val DISABLED_CONTENT_ALPHA = 0.5f
+    }
 }

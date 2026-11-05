@@ -74,6 +74,7 @@ object Dimens {
         val padding = 8.dp
         val spacing = 8.dp
         val corner = 24.dp
+        val buttonSize = 48.dp
     }
 
     object Progress {
