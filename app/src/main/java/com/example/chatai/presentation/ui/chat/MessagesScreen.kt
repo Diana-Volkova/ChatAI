@@ -43,10 +43,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import com.example.chatai.R
 import com.example.chatai.domain.model.Message
+import com.example.chatai.presentation.ui.chat.mapper.ChatListMapper
+import com.example.chatai.presentation.ui.chat.model.ChatListItem
 import com.example.chatai.presentation.ui.components.MessageItem
 import com.example.chatai.presentation.ui.theme.ChatUiTokens.Input.DISABLED_CONTENT_ALPHA
 import com.example.chatai.presentation.ui.theme.ChatUiTokens.Input.PLACEHOLDER_ALPHA
 import com.example.chatai.presentation.ui.theme.Dimens
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import androidx.compose.ui.platform.LocalLocale
+import com.example.chatai.presentation.ui.theme.ChatUiTokens.Message.DATE_SEPARATOR_ALPHA
 
 @Composable
 fun MessagesScreen(
@@ -62,12 +68,6 @@ fun MessagesScreen(
     modifier: Modifier = Modifier,
 ) {
     val layoutDirection = LocalLayoutDirection.current
-
-    LaunchedEffect(messages.size) {
-        if (messages.isNotEmpty() && searchQuery.isBlank()) {
-            listState.scrollToItem(messages.lastIndex)
-        }
-    }
 
     Column(
         modifier = modifier
@@ -105,36 +105,64 @@ fun Messages(
     onGenerateAnotherAnswer: (Message) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val chatItems = remember(messages) {
+        ChatListMapper.map(messages)
+    }
+
+    LaunchedEffect(chatItems.size) {
+        if (chatItems.isNotEmpty()) {
+            listState.animateScrollToItem(chatItems.lastIndex)
+        }
+    }
+
     LazyColumn(
         state = listState,
         modifier = modifier,
     ) {
         items(
-            messages,
-            key = { message -> message.id }
-        ) { message ->
-            MessageItem(
-                message = message,
-                fontFamily = fontFamily,
-                selected = message in selectedMessages,
-                selecting = selectedMessages.isNotEmpty(),
-                onDelete = {
-                    message.serverId?.let { serverId ->
-                        onDeleteMessages(listOf(serverId))
-                    }
-                },
-                onSelect = {
-                    if (message in selectedMessages) {
-                        selectedMessages.remove(message)
-                    } else {
-                        selectedMessages.add(message)
-                    }
-                },
-                onGenerateAnotherAnswer = {
-                    onGenerateAnotherAnswer(message)
+            items = chatItems,
+            key = { item ->
+                when (item) {
+                    is ChatListItem.MessageItem ->
+                        "message_${item.message.id}"
+
+                    is ChatListItem.DateSeparator ->
+                        "date_${item.date}"
+                }
+            }
+        ) { item ->
+
+            when (item) {
+                is ChatListItem.DateSeparator -> {
+                    DateSeparator(item.date)
                 }
 
-            )
+                is ChatListItem.MessageItem -> {
+                    val message = item.message
+
+                    MessageItem(
+                        message = message,
+                        fontFamily = fontFamily,
+                        selected = message in selectedMessages,
+                        selecting = selectedMessages.isNotEmpty(),
+                        onDelete = {
+                            message.serverId?.let { serverId ->
+                                onDeleteMessages(listOf(serverId))
+                            }
+                        },
+                        onSelect = {
+                            if (message in selectedMessages) {
+                                selectedMessages.remove(message)
+                            } else {
+                                selectedMessages.add(message)
+                            }
+                        },
+                        onGenerateAnotherAnswer = {
+                            onGenerateAnotherAnswer(message)
+                        }
+                    )
+                }
+            }
         }
     }
 }
@@ -236,6 +264,45 @@ fun MessageInput(
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.Send,
                 contentDescription = stringResource(R.string.send),
+            )
+        }
+    }
+}
+
+@Composable
+private fun DateSeparator(date: LocalDate) {
+    val today = LocalDate.now()
+    val yesterday = today.minusDays(1)
+
+    val dateText = when (date) {
+        today -> stringResource(R.string.today)
+        yesterday -> stringResource(R.string.yesterday)
+        else -> date.format(
+            DateTimeFormatter.ofPattern(
+                "d MMMM",
+                LocalLocale.current.platformLocale
+            )
+        )
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = Dimens.Spacing.small),
+        contentAlignment = Alignment.Center
+    ) {
+        Surface(
+            shape = RoundedCornerShape( Dimens.Shape.medium),
+            color = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = DATE_SEPARATOR_ALPHA)
+        ) {
+            Text(
+                text = dateText,
+                modifier = Modifier.padding(
+                    horizontal = Dimens.Spacing.medium,
+                    vertical =  Dimens.Spacing.small
+                ),
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }

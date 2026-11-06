@@ -10,6 +10,7 @@ object ChatUiTokens {
     object Message {
         const val SELECTION_ALPHA = 0.2f
         const val TIMESTAMP_ALPHA = 0.7f
+        const val DATE_SEPARATOR_ALPHA = 0.8f
         const val ACTION_ICON_ALPHA = 0.7f
         const val GRADIENT_END_ALPHA = 0.85f
         const val MENU_OFFSET_FACTOR = 0.15f
