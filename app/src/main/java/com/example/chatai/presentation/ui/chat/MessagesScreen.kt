@@ -1,6 +1,5 @@
 package com.example.chatai.presentation.ui.chat
 
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,12 +31,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateSet
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
@@ -46,13 +43,12 @@ import com.example.chatai.domain.model.Message
 import com.example.chatai.presentation.ui.chat.mapper.ChatListMapper
 import com.example.chatai.presentation.ui.chat.model.ChatListItem
 import com.example.chatai.presentation.ui.components.MessageItem
-import com.example.chatai.presentation.ui.theme.ChatUiTokens.Input.DISABLED_CONTENT_ALPHA
-import com.example.chatai.presentation.ui.theme.ChatUiTokens.Input.PLACEHOLDER_ALPHA
 import com.example.chatai.presentation.ui.theme.Dimens
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import androidx.compose.ui.platform.LocalLocale
-import com.example.chatai.presentation.ui.theme.ChatUiTokens.Message.DATE_SEPARATOR_ALPHA
+import androidx.compose.ui.unit.dp
+import com.example.chatai.presentation.ui.theme.ChatUiTokens.Input.PLACEHOLDER_ALPHA
 
 @Composable
 fun MessagesScreen(
@@ -134,7 +130,7 @@ fun Messages(
 
             when (item) {
                 is ChatListItem.DateSeparator -> {
-                    DateSeparator(item.date)
+                    DateSeparator(item.date, fontFamily)
                 }
 
                 is ChatListItem.MessageItem -> {
@@ -173,17 +169,17 @@ fun MessageInput(
     onSendMessage: (String) -> Unit,
 ) {
     val fieldState = remember { TextFieldState() }
-
     val canSend = fieldState.text.isNotBlank()
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(top = Dimens.Spacing.xSmall)
             .background(MaterialTheme.colorScheme.surface)
             .imePadding()
             .padding(
                 horizontal = Dimens.Spacing.medium,
-                vertical = Dimens.Spacing.small
+                vertical = Dimens.Spacing.medium
             ),
         horizontalArrangement = Arrangement.spacedBy(Dimens.Spacing.small),
         verticalAlignment = Alignment.Bottom,
@@ -191,8 +187,8 @@ fun MessageInput(
         Surface(
             modifier = Modifier.weight(1f),
             shape = RoundedCornerShape(Dimens.Shape.round),
-            color = MaterialTheme.colorScheme.surfaceContainerHigh,
-            tonalElevation = Dimens.Elevation.low,
+            color = MaterialTheme.colorScheme.surfaceContainerLow,
+            tonalElevation = 0.dp,
         ) {
             BasicTextField(
                 state = fieldState,
@@ -231,34 +227,23 @@ fun MessageInput(
             )
         }
 
-        val buttonScale by animateFloatAsState(
-            targetValue = if (canSend) 1f else 0.9f,
-            label = "sendButtonScale",
-        )
-
         FilledIconButton(
             onClick = {
                 val message = fieldState.text.toString()
 
                 if (message.isNotBlank()) {
-                    onSendMessage(message)
+                    onSendMessage(message.trim())
                     fieldState.clearText()
                 }
             },
             enabled = canSend,
-            modifier = Modifier
-                .size(Dimens.Input.buttonSize)
-                .graphicsLayer {
-                    scaleX = buttonScale
-                    scaleY = buttonScale
-                },
+            modifier = Modifier.size(Dimens.Input.buttonSize),
             shape = CircleShape,
             colors = IconButtonDefaults.filledIconButtonColors(
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary,
-                disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                    .copy(alpha = DISABLED_CONTENT_ALPHA),
+                disabledContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.35f),
+                disabledContentColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.55f),
             ),
         ) {
             Icon(
@@ -270,7 +255,10 @@ fun MessageInput(
 }
 
 @Composable
-private fun DateSeparator(date: LocalDate) {
+private fun DateSeparator(
+    date: LocalDate,
+    fontFamily: FontFamily
+) {
     val today = LocalDate.now()
     val yesterday = today.minusDays(1)
 
@@ -288,21 +276,23 @@ private fun DateSeparator(date: LocalDate) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = Dimens.Spacing.small),
-        contentAlignment = Alignment.Center
+            .padding(vertical = Dimens.Spacing.medium),
+        contentAlignment = Alignment.Center,
     ) {
         Surface(
-            shape = RoundedCornerShape( Dimens.Shape.medium),
-            color = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = DATE_SEPARATOR_ALPHA)
+            shape = RoundedCornerShape(Dimens.Shape.round),
+            color = MaterialTheme.colorScheme.surfaceContainer,
+            tonalElevation = 0.dp,
         ) {
             Text(
                 text = dateText,
                 modifier = Modifier.padding(
                     horizontal = Dimens.Spacing.medium,
-                    vertical =  Dimens.Spacing.small
+                    vertical = Dimens.Spacing.xSmall,
                 ),
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                style = MaterialTheme.typography.labelMedium,
+                fontFamily = fontFamily,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
     }

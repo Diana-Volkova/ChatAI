@@ -29,7 +29,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush.Companion.verticalGradient
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
@@ -43,10 +42,8 @@ import androidx.compose.ui.unit.dp
 import com.example.chatai.R
 import com.example.chatai.domain.model.Message
 import com.example.chatai.domain.model.Sender
-import com.example.chatai.presentation.ui.theme.ChatUiTokens.Message.ACTION_ICON_ALPHA
 import com.example.chatai.presentation.ui.theme.ChatUiTokens.Message.GRADIENT_END_ALPHA
 import com.example.chatai.presentation.ui.theme.ChatUiTokens.Message.SELECTION_ALPHA
-import com.example.chatai.presentation.ui.theme.ChatUiTokens.Message.TIMESTAMP_ALPHA
 import com.example.chatai.presentation.ui.theme.Dimens
 import com.example.chatai.presentation.ui.utils.formatTime
 
@@ -76,10 +73,24 @@ fun MessageItem(
     }
 
     val isUser = message.sender == Sender.USER
-    val colors = MaterialTheme.colorScheme
 
-    val bubbleColor = if (isUser) colors.primary else colors.surfaceVariant
-    val contentColor = if (isUser) colors.onPrimary else colors.onSurfaceVariant
+    val bubbleColor = if (isUser) {
+        MaterialTheme.colorScheme.primary
+    } else {
+        MaterialTheme.colorScheme.secondaryContainer
+    }
+
+    val contentColor = if (isUser) {
+        MaterialTheme.colorScheme.onPrimary
+    } else {
+        MaterialTheme.colorScheme.onSecondaryContainer
+    }
+
+    val timestampColor = if (isUser) {
+        MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f)
+    } else {
+        MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.7f)
+    }
 
     val bubbleShape = remember(message.sender) {
         message.sender.toBubbleShape()
@@ -106,7 +117,7 @@ fun MessageItem(
             .fillMaxWidth()
             .background(
                 color = if (selected) {
-                    colors.primary.copy(alpha = SELECTION_ALPHA)
+                    MaterialTheme.colorScheme.primary.copy(alpha = SELECTION_ALPHA)
                 } else {
                     Color.Transparent
                 },
@@ -156,6 +167,7 @@ fun MessageItem(
                         timestamp = message.timestamp,
                         modifier = Modifier.align(Alignment.End),
                         fontFamily = fontFamily,
+                        color = timestampColor,
                         onSizeChanged = { layoutState.timeSize = it },
                     )
 
@@ -186,16 +198,17 @@ fun MessageItem(
 private fun MessageTimestamp(
     timestamp: Long,
     fontFamily: FontFamily,
+    color: Color,
     modifier: Modifier,
     onSizeChanged: (IntSize) -> Unit,
 ) {
     Text(
         text = formatTime(timestamp),
         modifier = modifier
-            .alpha(TIMESTAMP_ALPHA)
             .onSizeChanged(onSizeChanged),
         style = MaterialTheme.typography.labelSmall,
-        fontFamily = fontFamily
+        fontFamily = fontFamily,
+        color = color
     )
 }
 
@@ -222,8 +235,7 @@ private fun AssistantMessageActions(
                     imageVector = Icons.Default.Refresh,
                     contentDescription = stringResource(R.string.generate_another_answer),
                     modifier = Modifier.size(Dimens.Message.actionIconSize),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                        .copy(alpha = ACTION_ICON_ALPHA),
+                    tint = MaterialTheme.colorScheme.outline,
                 )
             }
         }
@@ -248,8 +260,7 @@ private fun AnswerSwitcher(
     fontFamily: FontFamily,
     onSelectAnswer: (Int) -> Unit,
 ) {
-    val iconTint = MaterialTheme.colorScheme.onSurfaceVariant
-        .copy(alpha = ACTION_ICON_ALPHA)
+    val iconTint = MaterialTheme.colorScheme.outline
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
