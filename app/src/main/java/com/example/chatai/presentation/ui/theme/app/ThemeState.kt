@@ -1,4 +1,4 @@
-package com.example.chatai.presentation.ui.theme
+package com.example.chatai.presentation.ui.theme.app
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

@@ -21,7 +21,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
-import com.example.chatai.presentation.ui.theme.ChatUiTokens
+import com.example.chatai.presentation.ui.theme.chat.ChatUiTokens
 import com.example.chatai.presentation.ui.theme.Dimens
 import androidx.compose.ui.unit.IntOffset
 import kotlin.math.pow

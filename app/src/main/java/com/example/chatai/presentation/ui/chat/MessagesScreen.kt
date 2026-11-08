@@ -48,7 +48,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.unit.dp
-import com.example.chatai.presentation.ui.theme.ChatUiTokens.Input.PLACEHOLDER_ALPHA
+import com.example.chatai.presentation.ui.theme.chat.ChatUiTokens.Input.PLACEHOLDER_ALPHA
 
 @Composable
 fun MessagesScreen(

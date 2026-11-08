@@ -15,7 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import com.example.chatai.R
-import com.example.chatai.presentation.ui.theme.AppFonts.Lato
+import com.example.chatai.presentation.ui.theme.chat.AppFonts.Lato
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 

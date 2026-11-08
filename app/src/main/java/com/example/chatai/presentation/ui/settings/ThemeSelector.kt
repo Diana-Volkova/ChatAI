@@ -19,7 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.chatai.R
-import com.example.chatai.presentation.ui.theme.ThemeMode
+import com.example.chatai.presentation.ui.theme.app.ThemeMode
 
 @Composable
 fun ThemeSelector(

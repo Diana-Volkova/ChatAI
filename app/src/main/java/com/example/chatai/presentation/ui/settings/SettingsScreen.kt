@@ -44,8 +44,8 @@ import com.example.chatai.core.theme.ThemeManager
 import com.example.chatai.presentation.navigation.Screen
 import com.example.chatai.presentation.ui.extensions.getLocalizedMessage
 import com.example.chatai.presentation.ui.theme.Dimens
-import com.example.chatai.presentation.ui.theme.ThemeMode
-import com.example.chatai.presentation.ui.theme.ThemeState
+import com.example.chatai.presentation.ui.theme.app.ThemeMode
+import com.example.chatai.presentation.ui.theme.app.ThemeState
 
 
 @OptIn(ExperimentalMaterial3Api::class)

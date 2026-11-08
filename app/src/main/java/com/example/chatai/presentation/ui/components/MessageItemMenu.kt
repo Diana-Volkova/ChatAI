@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.example.chatai.R
 import com.example.chatai.domain.model.Message
 import com.example.chatai.domain.model.Sender
-import com.example.chatai.presentation.ui.theme.ChatUiTokens
+import com.example.chatai.presentation.ui.theme.chat.ChatUiTokens
 import com.example.chatai.presentation.ui.theme.Dimens
 
 @Composable

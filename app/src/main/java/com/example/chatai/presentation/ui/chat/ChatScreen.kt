@@ -29,7 +29,8 @@ import com.example.chatai.presentation.ui.components.ExceptionContent
 import com.example.chatai.presentation.ui.components.LoadingScreen
 import com.example.chatai.presentation.ui.sync.SyncStatus
 import com.example.chatai.presentation.ui.components.SyncWarning
-import com.example.chatai.presentation.ui.theme.ChatTheme
+import com.example.chatai.presentation.ui.theme.app.LocalDarkTheme
+import com.example.chatai.presentation.ui.theme.chat.ChatTheme
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,7 +62,8 @@ fun ChatScreen(
     }
 
     ChatTheme(
-        theme = settings?.theme ?: ChatThemeId.DEFAULT
+        theme = settings?.theme ?: ChatThemeId.DEFAULT,
+        darkTheme = LocalDarkTheme.current
     ) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),

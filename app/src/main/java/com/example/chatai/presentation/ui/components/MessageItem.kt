@@ -42,8 +42,8 @@ import androidx.compose.ui.unit.dp
 import com.example.chatai.R
 import com.example.chatai.domain.model.Message
 import com.example.chatai.domain.model.Sender
-import com.example.chatai.presentation.ui.theme.ChatUiTokens.Message.GRADIENT_END_ALPHA
-import com.example.chatai.presentation.ui.theme.ChatUiTokens.Message.SELECTION_ALPHA
+import com.example.chatai.presentation.ui.theme.chat.ChatUiTokens.Message.GRADIENT_END_ALPHA
+import com.example.chatai.presentation.ui.theme.chat.ChatUiTokens.Message.SELECTION_ALPHA
 import com.example.chatai.presentation.ui.theme.Dimens
 import com.example.chatai.presentation.ui.utils.formatTime
 

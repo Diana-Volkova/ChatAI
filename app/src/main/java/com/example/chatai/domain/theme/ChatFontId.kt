@@ -1,7 +1,7 @@
 package com.example.chatai.domain.theme
 
 import androidx.compose.ui.text.font.FontFamily
-import com.example.chatai.presentation.ui.theme.AppFonts
+import com.example.chatai.presentation.ui.theme.chat.AppFonts
 
 enum class ChatFontId(
     val label: String,

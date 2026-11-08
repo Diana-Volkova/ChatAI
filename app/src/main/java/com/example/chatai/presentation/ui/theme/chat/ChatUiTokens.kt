@@ -1,10 +1,12 @@
-package com.example.chatai.presentation.ui.theme
+package com.example.chatai.presentation.ui.theme.chat
 
 object ChatUiTokens {
 
     object Search {
         const val DIVIDER_ALPHA = 0.35f
         const val SEARCH_BAR_DIVIDER_ALPHA = 0.25f
+
+        const val SEARCH_PLACEHOLDER_ALPHA = 0.75f
     }
 
     object Message {
@@ -30,6 +32,5 @@ object ChatUiTokens {
 
     object Input {
         const val PLACEHOLDER_ALPHA = 0.6f
-        const val DISABLED_CONTENT_ALPHA = 0.5f
     }
 }

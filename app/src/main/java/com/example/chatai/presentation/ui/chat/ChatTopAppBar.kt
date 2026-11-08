@@ -38,14 +38,14 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.chatai.domain.model.Message
 import com.example.chatai.domain.theme.ChatThemeId
-import com.example.chatai.presentation.ui.theme.ChatThemeBackIcon
-import com.example.chatai.presentation.ui.theme.ChatThemeDefaultIcon
-import com.example.chatai.presentation.ui.theme.ChatThemeDeleteIcon
-import com.example.chatai.presentation.ui.theme.ChatThemeForestIcon
-import com.example.chatai.presentation.ui.theme.ChatThemeMidnightIcon
-import com.example.chatai.presentation.ui.theme.ChatThemePaletteIcon
-import com.example.chatai.presentation.ui.theme.ChatThemeSearchIcon
-import com.example.chatai.presentation.ui.theme.ChatThemeSunsetIcon
+import com.example.chatai.presentation.ui.theme.chat.ChatThemeBackIcon
+import com.example.chatai.presentation.ui.theme.chat.ChatThemeDefaultIcon
+import com.example.chatai.presentation.ui.theme.chat.ChatThemeDeleteIcon
+import com.example.chatai.presentation.ui.theme.chat.ChatThemeForestIcon
+import com.example.chatai.presentation.ui.theme.chat.ChatThemeMidnightIcon
+import com.example.chatai.presentation.ui.theme.chat.ChatThemePaletteIcon
+import com.example.chatai.presentation.ui.theme.chat.ChatThemeSearchIcon
+import com.example.chatai.presentation.ui.theme.chat.ChatThemeSunsetIcon
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.ui.res.stringResource
@@ -57,12 +57,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import com.example.chatai.R
 import com.example.chatai.domain.theme.ChatFontId
-import com.example.chatai.presentation.ui.theme.ChatThemeFontIcon
+import com.example.chatai.presentation.ui.theme.chat.ChatThemeFontIcon
 import com.example.chatai.presentation.ui.theme.ChatTypography
-import com.example.chatai.presentation.ui.theme.ChatUiTokens.Search.DIVIDER_ALPHA
-import com.example.chatai.presentation.ui.theme.ChatUiTokens.Search.SEARCH_BAR_DIVIDER_ALPHA
+import com.example.chatai.presentation.ui.theme.chat.ChatUiTokens.Search.DIVIDER_ALPHA
+import com.example.chatai.presentation.ui.theme.chat.ChatUiTokens.Search.SEARCH_BAR_DIVIDER_ALPHA
 import com.example.chatai.presentation.ui.theme.Dimens
-import com.example.chatai.presentation.ui.theme.SearchPlaceholderAlpha
+import com.example.chatai.presentation.ui.theme.chat.ChatUiTokens.Search.SEARCH_PLACEHOLDER_ALPHA
 import com.example.chatai.presentation.ui.utils.formatTime
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -123,7 +123,7 @@ fun ChatTopAppBar(
                                 text = stringResource(R.string.search_history),
                                 fontFamily = fontFamily,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(
-                                    alpha = SearchPlaceholderAlpha
+                                    alpha = SEARCH_PLACEHOLDER_ALPHA
                                 )
                             )
                         },

@@ -20,9 +20,9 @@ import com.example.chatai.core.localization.LocaleContextWrapper
 import com.example.chatai.core.theme.ThemeManager
 import com.example.chatai.presentation.navigation.Navigation
 import com.example.chatai.presentation.ui.splash.SplashScreen
-import com.example.chatai.presentation.ui.theme.ChatAITheme
-import com.example.chatai.presentation.ui.theme.ThemeMode
-import com.example.chatai.presentation.ui.theme.ThemeState
+import com.example.chatai.presentation.ui.theme.app.ChatAITheme
+import com.example.chatai.presentation.ui.theme.app.ThemeMode
+import com.example.chatai.presentation.ui.theme.app.ThemeState
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -67,7 +67,7 @@ class MainActivity : ComponentActivity() {
             else -> ThemeMode.SYSTEM
         }
         setContent {
-            ChatAITheme {
+            ChatAITheme(themeMode = ThemeState.mode) {
                 var showSplash by remember {
                     mutableStateOf(true)
                 }
