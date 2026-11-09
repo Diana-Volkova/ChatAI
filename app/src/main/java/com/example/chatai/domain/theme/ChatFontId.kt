@@ -9,6 +9,7 @@ enum class ChatFontId(
 ) {
     DEFAULT("По умолчанию", FontFamily.SansSerif),
     LATO("Lato", AppFonts.Lato),
+    JOST("Jost", AppFonts.Jost),
     SERIF("Serif", FontFamily.Serif),
     MONOSPACE("Monospace", FontFamily.Monospace),
     MARCK_SCRIPT("Marck Script", AppFonts.MarckScript),

@@ -3,13 +3,17 @@ package com.example.chatai.presentation.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
@@ -117,18 +121,20 @@ fun MessageItem(
             .fillMaxWidth()
             .background(
                 color = if (selected) {
-                    MaterialTheme.colorScheme.primary.copy(alpha = SELECTION_ALPHA)
+                    MaterialTheme.colorScheme.primary.copy(
+                        alpha = SELECTION_ALPHA
+                    )
                 } else {
                     Color.Transparent
-                },
+                }
             )
             .combinedClickable(
                 onClick = {
-                    if (selecting) onSelect() else menuExpanded = true
+                    if (selecting) onSelect()
+                    else menuExpanded = true
                 },
                 onLongClick = onSelect,
-            )
-            .onSizeChanged { layoutState.containerSize = it },
+            ),
         horizontalArrangement = if (isUser) {
             Arrangement.End
         } else {
@@ -148,36 +154,141 @@ fun MessageItem(
         ) {
             BoxWithConstraints {
                 Column(
-                    modifier = Modifier.padding(
-                        horizontal = Dimens.Message.horizontalPadding,
-                        vertical = Dimens.Message.verticalPadding,
-                    ),
+                    modifier = Modifier
+                        .width(IntrinsicSize.Max)
+                        .widthIn(max = maxWidth)
+                        .padding(
+                            horizontal = Dimens.Message.horizontalPadding,
+                            vertical = Dimens.Message.verticalPadding,
+                        ),
                     verticalArrangement = layoutState.arrangement,
                 ) {
-                    Text(
-                        text = currentAnswer,
-                        modifier = Modifier.padding(
-                            end = layoutState.textPadding,
-                        ),
-                        onTextLayout = { layoutState.textLayout = it },
-                        fontFamily = fontFamily
-                    )
-
-                    MessageTimestamp(
-                        timestamp = message.timestamp,
-                        modifier = Modifier.align(Alignment.End),
-                        fontFamily = fontFamily,
-                        color = timestampColor,
-                        onSizeChanged = { layoutState.timeSize = it },
-                    )
-
-                    if (!isUser) {
-                        AssistantMessageActions(
-                            selectedAnswer = answerIndex,
-                            answerCount = answers.size,
+                    if (isUser) {
+                        Text(
+                            text = currentAnswer,
+                            modifier = Modifier.padding(end = layoutState.textPadding),
+                            onTextLayout = { layoutState.textLayout = it },
                             fontFamily = fontFamily,
-                            onGenerateAnotherAnswer = onGenerateAnotherAnswer,
-                            onSelectAnswer = { selectedAnswer = it },
+                        )
+
+                        MessageTimestamp(
+                            timestamp = message.timestamp,
+                            modifier = Modifier.align(Alignment.End),
+                            fontFamily = fontFamily,
+                            color = timestampColor,
+                            onSizeChanged = { layoutState.timeSize = it },
+                        )
+                    } else {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            if (answers.size > 1) {
+                                IconButton(
+                                    onClick = { selectedAnswer = answerIndex - 1 },
+                                    enabled = answerIndex > 0,
+                                    modifier = Modifier
+                                        .padding(end = 10.dp)
+                                        .size(40.dp),
+                                ) {
+                                    Box(
+                                        modifier = Modifier
+                                            .padding(
+                                                start = 10.dp,
+                                                end = 2.dp,
+                                            )
+                                            .size(32.dp)
+                                            .background(
+                                                color = contentColor.copy(alpha = 0.10f),
+                                                shape = CircleShape,
+                                            ),
+                                        contentAlignment = Alignment.Center,
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                                            contentDescription = stringResource(R.string.previous_answer),
+                                            modifier = Modifier.size(20.dp),
+                                            tint = contentColor.copy(alpha = 0.75f),
+                                        )
+                                    }
+                                }
+                            } else {
+                                IconButton(
+                                    onClick = onGenerateAnotherAnswer,
+                                    modifier = Modifier
+                                        .padding(end = 10.dp)
+                                        .size(40.dp),
+                                ) {
+                                    Box(
+                                        modifier = Modifier
+                                            .padding(
+                                                start = 10.dp,
+                                                end = 2.dp,
+                                            )
+                                            .size(32.dp)
+                                            .background(
+                                                color = contentColor.copy(alpha = 0.10f),
+                                                shape = CircleShape,
+                                            ),
+                                        contentAlignment = Alignment.Center,
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.Refresh,
+                                            contentDescription = stringResource(R.string.generate_another_answer),
+                                            modifier = Modifier.size(20.dp),
+                                            tint = contentColor.copy(alpha = 0.75f),
+                                        )
+                                    }
+                                }
+                            }
+
+                            Text(
+                                text = currentAnswer,
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .padding(horizontal = layoutState.textPadding),
+                                onTextLayout = { layoutState.textLayout = it },
+                                fontFamily = fontFamily,
+                            )
+
+                            if (answers.size > 1) {
+                                IconButton(
+                                    onClick = { selectedAnswer = answerIndex + 1 },
+                                    enabled = answerIndex < answers.lastIndex,
+                                    modifier = Modifier
+                                        .padding(start = 10.dp)
+                                        .size(40.dp),
+                                ) {
+                                    Box(
+                                        modifier = Modifier
+                                            .padding(
+                                                start = 2.dp,
+                                                end = 10.dp,
+                                            )
+                                            .size(32.dp)
+                                            .background(
+                                                color = contentColor.copy(alpha = 0.10f),
+                                                shape = CircleShape,
+                                            ),
+                                        contentAlignment = Alignment.Center,
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                                            contentDescription = stringResource(R.string.next_answer),
+                                            modifier = Modifier.size(20.dp),
+                                            tint = contentColor.copy(alpha = 0.75f),
+                                        )
+                                    }
+                                }
+                            }
+                        }
+
+                        MessageTimestamp(
+                            timestamp = message.timestamp,
+                            modifier = Modifier.align(Alignment.End),
+                            fontFamily = fontFamily,
+                            color = timestampColor,
+                            onSizeChanged = { layoutState.timeSize = it },
                         )
                     }
                 }
@@ -210,93 +321,6 @@ private fun MessageTimestamp(
         fontFamily = fontFamily,
         color = color
     )
-}
-
-@Composable
-private fun AssistantMessageActions(
-    selectedAnswer: Int,
-    answerCount: Int,
-    fontFamily: FontFamily,
-    onGenerateAnotherAnswer: () -> Unit,
-    onSelectAnswer: (Int) -> Unit,
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = Dimens.Message.actionsTopPadding),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        if (answerCount == 1) {
-            IconButton(
-                onClick = onGenerateAnotherAnswer,
-                modifier = Modifier.size(Dimens.Message.actionButtonSize),
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Refresh,
-                    contentDescription = stringResource(R.string.generate_another_answer),
-                    modifier = Modifier.size(Dimens.Message.actionIconSize),
-                    tint = MaterialTheme.colorScheme.outline,
-                )
-            }
-        }
-
-        Spacer(Modifier.weight(1f))
-
-        if (answerCount > 1) {
-            AnswerSwitcher(
-                selectedAnswer = selectedAnswer,
-                answerCount = answerCount,
-                fontFamily = fontFamily,
-                onSelectAnswer = onSelectAnswer,
-            )
-        }
-    }
-}
-
-@Composable
-private fun AnswerSwitcher(
-    selectedAnswer: Int,
-    answerCount: Int,
-    fontFamily: FontFamily,
-    onSelectAnswer: (Int) -> Unit,
-) {
-    val iconTint = MaterialTheme.colorScheme.outline
-
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(Dimens.Message.actionSpacing),
-    ) {
-        IconButton(
-            onClick = { onSelectAnswer(selectedAnswer - 1) },
-            enabled = selectedAnswer > 0,
-            modifier = Modifier.size(Dimens.Message.actionButtonSize),
-        ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                contentDescription = stringResource(R.string.previous_answer),
-                tint = iconTint,
-            )
-        }
-
-        Text(
-            text = "${selectedAnswer + 1}/$answerCount",
-            style = MaterialTheme.typography.labelSmall,
-            fontFamily = fontFamily,
-            color = iconTint,
-        )
-
-        IconButton(
-            onClick = { onSelectAnswer(selectedAnswer + 1) },
-            enabled = selectedAnswer < answerCount - 1,
-            modifier = Modifier.size(Dimens.Message.actionButtonSize),
-        ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                contentDescription = stringResource(R.string.next_answer),
-                tint = iconTint,
-            )
-        }
-    }
 }
 
 private fun Sender.toBubbleShape() = when (this) {

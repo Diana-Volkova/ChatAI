@@ -8,6 +8,9 @@ import com.example.chatai.R
 
 object AppFonts {
 
+    val Jost = FontFamily(
+        Font(R.font.jost_regular, FontWeight.Normal, FontStyle.Normal)
+    )
     val MarckScript = FontFamily(
         Font(R.font.marck_script_regular, FontWeight.Normal, FontStyle.Normal)
     )
