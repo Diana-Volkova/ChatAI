@@ -49,6 +49,8 @@ import com.example.chatai.domain.model.Sender
 import com.example.chatai.presentation.ui.theme.chat.ChatUiTokens.Message.GRADIENT_END_ALPHA
 import com.example.chatai.presentation.ui.theme.chat.ChatUiTokens.Message.SELECTION_ALPHA
 import com.example.chatai.presentation.ui.theme.Dimens
+import com.example.chatai.presentation.ui.theme.chat.ChatUiTokens.Message.ACTION_ICON_ALPHA
+import com.example.chatai.presentation.ui.theme.chat.ChatUiTokens.Message.TIMESTAMP_ALPHA
 import com.example.chatai.presentation.ui.utils.formatTime
 
 @Composable
@@ -91,9 +93,9 @@ fun MessageItem(
     }
 
     val timestampColor = if (isUser) {
-        MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f)
+        MaterialTheme.colorScheme.onPrimary.copy(alpha = TIMESTAMP_ALPHA)
     } else {
-        MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.7f)
+        MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = TIMESTAMP_ALPHA)
     }
 
     val bubbleShape = remember(message.sender) {
@@ -188,18 +190,20 @@ fun MessageItem(
                                     onClick = { selectedAnswer = answerIndex - 1 },
                                     enabled = answerIndex > 0,
                                     modifier = Modifier
-                                        .padding(end = 10.dp)
-                                        .size(40.dp),
+                                        .padding(end = Dimens.Spacing.itemSpacing)
+                                        .size(Dimens.Icon.large),
                                 ) {
                                     Box(
                                         modifier = Modifier
                                             .padding(
-                                                start = 10.dp,
-                                                end = 2.dp,
+                                                start = Dimens.Spacing.itemSpacing,
+                                                end = Dimens.Spacing.xSmall / 2,
                                             )
-                                            .size(32.dp)
+                                            .size(Dimens.Spacing.xxLarge)
                                             .background(
-                                                color = contentColor.copy(alpha = 0.10f),
+                                                color = contentColor.copy(
+                                                    alpha = SELECTION_ALPHA,
+                                                ),
                                                 shape = CircleShape,
                                             ),
                                         contentAlignment = Alignment.Center,
@@ -207,8 +211,8 @@ fun MessageItem(
                                         Icon(
                                             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                                             contentDescription = stringResource(R.string.previous_answer),
-                                            modifier = Modifier.size(20.dp),
-                                            tint = contentColor.copy(alpha = 0.75f),
+                                            modifier = Modifier.size(Dimens.Icon.small + Dimens.Spacing.xSmall),
+                                            tint = contentColor.copy(ACTION_ICON_ALPHA),
                                         )
                                     }
                                 }
@@ -216,18 +220,20 @@ fun MessageItem(
                                 IconButton(
                                     onClick = onGenerateAnotherAnswer,
                                     modifier = Modifier
-                                        .padding(end = 10.dp)
-                                        .size(40.dp),
+                                        .padding(end = Dimens.Spacing.itemSpacing)
+                                        .size(Dimens.Icon.large),
                                 ) {
                                     Box(
                                         modifier = Modifier
                                             .padding(
-                                                start = 10.dp,
-                                                end = 2.dp,
+                                                start = Dimens.Spacing.itemSpacing,
+                                                end = Dimens.Spacing.xSmall / 2,
                                             )
-                                            .size(32.dp)
+                                            .size(Dimens.Spacing.xxLarge)
                                             .background(
-                                                color = contentColor.copy(alpha = 0.10f),
+                                                color = contentColor.copy(
+                                                    alpha = SELECTION_ALPHA,
+                                                ),
                                                 shape = CircleShape,
                                             ),
                                         contentAlignment = Alignment.Center,
@@ -235,8 +241,8 @@ fun MessageItem(
                                         Icon(
                                             imageVector = Icons.Default.Refresh,
                                             contentDescription = stringResource(R.string.generate_another_answer),
-                                            modifier = Modifier.size(20.dp),
-                                            tint = contentColor.copy(alpha = 0.75f),
+                                            modifier = Modifier.size(Dimens.Icon.small + Dimens.Spacing.xSmall),
+                                            tint = contentColor.copy(alpha = ACTION_ICON_ALPHA),
                                         )
                                     }
                                 }
@@ -256,18 +262,20 @@ fun MessageItem(
                                     onClick = { selectedAnswer = answerIndex + 1 },
                                     enabled = answerIndex < answers.lastIndex,
                                     modifier = Modifier
-                                        .padding(start = 10.dp)
-                                        .size(40.dp),
+                                        .padding(start = Dimens.Spacing.itemSpacing)
+                                        .size(Dimens.Icon.large),
                                 ) {
                                     Box(
                                         modifier = Modifier
                                             .padding(
-                                                start = 2.dp,
-                                                end = 10.dp,
+                                                start = Dimens.Spacing.xSmall / 2,
+                                                end = Dimens.Spacing.itemSpacing,
                                             )
-                                            .size(32.dp)
+                                            .size(Dimens.Spacing.xxLarge)
                                             .background(
-                                                color = contentColor.copy(alpha = 0.10f),
+                                                color = contentColor.copy(
+                                                    alpha = SELECTION_ALPHA,
+                                                ),
                                                 shape = CircleShape,
                                             ),
                                         contentAlignment = Alignment.Center,
@@ -275,8 +283,8 @@ fun MessageItem(
                                         Icon(
                                             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                                             contentDescription = stringResource(R.string.next_answer),
-                                            modifier = Modifier.size(20.dp),
-                                            tint = contentColor.copy(alpha = 0.75f),
+                                            modifier = Modifier.size(Dimens.Icon.small + Dimens.Spacing.xSmall),
+                                            tint = contentColor.copy(alpha = ACTION_ICON_ALPHA),
                                         )
                                     }
                                 }

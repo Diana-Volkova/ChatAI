@@ -13,6 +13,8 @@ object ChatUiTokens {
         const val SELECTION_ALPHA = 0.2f
         const val GRADIENT_END_ALPHA = 0.85f
         const val MENU_OFFSET_FACTOR = 0.15f
+        const val ACTION_ICON_ALPHA = 0.75f
+        const val TIMESTAMP_ALPHA = 0.7f
     }
 
     object Loading {
